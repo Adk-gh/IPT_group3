@@ -92,9 +92,9 @@
                         <div class="feed-tab">Popular</div>
                     </div>
 
-
-
-
+@if($posts->isEmpty())
+    <p>No posts found.</p>
+@else
     @foreach($posts as $post)
         <div class="post-card">
             <div class="post-header">
