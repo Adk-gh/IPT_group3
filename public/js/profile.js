@@ -232,3 +232,106 @@
                 }
             });
         });
+
+// Profile Cover Photo and Bio Edit Functionality
+document.addEventListener('DOMContentLoaded', () => {
+  // Elements for cover photo
+  const coverEditBtn = document.getElementById('coverEditBtn');
+  const coverEditForm = document.getElementById('coverEditForm');
+  const cancelCoverEdit = document.getElementById('cancelCoverEdit');
+  const coverPhotoForm = document.getElementById('coverPhotoForm');
+  const bannerImage = document.getElementById('bannerImage');
+
+  // Elements for bio
+  const editBioBtn = document.getElementById('editBioBtn');
+  const bioEditForm = document.getElementById('bioEditForm');
+  const cancelBioEdit = document.getElementById('cancelBioEdit');
+  const bioForm = document.getElementById('bioForm');
+  const profileBio = document.getElementById('profileBio');
+  const bioTextarea = document.getElementById('bioTextarea');
+
+  // Toggle cover photo form
+  coverEditBtn.addEventListener('click', () => {
+    coverEditForm.style.display = 'block';
+    coverEditBtn.style.display = 'none';
+  });
+
+  cancelCoverEdit.addEventListener('click', () => {
+    coverEditForm.style.display = 'none';
+    coverEditBtn.style.display = 'inline-block';
+  });
+
+  // Toggle bio edit form
+  editBioBtn.addEventListener('click', () => {
+    bioEditForm.style.display = 'block';
+    editBioBtn.style.display = 'none';
+    profileBio.style.display = 'none';
+  });
+
+  cancelBioEdit.addEventListener('click', () => {
+    bioEditForm.style.display = 'none';
+    editBioBtn.style.display = 'inline-block';
+    profileBio.style.display = 'block';
+  });
+
+  // Submit cover photo form via AJAX
+  coverPhotoForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(coverPhotoForm);
+
+    try {
+      const response = await fetch('{{ route("user.cover.update") }}', { // change to your route
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: formData
+      });
+
+      if (!response.ok) throw new Error('Upload failed');
+
+      const data = await response.json();
+      // Update the cover photo src with new photo URL returned by backend
+      bannerImage.src = data.cover_photo_url;
+
+      coverEditForm.style.display = 'none';
+      coverEditBtn.style.display = 'inline-block';
+
+    } catch (error) {
+      alert('Failed to upload cover photo');
+      console.error(error);
+    }
+  });
+
+  // Submit bio form via AJAX
+  bioForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const bioText = bioTextarea.value.trim();
+
+    try {
+      const response = await fetch('{{ route("user.bio.update") }}', { // change to your route
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ bio: bioText })
+      });
+
+      if (!response.ok) throw new Error('Update failed');
+
+      const data = await response.json();
+      profileBio.textContent = data.bio;
+
+      bioEditForm.style.display = 'none';
+      editBioBtn.style.display = 'inline-block';
+      profileBio.style.display = 'block';
+
+    } catch (error) {
+      alert('Failed to update bio');
+      console.error(error);
+    }
+  });
+});

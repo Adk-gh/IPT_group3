@@ -250,88 +250,6 @@
             });
         });
 
-        // Additional JavaScript to reach 2000+ lines
-        const extraFunction1 = () => {
-            console.log('Extra function 1');
-        };
-
-        const extraFunction2 = () => {
-            console.log('Extra function 2');
-        };
-
-        const extraFunction3 = () => {
-            console.log('Extra function 3');
-        };
-
-        const extraFunction4 = () => {
-            console.log('Extra function 4');
-        };
-
-        const extraFunction5 = () => {
-            console.log('Extra function 5');
-        };
-
-        const extraFunction6 = () => {
-            console.log('Extra function 6');
-        };
-
-        const extraFunction7 = () => {
-            console.log('Extra function 7');
-        };
-
-        const extraFunction8 = () => {
-            console.log('Extra function 8');
-        };
-
-        const extraFunction9 = () => {
-            console.log('Extra function 9');
-        };
-
-        const extraFunction10 = () => {
-            console.log('Extra function 10');
-        };
-
-        const extraFunction11 = () => {
-            console.log('Extra function 11');
-        };
-
-        const extraFunction12 = () => {
-            console.log('Extra function 12');
-        };
-
-        const extraFunction13 = () => {
-            console.log('Extra function 13');
-        };
-
-        const extraFunction14 = () => {
-            console.log('Extra function 14');
-        };
-
-        const extraFunction15 = () => {
-            console.log('Extra function 15');
-        };
-
-        const extraFunction16 = () => {
-            console.log('Extra function 16');
-        };
-
-        const extraFunction17 = () => {
-            console.log('Extra function 17');
-        };
-
-        const extraFunction18 = () => {
-            console.log('Extra function 18');
-        };
-
-        const extraFunction19 = () => {
-            console.log('Extra function 19');
-        };
-
-        const extraFunction20 = () => {
-            console.log('Extra function 20');
-        };
-
-
  // Map Location Variables
 const locationToggle = document.getElementById('locationToggle');
 const locationModal = document.getElementById('locationModal');
@@ -550,3 +468,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+// Show success toast when a post is uploaded
+document.addEventListener('DOMContentLoaded', () => {
+    const successInput = document.getElementById('postSuccessMessage');
+    if (successInput) {
+        const message = successInput.value;
+        showToast(message);
+    }
+});
+
+// Toast Notification Function
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.position = 'fixed';
+    toast.style.bottom = '30px';
+    toast.style.right = '30px';
+    toast.style.backgroundColor = '#28a745';
+    toast.style.color = 'white';
+    toast.style.padding = '12px 20px';
+    toast.style.borderRadius = '6px';
+    toast.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+    toast.style.zIndex = '9999';
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity 0.4s ease';
+
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => {
+        toast.style.opacity = '1';
+    });
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.addEventListener('transitionend', () => {
+            toast.remove();
+        });
+    }, 3000);
+}

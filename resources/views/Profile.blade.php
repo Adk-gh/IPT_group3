@@ -1,3 +1,7 @@
+<?php
+ $isEditing = isset($isEditing) ? $isEditing : false;
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,6 +23,7 @@
     <!-- Header -->
     <header id="header">
         @include('header')
+
     </header>
 
     <!-- Profile Banner -->
@@ -55,8 +60,8 @@
                     <div class="profile-bio-container">
                         <p class="profile-bio" id="profileBio">{{ Auth::user()->bio ?? 'add bio' }}</p>
                        <button class="edit-bio-btn" id="editBioBtn">
-    <i class="fas fa-pencil-alt"></i>
-</button>
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
                         <div class="bio-edit-form" id="bioEditForm">
                             <form id="bioForm">
                                 @csrf

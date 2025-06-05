@@ -19,6 +19,9 @@
     <header id="header">
         @include('header')
     </header>
+@if(session('success'))
+    <input type="hidden" id="postSuccessMessage" value="{{ session('success') }}">
+@endif
 
     <section class="social-hero">
         <div class="container">
@@ -91,6 +94,14 @@
                         <div class="feed-tab">Nearby</div>
                         <div class="feed-tab">Popular</div>
                     </div>
+                    <div class="feed-posts">
+                        <div class="loading-spinner" id="loadingSpinner" style="display: none;">
+                            <div class="spinner"></div>
+                        </div>
+                        <div id="postSuccessMessageContainer" style="display: none; background: #dff0d8; color: #3c763d; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                            <p id="postSuccessMessageText"></p>
+                        </div>
+                        <div id="postsContainer">
 
 @if($posts->isEmpty())
     <p>No posts found.</p>
@@ -151,8 +162,9 @@
         </div>
     @endforeach
 
-
-
+    {{-- Pagination links --}}
+    {{ $posts->links() }}
+@endif
 
 
 

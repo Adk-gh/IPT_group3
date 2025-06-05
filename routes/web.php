@@ -8,7 +8,7 @@ use App\Http\Controllers\PostController;
 
 
 
-Route::get('/feed', [PostController::class, 'index'])->name('feed');
+Route::get('/social-feed', [PostController::class, 'index'])->name('posts.index');
 
 // Home page
 Route::get('/', function () {
@@ -60,6 +60,15 @@ Route::get('/tags/list', function() {
     return App\Models\Tag::orderBy('name')->get();
 });
 
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
+    Route::post('/user/cover-update', [AuthController::class, 'updateCoverPhoto'])->name('user.cover.update');
+    Route::post('/user/bio-update', [AuthController::class, 'updateBio'])->name('user.bio.update');
+});
 
 
+Route::get('/posts', function () {
+    $posts = App\Models\Post::with(['user', 'tags'])->latest()->get();
+    return view('posts.index', compact('posts'));
+});
 

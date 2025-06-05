@@ -39,7 +39,7 @@
                             </button>
                             <div class="profile-dropdown">
                                 <a href="{{ route('profile') }}"><i class="fas fa-user-circle mr-2"></i> My Profile</a>
-
+                                 <a href="{{ route('profile') }}"><i class="fas fa-user-cog mr-2"></i> Manage Profile</a>
                                 <div class="divider"></div>
                                 @auth
                                     @if(Auth::user()->email === 'admin@gmail.com')

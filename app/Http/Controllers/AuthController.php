@@ -118,4 +118,35 @@ public function signIn(Request $request)
     }
 
 
+    public function updateCoverPhoto(Request $request) {
+    $request->validate([
+        'cover_photo' => 'required|image|max:2048', // max 2MB
+    ]);
+
+    $user = User::find(auth()->id());
+
+    $path = $request->file('cover_photo')->store('cover_photos', 'public');
+
+    $user->cover_photo = asset('storage/' . $path);
+    $user->save();
+
+    return response()->json(['cover_photo_url' => $user->cover_photo]);
+}
+
+public function updateBio(Request $request) {
+    $request->validate([
+        'bio' => 'nullable|string|max:500',
+    ]);
+
+    $user = User::find(auth()->id());
+    if ($user) {
+        $user->bio = $request->bio;
+        $user->save();
+        return response()->json(['bio' => $user->bio]);
+    } else {
+        return response()->json(['error' => 'User not found.'], 404);
+    }
+}
+
+
 }
