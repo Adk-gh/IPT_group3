@@ -4,11 +4,11 @@ use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\PostController;
 
 
 
-Route::get('/social-feed', [PostController::class, 'index'])->name('posts.index');
+
+
 
 // Home page
 Route::get('/', function () {
@@ -51,10 +51,11 @@ Route::post('/profile/update-bio', [AuthController::class, 'updateBio'])->middle
 Route::post('/profile/update-cover', [AuthController::class, 'updateCover'])->middleware('auth');
 
 
-//
 
 
-Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+// Post routes
+Route::post('/posts', [AuthController::class, 'store'])->name('posts.store');
+
 // routes/web.php
 Route::get('/tags/list', function() {
     return App\Models\Tag::orderBy('name')->get();

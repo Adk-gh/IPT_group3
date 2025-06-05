@@ -111,14 +111,15 @@
             <div class="post-header">
                 <div class="post-user">
                     <div class="post-user-avatar">
-                        <img src="{{ $post->user->avatar ?? 'https://via.placeholder.com/50x50?text=User' }}" alt="User Avatar">
+                        <img src="{{ $post->user->profile ?? 'https://via.placeholder.com/50x50?text=User' }}" alt="User Avatar">
                         <div class="verified-badge">
                             <i class="fas fa-check"></i>
                         </div>
                     </div>
                     <div class="post-user-info">
-                        <h4>{{ $post->user->name }}</h4>
-                        <p>@{{ $post->user->username }}</p>
+                        <h4>{{ $post->user?->name ?? 'Unknown User' }}</h4>
+                        {{-- Email or placeholder since username is not available --}}
+                        <p>{{ $post->user?->email ?? 'no-email@example.com' }}</p>
                     </div>
                 </div>
                 <div class="post-meta">
@@ -135,7 +136,9 @@
                 </div>
                 @if($post->image_url)
                     <div class="post-image">
-                        <img src="{{ asset('storage/' . $post->image_url) }}" alt="Post Image">
+                      <img src="{{ asset('storage/' . $post->image_url) }}" alt="Post Image">
+
+
                     </div>
                 @endif
                 <div class="post-tags">
@@ -158,13 +161,12 @@
                     <i class="far fa-bookmark"></i> Save
                 </button>
             </div>
-            <!-- Comments could be rendered here similarly -->
         </div>
     @endforeach
 
-    {{-- Pagination links --}}
     {{ $posts->links() }}
 @endif
+
 
 
 
