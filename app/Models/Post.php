@@ -21,10 +21,11 @@ class Post extends Model
 
     // Relationship with User
     public function user()
-    {
-        return $this->belongsTo(User::class);
-        
-    }
+{
+   
+       return $this->belongsTo(User::class, 'user_id', 'user_id');
+}
+
 
     // Many-to-many with Tag
     public function tags()

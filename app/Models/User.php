@@ -18,7 +18,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $primaryKey = 'user_id';
+protected $primaryKey = 'user_id';
 
     /**
      * The attributes that are mass assignable.
@@ -50,6 +50,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // One-to-one with UserInfo
+    public function userInfo()
+    {
+        return $this->hasOne(UserInfo::class, 'user_id', 'user_id');
+    }
     // One-to-many with Post
     public function posts()
     {

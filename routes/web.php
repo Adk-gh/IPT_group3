@@ -6,10 +6,6 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Auth;
 
 
-
-
-
-
 // Home page
 Route::get('/', function () {
     return view('Signup');
@@ -54,8 +50,8 @@ Route::post('/profile/update-cover', [AuthController::class, 'updateCover'])->mi
 
 
 // Post routes
-Route::post('/posts', [AuthController::class, 'store'])->name('posts.store');
 
+Route::post('/posts', [AuthController::class, 'storePost'])->name('posts.store');
 // routes/web.php
 Route::get('/tags/list', function() {
     return App\Models\Tag::orderBy('name')->get();

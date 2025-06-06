@@ -40,7 +40,7 @@
                             <div class="create-post-header">
                                 <div class="user-avatar" style="display: flex; align-items: center; gap: 10px;">
                                     <img
-                                        src="{{ Auth::user()->avatar_url ?? 'https://via.placeholder.com/50x50?text=User' }}"
+                                        src="{{ Auth::user()->profile ?? 'https://via.placeholder.com/50x50?text=User' }}"
                                         alt="{{ Auth::user()->name }}"
                                         style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;"
                                     >
@@ -137,8 +137,6 @@
                 @if($post->image_url)
                     <div class="post-image">
                       <img src="{{ asset('storage/' . $post->image_url) }}" alt="Post Image">
-
-
                     </div>
                 @endif
                 <div class="post-tags">
