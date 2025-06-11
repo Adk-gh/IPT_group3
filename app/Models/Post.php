@@ -146,4 +146,9 @@ public function isSavedByUser($userId)
     {
         return $value;
     }
+
+    public function reports()
+{
+    return $this->hasMany(PostReport::class);
+}
 }

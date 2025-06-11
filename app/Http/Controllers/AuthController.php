@@ -13,6 +13,7 @@ use App\Models\Tag;
 use App\Models\Comment;
 use App\Models\SharedPost;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Models\PostReport;
 
 
 class AuthController extends Controller
@@ -256,6 +257,7 @@ public function socialFeed()
             ];
         });
 
+
         return view('index', compact('posts', 'users', 'postsWithLocation'));
     }
 
@@ -274,6 +276,26 @@ public function socialFeed()
 
         return back()->with('success', 'Post shared successfully.');
     }
+
+    public function report(Post $post, Request $request)
+{
+    $validated = $request->validate([
+        'report_reason' => 'required|string|max:255',
+        'additional_info' => 'nullable|string|max:1000'
+    ]);
+
+    // Create the report
+    $report = new PostReport([
+        'user_id' => auth()->id(),
+        'reason' => $validated['report_reason'],
+        'additional_info' => $validated['additional_info'] ?? null,
+        'status' => 'pending'
+    ]);
+
+    $post->reports()->save($report);
+
+    return back()->with('success', 'Thank you for your report. We will review it shortly.');
+}
 
     // Static pages
     public function showArtist()

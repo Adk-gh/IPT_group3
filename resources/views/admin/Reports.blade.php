@@ -27,69 +27,7 @@
         <!-- Header -->
          @include('admin.adminnavbar')
 
-        <!-- Reports Analytics -->
-        <div class="dashboard">
-            <div class="stat-card">
-                <div class="stat-icon reports">
-                    <i class="fas fa-flag"></i>
-                </div>
-                <div class="stat-title">Total Reports This Week</div>
-                <div class="stat-value">42</div>
-                <div class="stat-change negative">
-                    <i class="fas fa-arrow-down"></i> 12.5% from last week
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon art">
-                    <i class="fas fa-paint-brush"></i>
-                </div>
-                <div class="stat-title">Artwork Reports</div>
-                <div class="stat-value">28</div>
-                <div class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> 8.3% from last week
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon comments">
-                    <i class="fas fa-comment"></i>
-                </div>
-                <div class="stat-title">Comment Reports</div>
-                <div class="stat-value">9</div>
-                <div class="stat-change negative">
-                    <i class="fas fa-arrow-down"></i> 5.1% from last week
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon users">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="stat-title">User Reports</div>
-                <div class="stat-value">5</div>
-                <div class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> 2.4% from last week
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon trending">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <div class="stat-title">Trending Issues</div>
-                <div class="stat-value">3</div>
-                <div class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> 15.2% from last week
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon auto">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="stat-title">Auto-Moderated</div>
-                <div class="stat-value">18</div>
-                <div class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> 7.8% from last week
-                </div>
-            </div>
-        </div>
+        
 
         <!-- Reports Filter -->
         <div class="reports-filter">

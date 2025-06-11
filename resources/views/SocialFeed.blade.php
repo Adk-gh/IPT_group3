@@ -197,6 +197,65 @@
                             <small class="text-muted"><i class="far fa-clock me-1"></i>{{ $originalPost->created_at->diffForHumans() }}</small>
 
                         </div>
+           <!-- Three-dot menu button -->
+<div class="dropdown d-inline-block ms-2">
+    <button class="btn btn-sm btn-link text-muted" type="button" id="postOptionsDropdown-{{ $originalPost->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-ellipsis-h"></i>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="postOptionsDropdown-{{ $originalPost->id }}">
+        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#reportModal-{{ $originalPost->id }}">Report Post</a></li>
+    </ul>
+</div>
+
+<!-- Report Modal -->
+<div class="modal fade" id="reportModal-{{ $originalPost->id }}" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportModalLabel">Report Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('posts.report', $originalPost->id) }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <p>Why are you reporting this post?</p>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="report_reason" id="reason1-{{ $originalPost->id }}" value="Inappropriate Content" checked>
+                            <label class="form-check-label" for="reason1-{{ $originalPost->id }}">
+                                <i class="fas fa-exclamation-triangle text-warning me-2"></i>Inappropriate Content
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="report_reason" id="reason2-{{ $originalPost->id }}" value="Hate Speech">
+                            <label class="form-check-label" for="reason2-{{ $originalPost->id }}">
+                                <i class="fas fa-ban text-danger me-2"></i>Hate Speech
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="report_reason" id="reason3-{{ $originalPost->id }}" value="Harassment">
+                            <label class="form-check-label" for="reason3-{{ $originalPost->id }}">
+                                <i class="fas fa-user-slash text-danger me-2"></i>Harassment
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label for="additionalInfo-{{ $originalPost->id }}" class="form-label">Additional details (optional):</label>
+                        <textarea class="form-control" id="additionalInfo-{{ $originalPost->id }}" name="additional_info" rows="3" placeholder="Please provide more information..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-flag me-1"></i> Submit Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
                     </div>
 
                     <div class="post-content mb-3">

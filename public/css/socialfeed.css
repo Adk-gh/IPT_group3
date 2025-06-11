@@ -793,6 +793,19 @@ header.scrolled {
   border-radius: 6px;
   flex-shrink: 0;
 }
+/* Add this to your CSS file */
+.post-meta .dropdown-toggle::after {
+    display: none;
+}
+
+.post-meta .dropdown-menu {
+    min-width: 150px;
+}
+
+.post-meta .btn-link {
+    text-decoration: none;
+    padding: 0 5px;
+}
 
 /* Create post section */
 .create-post {
