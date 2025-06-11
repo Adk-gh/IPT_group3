@@ -5,22 +5,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+
 
 class Comment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'post_id', 'text'];
+ protected $fillable = [
+    'user_id',
+    'text',
+    'commentable_id',
+    'commentable_type',
+];
 
-    // Relationship with User
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
-    // Relationship with Post
-    public function post()
-    {
-        return $this->belongsTo(Post::class);
-    }
+
+   public function commentable()
+{
+    return $this->morphTo();
+}
+
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
+
+
 }

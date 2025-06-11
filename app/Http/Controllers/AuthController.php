@@ -5,24 +5,52 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Tag;
+use App\Models\Comment;
+use App\Models\SharedPost;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 
 class AuthController extends Controller
 {
+    // Redirect authenticated users away from auth pages
+    private function redirectIfAuthenticated()
+    {
+        if (auth()->check()) {
+            return redirect()->route('home');
+        }
+        return null;
+    }
+
+    // Show the sign-up form
+    public function showSignUpForm()
+    {
+        if ($redirect = $this->redirectIfAuthenticated()) {
+            return $redirect;
+        }
+        return view('Signup');
+    }
+
     // Show the sign-in form
     public function showSignInForm()
     {
+        if ($redirect = $this->redirectIfAuthenticated()) {
+            return $redirect;
+        }
         return view('Signin');
     }
 
     // Handle user sign-in
     public function signIn(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
@@ -34,22 +62,10 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    // Show the home page
-    public function showIndex()
-    {
-        return view('index');
-    }
-
-    // Show the sign-up form
-    public function showSignUpForm()
-    {
-        return view('Signup');
-    }
-
     // Handle user registration
     public function signUp(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -57,13 +73,13 @@ class AuthController extends Controller
         ]);
 
         $user = User::create([
-            'name' => $request->first_name . ' ' . $request->last_name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name' => "{$validated['first_name']} {$validated['last_name']}",
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
         ]);
 
         Auth::login($user);
-        return redirect('/profile')->with('success', 'Account created successfully!');
+        return redirect()->route('home')->with('success', 'Account created successfully!');
     }
 
     // Handle logout
@@ -72,6 +88,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect('/')->with('success', 'You have been signed out successfully.');
     }
 
@@ -79,96 +96,206 @@ class AuthController extends Controller
     public function showProfile()
     {
         $user = Auth::user();
+
         if (!$user) {
             return redirect()->route('login')->withErrors('You must be logged in to view the profile.');
         }
 
-        return view('Profile', compact('user'));
+        Log::info('User profile accessed', ['user_id' => $user->id]);
+
+        $posts = Post::where('user_id', $user->id)
+            ->with('tags')
+            ->latest()
+            ->get();
+
+        return view('Profile', [
+            'user' => $user,
+            'posts' => $posts,
+            'artworksCount' => $posts->count()
+        ]);
     }
 
-    // Social Feed (now includes post loading logic)
-    public function socialFeed()
+    // Update user profile
+    public function update(Request $request)
     {
-        Log::info('Fetching posts for feed');
+        $user = Auth::user();
 
-        $posts = Post::with(['user', 'tags'])->latest()->paginate(10);
-        Log::info('Fetched posts:', ['posts' => $posts]);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users,username,'.$user->id,
+            'bio' => 'nullable|string|max:500',
+            'location' => 'nullable|string|max:255',
+            'website' => 'nullable|url|max:255',
+            'instagram' => 'nullable|string|max:255',
+            'tiktok' => 'nullable|string|max:255',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'cover_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+        ]);
 
-        $trendingTags = Tag::orderByDesc('usage_count')->take(10)->get();
-        Log::info('Trending tags:', ['tags' => $trendingTags]);
+        // Handle file uploads
+        foreach (['avatar', 'cover_photo'] as $field) {
+            if ($request->hasFile($field)) {
+                // Delete old file if exists
+                if ($user->$field) {
+                    Storage::disk('public')->delete($user->$field);
+                }
+                $validated[$field] = $request->file($field)->store($field.'s', 'public');
+            }
+        }
 
+        $user->update($validated);
 
-
-        return view('SocialFeed', compact('posts', 'trendingTags'));
+        return response()->json([
+            'success' => true,
+            'user' => User::find($user->id),
+            'avatar_url' => $user->avatar ? asset('storage/'.$user->avatar) : null,
+            'cover_photo_url' => $user->cover_photo ? asset('storage/'.$user->cover_photo) : null
+        ]);
     }
+
+
+
+public function socialFeed()
+{
+    // Load all original posts
+    $originalPosts = Post::with(['user', 'tags', 'comments.user'])
+        ->latest()
+        ->get();
+
+    // Load all shared posts, including their original post and relationships
+   $sharedPosts = SharedPost::with(['user', 'post.user', 'post.tags', 'post.comments.user'])
+       ->latest()
+       ->get();
+
+    // Merge both types of posts into one collection and sort by creation time
+    $allPosts = $originalPosts->concat($sharedPosts)->sortByDesc('created_at');
+
+    // Paginate the merged result manually
+    $perPage = 10;
+    $currentPage = request()->get('page', 1);
+    $paginatedPosts = new LengthAwarePaginator(
+        $allPosts->forPage($currentPage, $perPage),
+        $allPosts->count(),
+        $perPage,
+        $currentPage,
+        ['path' => request()->url(), 'query' => request()->query()]
+    );
+
+     $tags = Tag::all();
+
+
+    // Load trending tags and user post count
+    $trendingTags = Tag::orderByDesc('usage_count')->take(10)->get();
+    $artworksCount = auth()->check() ? Post::where('user_id', auth()->id())->count() : 0;
+
+    return view('SocialFeed', [
+        'posts' => $paginatedPosts, // this now contains both original and shared posts
+        'trendingTags' => $trendingTags,
+        'artworksCount' => $artworksCount,
+        'tags' => $tags,
+    ]);
+}
+
 
     // Handle storing a new post
     public function storePost(Request $request)
     {
-        Log::info('Received post creation request', ['request_data' => $request->all()]);
-
         $validatedData = $request->validate([
             'caption' => 'required|string|max:255',
-            'image_url' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'tags' => 'nullable|array',
+            'tags.*' => 'integer|exists:tags,id', // Ensure tags are valid IDs
+            'image_url' => 'required|image|mimes:jpg,jpeg,png,gif,webp|max:40960',
             'location_name' => 'nullable|string|max:255',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
         ]);
 
-        $imageUrl = null;
-        if ($request->hasFile('image_url')) {
-            $imageUrl = $request->file('image_url')->store('uploads/posts', 'public');
-            Log::info('Image uploaded to:', ['path' => $imageUrl]);
-        }
-
-        $post = new Post();
-        $post->user_id = Auth::id();
-        $post->caption = $request->caption;
-        $post->image_url = $imageUrl;
-        $post->location_name = $request->location_name;
-        $post->latitude = $request->latitude;
-        $post->longitude = $request->longitude;
-        $post->save();
-
-        Log::info('Post created:', ['post' => $post]);
-
-        return redirect()->back()->with('success', 'Post created successfully!');
-    }
-
-    // Other static pages
-    public function showArtist() { return view('Artist'); }
-    public function showArticles() { return view('Articles'); }
-    public function showAboutUs() { return view('AboutUs'); }
-    public function showContact() { return view('Contact'); }
-
-    // Profile updates
-    public function updateCoverPhoto(Request $request)
-    {
-        $request->validate([
-            'cover_photo' => 'required|image|max:2048',
+        $post = Post::create([
+            'user_id' => Auth::id(),
+            'caption' => $validatedData['caption'],
+            'tags' => $validatedData['tags'] ? json_encode($validatedData['tags']) : null,
+            'image_url' => $request->file('image_url')->store('uploads/posts', 'public'),
+            'location_name' => $validatedData['location_name'],
+            'latitude' => $validatedData['latitude'],
+            'longitude' => $validatedData['longitude'],
         ]);
 
-        $user = User::find(auth()->id());
-        $path = $request->file('cover_photo')->store('cover_photos', 'public');
-        $user->cover_photo = asset('storage/' . $path);
-        $user->save();
+        // Sync tags
+        if ($validatedData['tags']) {
+            $post->tags()->sync($validatedData['tags']);
+        }
+        if (!empty($validatedData['tags'])) {
+    $cleanTags = array_filter($validatedData['tags'], fn($tag) => !empty($tag));
+    $post->tags()->sync($cleanTags);
+}
 
-        return response()->json(['cover_photo_url' => $user->cover_photo]);
+
+        return redirect()->back()->with('success', 'Your post was successfully created!');
     }
 
-    public function updateBio(Request $request)
+    // Homepage
+    public function index()
+    {
+        $posts = Post::with(['user', 'tags'])
+            ->latest()
+            ->paginate(10);
+
+        $users = User::where('email', '!=', 'admin@gmail.com')
+            ->paginate(12);
+
+        $postsWithLocation = collect($posts->items())->filter(function ($post) {
+            return $post->latitude && $post->longitude;
+        })->map(function ($post) {
+            return [
+                'id' => $post->id,
+                'title' => $post->caption ?? 'Untitled',
+                'tags' => $post->tags ?? ['N/A'],
+                'longitude' => $post->longitude,
+                'location_name' => $post->location_name ?? '',
+                'image_url' => $post->image_url ? asset('storage/'.$post->image_url) : null,
+            ];
+        });
+
+        return view('index', compact('posts', 'users', 'postsWithLocation'));
+    }
+
+    // Share a post
+    public function share(Request $request, $postId)
     {
         $request->validate([
-            'bio' => 'nullable|string|max:500',
+            'caption' => 'nullable|string|max:1000',
         ]);
 
-        $user = User::find(auth()->id());
-        if ($user) {
-            $user->bio = $request->bio;
-            $user->save();
-            return response()->json(['bio' => $user->bio]);
-        } else {
-            return response()->json(['error' => 'User not found.'], 404);
-        }
+        SharedPost::create([
+            'user_id' => auth()->id(),
+            'post_id' => $postId,
+            'caption' => $request->caption,
+        ]);
+
+        return back()->with('success', 'Post shared successfully.');
+    }
+
+    // Static pages
+    public function showArtist()
+    {
+        return view('Artist', [
+            'users' => User::where('email', '!=', 'admin@gmail.com')
+                ->paginate(12)
+        ]);
+    }
+
+    public function showArticles()
+    {
+        return view('Articles');
+    }
+
+    public function showAboutUs()
+    {
+        return view('AboutUs');
+    }
+
+    public function showContact()
+    {
+        return view('Contact');
     }
 }

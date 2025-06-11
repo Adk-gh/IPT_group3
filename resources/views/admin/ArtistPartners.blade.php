@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Street & Ink | Artist & Partner Management</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,36 +24,7 @@
     <!-- Main Content -->
     <div class="main-content">
         <!-- Header -->
-        <div class="header">
-            <div class="header-left">
-                <h1 class="header-title">Artist & Partner Management</h1>
-            </div>
-            <div class="header-right">
-                <div class="search-bar">
-                    <input type="text" class="search-input" placeholder="Search artists or partners...">
-                    <button class="search-btn"><i class="fas fa-search"></i></button>
-                </div>
-                <button class="notification-btn">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
-                </button>
-                <button class="theme-toggle" id="themeToggle">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <div class="user-menu">
-                    <div class="user-avatar">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Admin">
-                    </div>
-                    <div class="user-name">Admin User</div>
-                    <div class="user-dropdown">
-                        <a href="#" class="dropdown-item"><i class="fas fa-user"></i> Profile</a>
-                        <a href="#" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+       @include('admin.adminnavbar')
 
         <!-- Tabs -->
         <div class="tabs">

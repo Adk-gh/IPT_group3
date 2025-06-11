@@ -4,11 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserInfosTable extends Migration
+class CreateUserInformationTable extends Migration
 {
     public function up()
     {
-        Schema::create('user_infos', function (Blueprint $table) {
+        Schema::create('user_information', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->unique(); // One-to-one relationship
 

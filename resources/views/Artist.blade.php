@@ -2,8 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Street & Ink | Discover Street Artists</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -83,260 +88,54 @@
         </div>
     </section>
 
-    <!-- Artists Grid Section -->
-    <section class="section">
-        <div class="container">
-            <div class="artists-grid">
-                <!-- Artist 1 -->
+  <section class="section">
+    <div class="container">
+        <div class="artists-grid">
+            @forelse($users as $user)
+                @if($user->email !== 'admin@gmail.com')
                 <div class="artist-card">
                     <div class="artist-card-img">
-                        <img src="https://images.unsplash.com/photo-1542103749-8ef59b94f47e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Artist">
+                        <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('img/default.jpg') }}" alt="User Avatar">
+
+                        @if($user->is_verified)
                         <div class="artist-verified" title="Verified Artist"><i class="fas fa-check"></i></div>
+                        @endif
                     </div>
                     <div class="artist-card-content">
-                        <h3 class="artist-card-name">Banksy</h3>
+                        <h3 class="artist-card-name">{{ $user->name }}</h3>
                         <div class="artist-card-location">
-                            <i class="fas fa-map-marker-alt"></i> Bristol, UK
+                            <i class="fas fa-map-marker-alt"></i> {{ $user->location ?? 'Unknown Location' }}
                         </div>
-                        <p class="artist-card-bio">Anonymous England-based street artist known for his satirical and subversive work.</p>
+                        <p class="artist-card-bio">{{ $user->bio ?? 'No bio available.' }}</p>
                         <div class="artist-card-stats">
                             <div class="artist-card-stat">
-                                <i class="fas fa-paint-brush"></i> 120+ Artworks
+                                <i class="fas fa-paint-brush"></i> {{ $user->artworks_count ?? 0 }}+ Artworks
                             </div>
                             <div class="artist-card-stat">
-                                <i class="fas fa-heart"></i> 25K Likes
+                                <i class="fas fa-heart"></i> {{ $user->likes_count ?? 0 }} Likes
                             </div>
                         </div>
+
                         <div class="artist-card-tags">
-                            <span class="artist-card-tag">Stencil</span>
-                            <span class="artist-card-tag">Political</span>
-                            <span class="artist-card-tag">Satire</span>
+                            @if(!empty($user->tags))
+                                @foreach($user->tags as $tag)
+                                    <span class="artist-card-tag">{{ $tag }}</span>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>
-
-                <!-- Artist 2 -->
-                <div class="artist-card">
-                    <div class="artist-card-img">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Artist">
-                        <div class="artist-verified" title="Verified Artist"><i class="fas fa-check"></i></div>
-                    </div>
-                    <div class="artist-card-content">
-                        <h3 class="artist-card-name">Shepard Fairey</h3>
-                        <div class="artist-card-location">
-                            <i class="fas fa-map-marker-alt"></i> Los Angeles, USA
-                        </div>
-                        <p class="artist-card-bio">American street artist, graphic designer, and founder of OBEY Clothing.</p>
-                        <div class="artist-card-stats">
-                            <div class="artist-card-stat">
-                                <i class="fas fa-paint-brush"></i> 85+ Artworks
-                            </div>
-                            <div class="artist-card-stat">
-                                <i class="fas fa-heart"></i> 18K Likes
-                            </div>
-                        </div>
-                        <div class="artist-card-tags">
-                            <span class="artist-card-tag">Stencil</span>
-                            <span class="artist-card-tag">Screen Printing</span>
-                            <span class="artist-card-tag">Propaganda</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Artist 3 -->
-                <div class="artist-card">
-                    <div class="artist-card-img">
-                        <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Artist">
-                        <div class="artist-verified" title="Verified Artist"><i class="fas fa-check"></i></div>
-                    </div>
-                    <div class="artist-card-content">
-                        <h3 class="artist-card-name">Maya Hayuk</h3>
-                        <div class="artist-card-location">
-                            <i class="fas fa-map-marker-alt"></i> Brooklyn, USA
-                        </div>
-                        <p class="artist-card-bio">Known for her large-scale, symmetrical murals featuring vibrant colors and patterns.</p>
-                        <div class="artist-card-stats">
-                            <div class="artist-card-stat">
-                                <i class="fas fa-paint-brush"></i> 65+ Artworks
-                            </div>
-                            <div class="artist-card-stat">
-                                <i class="fas fa-heart"></i> 15K Likes
-                            </div>
-                        </div>
-                        <div class="artist-card-tags">
-                            <span class="artist-card-tag">Abstract</span>
-                            <span class="artist-card-tag">Colorful</span>
-                            <span class="artist-card-tag">Symmetrical</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Artist 4 -->
-                <div class="artist-card">
-                    <div class="artist-card-img">
-                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Artist">
-                        <div class="artist-verified" title="Verified Artist"><i class="fas fa-check"></i></div>
-                    </div>
-                    <div class="artist-card-content">
-                        <h3 class="artist-card-name">Felipe Pantone</h3>
-                        <div class="artist-card-location">
-                            <i class="fas fa-map-marker-alt"></i> Valencia, Spain
-                        </div>
-                        <p class="artist-card-bio">Argentinian-Spanish artist known for his vibrant, geometric works exploring digital themes.</p>
-                        <div class="artist-card-stats">
-                            <div class="artist-card-stat">
-                                <i class="fas fa-paint-brush"></i> 42+ Artworks
-                            </div>
-                            <div class="artist-card-stat">
-                                <i class="fas fa-heart"></i> 12K Likes
-                            </div>
-                        </div>
-                        <div class="artist-card-tags">
-                            <span class="artist-card-tag">Optical</span>
-                            <span class="artist-card-tag">Digital</span>
-                            <span class="artist-card-tag">Geometric</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Artist 5 -->
-                <div class="artist-card">
-                    <div class="artist-card-img">
-                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Artist">
-                    </div>
-                    <div class="artist-card-content">
-                        <h3 class="artist-card-name">JR</h3>
-                        <div class="artist-card-location">
-                            <i class="fas fa-map-marker-alt"></i> Paris, France
-                        </div>
-                        <p class="artist-card-bio">French artist who uses photography and large-scale installations to make powerful statements.</p>
-                        <div class="artist-card-stats">
-                            <div class="artist-card-stat">
-                                <i class="fas fa-paint-brush"></i> 78+ Artworks
-                            </div>
-                            <div class="artist-card-stat">
-                                <i class="fas fa-heart"></i> 22K Likes
-                            </div>
-                        </div>
-                        <div class="artist-card-tags">
-                            <span class="artist-card-tag">Photography</span>
-                            <span class="artist-card-tag">Installation</span>
-                            <span class="artist-card-tag">Social</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Artist 6 -->
-                <div class="artist-card">
-                    <div class="artist-card-img">
-                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Artist">
-                    </div>
-                    <div class="artist-card-content">
-                        <h3 class="artist-card-name">Swoon</h3>
-                        <div class="artist-card-location">
-                            <i class="fas fa-map-marker-alt"></i> New York, USA
-                        </div>
-                        <p class="artist-card-bio">American street artist known for her life-size wheatpaste prints and paper cutouts.</p>
-                        <div class="artist-card-stats">
-                            <div class="artist-card-stat">
-                                <i class="fas fa-paint-brush"></i> 55+ Artworks
-                            </div>
-                            <div class="artist-card-stat">
-                                <i class="fas fa-heart"></i> 14K Likes
-                            </div>
-                        </div>
-                        <div class="artist-card-tags">
-                            <span class="artist-card-tag">Wheatpaste</span>
-                            <span class="artist-card-tag">Portrait</span>
-                            <span class="artist-card-tag">Social</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Artist 7 -->
-                <div class="artist-card">
-                    <div class="artist-card-img">
-                        <img src="https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Artist">
-                    </div>
-                    <div class="artist-card-content">
-                        <h3 class="artist-card-name">Vhils</h3>
-                        <div class="artist-card-location">
-                            <i class="fas fa-map-marker-alt"></i> Lisbon, Portugal
-                        </div>
-                        <p class="artist-card-bio">Portuguese street artist known for his unique carving technique that transforms walls into portraits.</p>
-                        <div class="artist-card-stats">
-                            <div class="artist-card-stat">
-                                <i class="fas fa-paint-brush"></i> 68+ Artworks
-                            </div>
-                            <div class="artist-card-stat">
-                                <i class="fas fa-heart"></i> 16K Likes
-                            </div>
-                        </div>
-                        <div class="artist-card-tags">
-                            <span class="artist-card-tag">Carving</span>
-                            <span class="artist-card-tag">Portrait</span>
-                            <span class="artist-card-tag">Urban</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Artist 8 -->
-                <div class="artist-card">
-                    <div class="artist-card-img">
-                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Artist">
-                    </div>
-                    <div class="artist-card-content">
-                        <h3 class="artist-card-name">Blu</h3>
-                        <div class="artist-card-location">
-                            <i class="fas fa-map-marker-alt"></i> Bologna, Italy
-                        </div>
-                        <p class="artist-card-bio">Italian street artist known for his politically charged murals and stop-motion animations.</p>
-                        <div class="artist-card-stats">
-                            <div class="artist-card-stat">
-                                <i class="fas fa-paint-brush"></i> 92+ Artworks
-                            </div>
-                            <div class="artist-card-stat">
-                                <i class="fas fa-heart"></i> 28K Likes
-                            </div>
-                        </div>
-                        <div class="artist-card-tags">
-                            <span class="artist-card-tag">Mural</span>
-                            <span class="artist-card-tag">Political</span>
-                            <span class="artist-card-tag">Animation</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="pagination">
-                <a href="#" class="page-link active">1</a>
-                <a href="#" class="page-link">2</a>
-                <a href="#" class="page-link">3</a>
-                <a href="#" class="page-link">4</a>
-                <a href="#" class="page-link">5</a>
-                <a href="#" class="page-link"><i class="fas fa-chevron-right"></i></a>
-            </div>
+                @endif
+            @empty
+                <p>No artists found.</p>
+            @endforelse
         </div>
-    </section>
 
-    <!-- Featured Artist Section -->
-    <section class="section">
-        <div class="container">
-            <div class="featured-artist">
-                <div class="featured-artist-container">
-                    <div class="featured-artist-content">
-                        <span class="featured-artist-badge">Featured Artist</span>
-                        <h2>Banksy: The Anonymous Revolutionary</h2>
-                        <p>Explore the mysterious world of Banksy, the anonymous England-based street artist whose satirical and subversive works combine dark humor with graffiti executed in a distinctive stenciling technique.</p>
-                        <a href="#" class="btn btn-primary">Explore Banksy's Art</a>
-                    </div>
-                    <div class="featured-artist-image">
-                        <img src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Banksy Artwork">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        {{ $users->links() }}
+
+    </div>
+</section>
+
 
     <!-- Artist Spotlights Section -->
     <section class="section artist-spotlights">
@@ -412,78 +211,7 @@
 
     <!-- Footer - Same as main page -->
     <footer>
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-about">
-                    <a href="#" class="footer-logo">Street & <span>Ink</span></a>
-                    <p>The world's most comprehensive street art discovery platform. Documenting urban creativity since 2018.</p>
-                    <div style="display: flex; gap: 15px; margin-top: 20px;">
-                        <a href="#" style="color: var(--white); font-size: 1.2rem;"><i class="fab fa-instagram"></i></a>
-                        <a href="#" style="color: var(--white); font-size: 1.2rem;"><i class="fab fa-twitter"></i></a>
-                        <a href="#" style="color: var(--white); font-size: 1.2rem;"><i class="fab fa-facebook"></i></a>
-                        <a href="#" style="color: var(--white); font-size: 1.2rem;"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="footer-title">Explore</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Map</a></li>
-                        <li><a href="#">Street Art</a></li>
-                        <li><a href="#">Artists</a></li>
-                        <li><a href="#">Categories</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Events</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="footer-title">Community</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Guidelines</a></li>
-                        <li><a href="#">Submit Art</a></li>
-                        <li><a href="#">Forums</a></li>
-                        <li><a href="#">Meetups</a></li>
-                        <li><a href="#">Wall of Fame</a></li>
-                        <li><a href="#">Get Involved</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="footer-title">Company</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Press</a></li>
-                        <li><a href="#">Partners</a></li>
-                        <li><a href="#">Contact</a></li>
-                        <li><a href="#">FAQ</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="footer-title">Contact Us</h3>
-                    <ul class="footer-contact">
-                        <li>
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>123 Art Street, Creative District, CA 90210</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-envelope"></i>
-                            <span>hello@streetandink.com</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-phone"></i>
-                            <span>+1 (555) 123-4567</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2023 Street & Ink. All rights reserved. | <a href="#" style="color: var(--accent);">Privacy Policy</a> | <a href="#" style="color: var(--accent);">Terms of Service</a></p>
-            </div>
-        </div>
+    @include('footer')
     </footer>
 
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>

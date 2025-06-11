@@ -98,7 +98,7 @@
         }
 
         .form-header p {
-            color: var(--text-light);
+            color: var(--text);
         }
 
         .form-group {
@@ -272,7 +272,7 @@
 
         .terms {
             font-size: 0.9rem;
-            color: var(--text-light);
+            color: var(--text);
             margin-top: 20px;
         }
 
@@ -290,3 +290,39 @@
                 display: flex;
             }
         }
+
+/* Header container (optional spacing and layout) */
+.header-container {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+/* Logo link */
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #000; /* fallback text color */
+  gap: 10px;
+}
+
+/* Logo image */
+.logo-img {
+  height: 40px; /* adjust to your preferred size */
+  width: auto;
+  object-fit: contain;
+}
+
+/* Logo text */
+.logo-text {
+  font-size: 500rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Stylized "Ink" part */
+.logo-text .accent {
+  color: #e63946; /* or your brand color */
+}
+

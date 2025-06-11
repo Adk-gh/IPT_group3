@@ -14,32 +14,44 @@
 <body>
     <header id="header">
         <div class="container header-container">
-            <a href="{{ route('home') }}" class="logo">
-                <i class="fas fa-spray-can"></i>Street & <span>Ink</span>
-            </a>
+            <a href="{{ route('home') }}" class="logo" >
+                    <img src="img/SI.png" alt="Street & Ink Logo" style="width: 40px; height: 40px; margin-right: 10px;" class="logo-img">
+                    Street & <span>Ink</span>
+                </a>
             <div class="header-right">
                 <nav id="nav">
                     <ul>
 
-                        <li class="theme-toggle-container">
-                            <button class="theme-toggle" id="themeToggle">
-                                <i class="fas fa-moon"></i>
-                            </button>
-                        </li>
+
                         @auth
                          <li><a href="{{ route('social_feed') }}">Social Feed</a></li>
                         <li><a href="{{ route('articles') }}">Articles</a></li>
                         <li><a href="{{ route('artist') }}">Artists</a></li>
                         <li><a href="{{ route('contact') }}">Contact</a></li>
                         <li><a href="{{ route('aboutus') }}">About</a></li>
+
+                       <li class="theme-toggle-container">
+                            <button class="theme-toggle" id="themeToggle">
+                                <i class="fas fa-moon"></i>
+                            </button>
+                        </li>
+                        <!--<li class="notification-container">
+                            <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                        </li>
+                    -->
+
                         <li class="profile-container">
                             <button class="profile-btn">
-                                <img src="{{ Auth::user()->profile_photo_url ?? 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->name).'&color=FFFFFF&background=FF5E5B' }}" alt="Profile" class="profile-img">
+                                <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : 'img/default.jpg' }}" alt="Profile" class="profile-img">
                                 <span>{{ Auth::user()->name }}</span>
                             </button>
                             <div class="profile-dropdown">
-                                <a href="{{ route('profile') }}"><i class="fas fa-user-circle mr-2"></i> My Profile</a>
+
                                  <a href="{{ route('profile') }}"><i class="fas fa-user-cog mr-2"></i> Manage Profile</a>
+
                                 <div class="divider"></div>
                                 @auth
                                     @if(Auth::user()->email === 'admin@gmail.com')

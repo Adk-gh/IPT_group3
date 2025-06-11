@@ -2,27 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Street & Ink | Discover Street Art Near You</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-      <!-- Inside <head> -->
-<link href="{{ asset('css/loading.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
+    <link href="{{ asset('css/loading.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     <script src="{{ asset('js/index.js') }}"></script>
-
+    <!-- Add this to both files -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <header id="header">
+            @include('header')
+        </header>
 </head>
 <body>
     <!-- Header -->
-    <header id="header">
-       @include('header')
 
-    </header>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -30,14 +40,14 @@
             <h1>Explore the Streets, One Wall at a Time</h1>
             <p>Discover and share the most vibrant street art from around the world. Join our community of urban art enthusiasts and creators.</p>
             <div class="hero-btns">
-                <a href="{{ route('register') }}" class="btn btn-primary btn-large" id="ajax-link">Get Started</a>
-                <a href="{{ route('register') }}" class="btn btn-secondary btn-large">Learn More</a>
+                <a href="{{ route('social_feed') }}" class="btn btn-primary btn-large" id="ajax-link">Get Started</a>
+                <a href="{{ route('aboutus') }}" class="btn btn-secondary btn-large">Learn More</a>
             </div>
             <div class="search-container">
                 <input type="text" class="search-input" placeholder="Search by city, neighborhood or artist...">
                 <button class="search-btn">Search</button>
             </div>
-            <a href="{{ route('register') }}" class="location-btn">
+            <a href="#map" class="location-btn">
                 <i class="fas fa-location-arrow"></i> Find Art Near Me
             </a>
         </div>
@@ -50,244 +60,52 @@
             <h2 class="section-title">Interactive Street Art Map</h2>
             <p class="text-center" style="margin-bottom: 2rem;">Explore thousands of street art locations around the world. Click on markers to discover new artworks.</p>
             <div class="map-container">
-                <div id="streetArtMap"></div>
+               <div id="streetArtMap" style="height: 500px;"></div>
                 <div class="map-overlay">
                     <h3>San Pablo City Street Art</h3>
                     <p>Discover over 1,200 documented street artworks in City Of Seven Lakes.</p>
-                    <a href="{{ route('register') }}" class="btn btn-primary">View Full Map</a>
+                   <a href="#" class="btn btn-primary" id="viewFullMapBtn">View Full Map</a>
                 </div>
             </div>
         </div>
     </section>
 
-
-    <!-- Featured Street Art Section -->
-    <section class="section" id="art">
-        <div class="container">
-            <h2 class="section-title">Featured Street Art</h2>
-            <p class="text-center" style="margin-bottom: 3rem;">Discover the most popular and recent additions to our growing collection.</p>
-
-            <div class="art-tabs">
-                <div class="art-tab active">Most Liked</div>
-                <div class="art-tab">Recently Added</div>
-                <div class="art-tab">Hidden Gems</div>
-            </div>
-
-            <div class="art-grid">
-                <!-- Artwork 1 -->
-                <div class="art-card">
-                    <div class="art-card-img">
-                        <img src="img/pexels-vincent-gerbouin-445991-2263686.jpg" alt="Street Art">
-                    </div>
-                    <div class="art-card-content">
-                        <h3 class="art-card-title">Urban Dreams</h3>
-                        <div class="art-card-artist">
-                            <i class="fas fa-user"></i> Banksy (unconfirmed)
-                        </div>
-                        <div class="art-card-location">
-                            <i class="fas fa-map-marker-alt"></i> Shoreditch, London
-                        </div>
-                        <div class="art-card-tags">
-                            <span class="art-card-tag">Stencil</span>
-                            <span class="art-card-tag">Political</span>
-                            <span class="art-card-tag">Iconic</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Artwork 2 -->
-                <div class="art-card">
-                    <div class="art-card-img">
-                        <img src="img/pexels-conojeghuo-173301.jpg" alt="Street Art">
-                    </div>
-                    <div class="art-card-content">
-                        <h3 class="art-card-title">Color Explosion</h3>
-                        <div class="art-card-artist">
-                            <i class="fas fa-user"></i> Maya Hayuk
-                        </div>
-                        <div class="art-card-location">
-                            <i class="fas fa-map-marker-alt"></i> Williamsburg, NYC
-                        </div>
-                        <div class="art-card-tags">
-                            <span class="art-card-tag">Mural</span>
-                            <span class="art-card-tag">Abstract</span>
-                            <span class="art-card-tag">Colorful</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Artwork 3 -->
-                <div class="art-card">
-                    <div class="art-card-img">
-                        <img src="img/pexels-fernando-dos-santos-campos-1309016-2510245.jpg" alt="Street Art">
-                    </div>
-                    <div class="art-card-content">
-                        <h3 class="art-card-title">The Thinker</h3>
-                        <div class="art-card-artist">
-                            <i class="fas fa-user"></i> Unknown Artist
-                        </div>
-                        <div class="art-card-location">
-                            <i class="fas fa-map-marker-alt"></i> Berlin, Germany
-                        </div>
-                        <div class="art-card-tags">
-                            <span class="art-card-tag">Portrait</span>
-                            <span class="art-card-tag">Monochrome</span>
-                            <span class="art-card-tag">Thought-provoking</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Artwork 4 -->
-                <div class="art-card">
-                    <div class="art-card-img">
-                        <img src="/resources/views/img/pexels-heftiba-1194420.jpg" alt="Street Art">
-                    </div>
-                    <div class="art-card-content">
-                        <h3 class="art-card-title">Neon Dreams</h3>
-                        <div class="art-card-artist">
-                            <i class="fas fa-user"></i> D*Face
-                        </div>
-                        <div class="art-card-location">
-                            <i class="fas fa-map-marker-alt"></i> Downtown LA
-                        </div>
-                        <div class="art-card-tags">
-                            <span class="art-card-tag">Pop Art</span>
-                            <span class="art-card-tag">Neon</span>
-                            <span class="art-card-tag">Night View</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Artwork 5 -->
-                <div class="art-card">
-                    <div class="art-card-img">
-                        <img src="img/pexels-tobiasbjorkli-2119706.jpg" alt="Street Art">
-                    </div>
-                    <div class="art-card-content">
-                        <h3 class="art-card-title">Abstract Flow</h3>
-                        <div class="art-card-artist">
-                            <i class="fas fa-user"></i> Felipe Pantone
-                        </div>
-                        <div class="art-card-location">
-                            <i class="fas fa-map-marker-alt"></i> Wynwood, Miami
-                        </div>
-                        <div class="art-card-tags">
-                            <span class="art-card-tag">Abstract</span>
-                            <span class="art-card-tag">Geometric</span>
-                            <span class="art-card-tag">Optical</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Artwork 6 -->
-                <div class="art-card">
-                    <div class="art-card-img">
-                        <img src="img/pexels-arantxa-treva-351075-959314.jpg" alt="Street Art">
-                    </div>
-                    <div class="art-card-content">
-                        <h3 class="art-card-title">Cultural Fusion</h3>
-                        <div class="art-card-artist">
-                            <i class="fas fa-user"></i> Shepard Fairey
-                        </div>
-                        <div class="art-card-location">
-                            <i class="fas fa-map-marker-alt"></i> Little Tokyo, LA
-                        </div>
-                        <div class="art-card-tags">
-                            <span class="art-card-tag">Cultural</span>
-                            <span class="art-card-tag">Portrait</span>
-                            <span class="art-card-tag">Social</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center" style="margin-top: 50px;">
-                <a href="{{ route('social_feed') }}" class="btn btn-primary">View All Artworks</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Artist Spotlight Section -->
+<!-- Artists Section -->
     <section class="section artists" id="artists">
         <div class="container">
-            <h2 class="section-title">Artist Spotlights</h2>
-            <p class="text-center">Discover the talented individuals behind the urban masterpieces.</p>
-
-            <div class="artist-grid">
-                <!-- Artist 1 -->
-                <div class="artist-card">
-                    <div class="artist-card-img">
-                        <img src="https://images.unsplash.com/photo-1542103749-8ef59b94f47e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" alt="Artist">
-                    </div>
-                    <div class="artist-card-content">
-                        <h3 class="artist-card-name">Banksy</h3>
-                        <div class="artist-card-style">Stencil Art, Political</div>
-                        <p class="artist-card-bio">Anonymous England-based street artist known for his satirical and subversive work.</p>
-                        <div class="artist-social">
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fas fa-globe"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Artist 2 -->
-                <div class="artist-card">
-                    <div class="artist-card-img">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1374&q=80" alt="Artist">
-                    </div>
-                    <div class="artist-card-content">
-                        <h3 class="artist-card-name">Shepard Fairey</h3>
-                        <div class="artist-card-style">Stencil, Screen Printing</div>
-                        <p class="artist-card-bio">American street artist, graphic designer, and founder of OBEY Clothing.</p>
-                        <div class="artist-social">
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fas fa-globe"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Artist 3 -->
-                <div class="artist-card">
-                    <div class="artist-card-img">
-                        <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1374&q=80" alt="Artist">
-                    </div>
-                    <div class="artist-card-content">
-                        <h3 class="artist-card-name">Maya Hayuk</h3>
-                        <div class="artist-card-style">Abstract, Colorful</div>
-                        <p class="artist-card-bio">Known for her large-scale, symmetrical murals featuring vibrant colors and patterns.</p>
-                        <div class="artist-social">
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fas fa-globe"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Artist 4 -->
-                <div class="artist-card">
-                    <div class="artist-card-img">
-                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1374&q=80" alt="Artist">
-                    </div>
-                    <div class="artist-card-content">
-                        <h3 class="artist-card-name">Felipe Pantone</h3>
-                        <div class="artist-card-style">Optical, Digital</div>
-                        <p class="artist-card-bio">Argentinian-Spanish artist known for his vibrant, geometric works exploring digital themes.</p>
-                        <div class="artist-social">
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fas fa-globe"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center" style="margin-top: 50px;">
-                <a href="{{ route('artist') }}" class="btn btn-primary">View All Artists</a>
-            </div>
+            <h2 class="section-title">Featured Artists</h2>
+            <p class="text-center">Meet the creative minds behind the art. Discover their styles, stories, and contributions to the street art scene.</p>
         </div>
     </section>
+<div class="artist-grid">
+    @forelse ($users as $user)
+        <div class="artist-card">
+            <div class="artist-card-img">
+                <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('img/default.jpg') }}" alt="User Avatar">
+            </div>
+            <div class="artist-card-content">
+                <h3 class="artist-card-name">{{ $user->name }}</h3>
+                <h4 class="artist-card-username">{{ $user->username }}</h4>
+                <div class="artist-card-style">{{ $user->style ?? 'Unknown Style' }}</div>
+                <p class="artist-card-bio">{{ $user->bio ?? 'No bio available.' }}</p>
+                <div class="artist-social">
+                    @if($user->instagram) <a href="{{ $user->instagram }}" target="_blank"><i class="fab fa-instagram"></i></a> @endif
+                    @if($user->twitter) <a href="{{ $user->twitter }}" target="_blank"><i class="fab fa-twitter"></i></a> @endif
+                    @if($user->website) <a href="{{ $user->website }}" target="_blank"><i class="fas fa-globe"></i></a> @endif
+                </div>
+            </div>
+        </div>
+    @empty
+        <p>No artists found.</p>
+    @endforelse
+</div>
+<!-- Post Modal -->
+<div id="postModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+  <div id="modalContent" class="bg-white rounded-lg p-4 max-w-md w-full"></div>
+</div>
+
+
+
 
     <!-- Categories Section -->
     <section class="section" id="categories">
@@ -558,6 +376,24 @@
     <footer>
     @include('footer')
     </footer>
+<script>
+    const postsWithLocation = [
+        @foreach ($posts as $post)
+            @if ($post->latitude && $post->longitude)
+                {
+                    id: {{ $post->id }},
+                    title: @json($post->caption ?? 'Untitled'),
+                    latitude: {{ $post->latitude }},
+                    longitude: {{ $post->longitude }},
+                    location_name: @json($post->location_name ?? ''),
+                    image_url: @json($post->image_url ? asset('storage/' . $post->image_url) : null),
+                },
+            @endif
+        @endforeach
+    ];
+</script>
+
+
 
     <script src="https://unpkg.com/leaflet.js"></script>
 

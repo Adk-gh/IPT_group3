@@ -19,10 +19,10 @@
                     <a href="#" class="footer-logo">Street & <span>Ink</span></a>
                     <p>The world's most comprehensive street art discovery platform. Documenting urban creativity since 2018.</p>
                     <div class="footer-social-links">
-                        <a href="#" title="Instagram" aria-label="Visit our Instagram page"><i class="fab fa-instagram"></i></a>
-                        <a href="#" title="Twitter" aria-label="Visit our Twitter page"><i class="fab fa-twitter"></i></a>
-                        <a href="#" title="Facebook" aria-label="Visit our Facebook page"><i class="fab fa-facebook"></i></a>
-                        <a href="#" title="YouTube" aria-label="Visit our YouTube page"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.instagram.com/streetandink/" title="Instagram" aria-label="Visit our Instagram page"><i class="fab fa-instagram"></i></a>
+                        <a href="https://x.com/streetandink" title="Twitter" aria-label="Visit our Twitter page"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.tiktok.com/@streetandink" title="TikTok" aria-label="Visit our TikTok page"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61577181927094" title="YouTube" aria-label="Visit our YouTube page"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
 

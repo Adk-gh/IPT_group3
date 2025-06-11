@@ -233,58 +233,136 @@
             });
         });
 
-// Profile Cover Photo and Bio Edit Functionality
 document.addEventListener('DOMContentLoaded', () => {
-  // Elements for cover photo
-  const coverEditBtn = document.getElementById('coverEditBtn');
-  const coverEditForm = document.getElementById('coverEditForm');
-  const cancelCoverEdit = document.getElementById('cancelCoverEdit');
+  // Overlay element for all edit forms
+  const overlay = document.createElement('div');
+  overlay.className = 'edit-form-overlay';
+  document.body.appendChild(overlay);
+
+  // Helper: Toggle form visibility with overlay and buttons
+  function setupToggle(editBtnId, formId, cancelBtnId) {
+    const editBtn = document.getElementById(editBtnId);
+    const form = document.getElementById(formId);
+    const cancelBtn = document.getElementById(cancelBtnId);
+    if (!editBtn || !form || !cancelBtn) return;
+
+    const showForm = () => {
+      form.classList.add('edit-form-active');
+      overlay.classList.add('active');
+      editBtn.style.display = 'none';
+    };
+
+    const hideForm = () => {
+      form.classList.remove('edit-form-active');
+      overlay.classList.remove('active');
+      editBtn.style.display = 'inline-block';
+    };
+
+    editBtn.addEventListener('click', showForm);
+    cancelBtn.addEventListener('click', hideForm);
+    overlay.addEventListener('click', hideForm);
+
+    // Optional: close form on submit
+    const innerForm = form.querySelector('form');
+    if (innerForm) {
+      innerForm.addEventListener('submit', (e) => {
+        // You can handle AJAX here or just close UI
+        hideForm();
+      });
+    }
+  }
+
+  // Setup toggles for all edit buttons/forms
+  setupToggle('editNameBtn', 'nameEditForm', 'cancelNameEdit');
+  setupToggle('editBioBtn', 'bioEditForm', 'cancelBioEdit');
+  setupToggle('editLocationBtn', 'locationEditForm', 'cancelLocationEdit');
+  setupToggle('coverEditBtn', 'coverEditForm', 'cancelCoverEdit');
+
+  // Specific elements for cover photo AJAX upload
   const coverPhotoForm = document.getElementById('coverPhotoForm');
   const bannerImage = document.getElementById('bannerImage');
 
-  // Elements for bio
-  const editBioBtn = document.getElementById('editBioBtn');
-  const bioEditForm = document.getElementById('bioEditForm');
-  const cancelBioEdit = document.getElementById('cancelBioEdit');
+  if (coverPhotoForm) {
+    coverPhotoForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(coverPhotoForm);
+
+      try {
+        const response = await fetch('{{ route("user.cover.update") }}', {
+          method: 'POST',
+          headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+          },
+          body: formData,
+        });
+
+        if (!response.ok) throw new Error('Upload failed');
+
+        const data = await response.json();
+        if (bannerImage && data.cover_photo_url) {
+          bannerImage.src = data.cover_photo_url;
+        }
+      } catch (error) {
+        alert('Failed to upload cover photo');
+        console.error(error);
+      }
+    });
+  }
+
+  // Specific elements for bio AJAX update
   const bioForm = document.getElementById('bioForm');
-  const profileBio = document.getElementById('profileBio');
   const bioTextarea = document.getElementById('bioTextarea');
+  const profileBio = document.getElementById('profileBio');
 
-  // Toggle cover photo form
-  coverEditBtn.addEventListener('click', () => {
-    coverEditForm.style.display = 'block';
-    coverEditBtn.style.display = 'none';
+  if (bioForm && bioTextarea && profileBio) {
+    bioForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const bioText = bioTextarea.value.trim();
+
+      try {
+        const response = await fetch('{{ route("user.bio.update") }}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+          },
+          body: JSON.stringify({ bio: bioText }),
+        });
+
+        if (!response.ok) throw new Error('Update failed');
+
+        const data = await response.json();
+        profileBio.textContent = data.bio;
+      } catch (error) {
+        alert('Failed to update bio');
+        console.error(error);
+      }
+    });
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const avatarInput = document.getElementById('avatarInput');
+  const avatarForm = document.getElementById('avatarForm');
+  const avatarImage = document.getElementById('avatarImage');
+  const editAvatarBtn = document.getElementById('editAvatarBtn');
+
+  // Open file picker
+  editAvatarBtn.addEventListener('click', () => {
+    avatarInput.click();
   });
 
-  cancelCoverEdit.addEventListener('click', () => {
-    coverEditForm.style.display = 'none';
-    coverEditBtn.style.display = 'inline-block';
-  });
+  // Submit avatar form when file is selected
+  avatarInput.addEventListener('change', async () => {
+    if (!avatarInput.files.length) return;
 
-  // Toggle bio edit form
-  editBioBtn.addEventListener('click', () => {
-    bioEditForm.style.display = 'block';
-    editBioBtn.style.display = 'none';
-    profileBio.style.display = 'none';
-  });
-
-  cancelBioEdit.addEventListener('click', () => {
-    bioEditForm.style.display = 'none';
-    editBioBtn.style.display = 'inline-block';
-    profileBio.style.display = 'block';
-  });
-
-  // Submit cover photo form via AJAX
-  coverPhotoForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(coverPhotoForm);
+    const formData = new FormData(avatarForm);
 
     try {
-      const response = await fetch('{{ route("user.cover.update") }}', { // change to your route
+      const response = await fetch('{{ route("user.avatar.update") }}', {
         method: 'POST',
         headers: {
-          'X-CSRF-TOKEN': '{{ csrf_token() }}'
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
         },
         body: formData
       });
@@ -292,46 +370,213 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!response.ok) throw new Error('Upload failed');
 
       const data = await response.json();
-      // Update the cover photo src with new photo URL returned by backend
-      bannerImage.src = data.cover_photo_url;
-
-      coverEditForm.style.display = 'none';
-      coverEditBtn.style.display = 'inline-block';
+      avatarImage.src = data.avatar_url;
 
     } catch (error) {
-      alert('Failed to upload cover photo');
+      alert('Failed to update avatar');
       console.error(error);
     }
   });
+});
+document.addEventListener('DOMContentLoaded', () => {
+    // Cover Photo Edit Functionality
+    const coverEditBtn = document.getElementById('coverEditBtn');
+    const coverEditForm = document.getElementById('coverEditForm');
+    const cancelCoverEdit = document.getElementById('cancelCoverEdit');
+    const bannerImage = document.getElementById('bannerImage');
+    const coverPhotoInput = document.getElementById('coverPhotoInput');
+    const coverPhotoForm = document.getElementById('coverPhotoForm');
+    const coverPreview = document.getElementById('coverPreview');
+    const overlay = document.querySelector('.edit-form-overlay');
 
-  // Submit bio form via AJAX
-  bioForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+    if (coverEditBtn && coverEditForm) {
+        // Show edit form
+        coverEditBtn.addEventListener('click', () => {
+            coverEditForm.style.display = 'block';
+            overlay.style.display = 'block';
+        });
 
-    const bioText = bioTextarea.value.trim();
+        // Hide edit form
+        cancelCoverEdit.addEventListener('click', () => {
+            coverEditForm.style.display = 'none';
+            overlay.style.display = 'none';
+            coverPreview.style.display = 'none';
+            coverPhotoInput.value = '';
+        });
 
-    try {
-      const response = await fetch('{{ route("user.bio.update") }}', { // change to your route
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({ bio: bioText })
-      });
+        overlay.addEventListener('click', () => {
+            coverEditForm.style.display = 'none';
+            overlay.style.display = 'none';
+            coverPreview.style.display = 'none';
+            coverPhotoInput.value = '';
+        });
 
-      if (!response.ok) throw new Error('Update failed');
+        // Preview cover photo when selected
+        coverPhotoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    coverPreview.src = event.target.result;
+                    coverPreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
 
-      const data = await response.json();
-      profileBio.textContent = data.bio;
+        // Handle cover photo form submission
+        coverPhotoForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-      bioEditForm.style.display = 'none';
-      editBioBtn.style.display = 'inline-block';
-      profileBio.style.display = 'block';
+            const formData = new FormData(coverPhotoForm);
 
-    } catch (error) {
-      alert('Failed to update bio');
-      console.error(error);
+            try {
+                const response = await fetch('/profile/update-cover', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Update the banner image
+                    bannerImage.src = data.cover_url;
+
+                    // Hide the form and reset
+                    coverEditForm.style.display = 'none';
+                    overlay.style.display = 'none';
+                    coverPreview.style.display = 'none';
+                    coverPhotoInput.value = '';
+
+                    showToast('Cover photo updated successfully!');
+                } else {
+                    throw new Error(data.message || 'Failed to update cover photo');
+                }
+            } catch (error) {
+                console.error('Error updating cover photo:', error);
+                showToast(error.message || 'Failed to update cover photo');
+            }
+        });
     }
-  });
+
+    // Toast notification function
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 100);
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 3000);
+    }
+});
+// Profile Actions Dropdown
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Bootstrap dropdown
+    $('.dropdown-toggle').dropdown();
+
+    document.getElementById('profileActionsDropdown').addEventListener('click', function(event) {
+    event.preventDefault();
+    const dropdownMenu = this.nextElementSibling;
+    dropdownMenu.classList.toggle('show');
+});
+
+    // Edit Profile Button Click
+    document.getElementById('editProfileBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        $('#editProfileModal').modal('show');
+    });
+
+    // Save Profile Changes
+    document.getElementById('saveProfileChanges').addEventListener('click', function() {
+        const form = document.getElementById('profileEditForm');
+        const formData = new FormData(form);
+
+        fetch('/profile/update', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update the profile info on the page
+                if (data.name) {
+                    document.getElementById('profileName').textContent = data.name;
+                }
+                if (data.bio) {
+                    document.getElementById('profileBio').textContent = data.bio;
+                }
+                if (data.location) {
+                    document.getElementById('profileLocation').textContent = data.location;
+                }
+                if (data.avatar) {
+                    document.getElementById('avatarImage').src = data.avatar;
+                }
+                if (data.cover_photo) {
+                    document.getElementById('bannerImage').src = data.cover_photo;
+                }
+
+                // Close the modal
+                $('#editProfileModal').modal('hide');
+
+                // Show success message
+                alert('Profile updated successfully!');
+            } else {
+                alert('Failed to update profile: ' + (data.message || 'Please try again.'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while updating the profile.');
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all dropdowns
+    var dropdownElements = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+    dropdownElements.map(function (dropdownToggleEl) {
+        return new bootstrap.Dropdown(dropdownToggleEl);
+    });
+
+    // Edit Profile button click handler
+    document.getElementById('editProfileBtn')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        var editModal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+        editModal.show();
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const editBtn = document.getElementById('editProfileBtn');
+    const modal = document.getElementById('editModal');
+
+    if (editBtn && modal) {
+        editBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            modal.style.display = 'block';
+        });
+    }
+
+    // Optional: Close modal when clicking outside or on close button
+    document.querySelectorAll('.modal-close').forEach(btn => {
+        btn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    });
 });

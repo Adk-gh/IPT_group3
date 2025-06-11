@@ -98,7 +98,7 @@
         }
 
         .form-header p {
-            color: var(--text-light);
+            color: var(--text);
         }
 
         .form-group {
@@ -181,6 +181,7 @@
             color: var(--accent-dark);
         }
 
+
         .divider {
             display: flex;
             align-items: center;
@@ -243,6 +244,7 @@
             font-size: 1.2rem;
             max-width: 400px;
             margin-bottom: 30px;
+
         }
 
         .forgot-link {

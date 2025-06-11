@@ -4,10 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Street & Ink | Admin Dashboard</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+        <!-- chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <link href="{{ asset('css/admin-dashboard.css') }}" rel="stylesheet">
     <script src="{{ asset('js/admin-dashboard.js') }}" defer></script>
       <!-- Inside <head> -->
@@ -27,20 +36,16 @@
                     <i class="fas fa-users"></i>
                 </div>
                 <div class="stat-title">Total Users</div>
-                <div class="stat-value">8,742</div>
-                <div class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> 12.5% from last month
-                </div>
+                <div class="stat-value">{{ number_format(App\Models\User::count()) }}</div>
+
             </div>
             <div class="stat-card">
                 <div class="stat-icon art">
                     <i class="fas fa-paint-brush"></i>
                 </div>
                 <div class="stat-title">Artworks Uploaded</div>
-                <div class="stat-value">25,189</div>
-                <div class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> 8.3% from last month
-                </div>
+                <div class="stat-value">{{ number_format(App\Models\Post::count()) }}</div>
+
             </div>
             <div class="stat-card">
                 <div class="stat-icon locations">
@@ -48,9 +53,7 @@
                 </div>
                 <div class="stat-title">Tagged Locations</div>
                 <div class="stat-value">3,456</div>
-                <div class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> 5.1% from last month
-                </div>
+
             </div>
             <div class="stat-card">
                 <div class="stat-icon reports">
@@ -82,7 +85,26 @@
                     <i class="fas fa-arrow-up"></i> 15.2% from last week
                 </div>
             </div>
+
+
         </div>
+
+        <div class="dashboard-graphs">
+
+<!-- Add graph containers -->
+    <div class="graph-container">
+        <canvas id="userGrowthChart"></canvas>
+    </div>
+
+    <div class="graph-container">
+        <canvas id="artworkUploadsChart"></canvas>
+    </div>
+
+    <div class="graph-container">
+        <canvas id="monthlyUploadsChart"></canvas>
+    </div>
+</div>
+
 
         <!-- Recent Activity -->
         <div class="recent-activity">

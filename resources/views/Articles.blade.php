@@ -2,14 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>All Articles | Street & Ink</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-       <link href="{{ asset('css/articles.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/articles.css') }}" rel="stylesheet">
     <script src="{{ asset('js/articles.js') }}"></script>
-      <!-- Inside <head> -->
-<link href="{{ asset('css/loading.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/loading.css') }}" rel="stylesheet">
+
 </head>
 <body>
     <!-- Fixed Header -->
@@ -380,57 +385,7 @@
 
     <!-- Footer -->
     <footer>
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-about">
-                    <a href="#" class="footer-logo">Street & <span>Ink</span></a>
-                    <p>The world's most comprehensive street art discovery platform. Documenting urban creativity since 2018.</p>
-                    <div style="display: flex; gap: 15px; margin-top: 20px;">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="footer-title">Explore</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Map</a></li>
-                        <li><a href="#">Street Art</a></li>
-                        <li><a href="#">Artists</a></li>
-                        <li><a href="#">Articles</a></li>
-                        <li><a href="#">Events</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="footer-title">Community</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Guidelines</a></li>
-                        <li><a href="#">Submit Art</a></li>
-                        <li><a href="#">Forums</a></li>
-                        <li><a href="#">Meetups</a></li>
-                        <li><a href="#">Get Involved</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="footer-title">Company</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Press</a></li>
-                        <li><a href="#">Contact</a></li>
-                        <li><a href="#">FAQ</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2023 Street & Ink. All rights reserved. | <a href="#" style="color: var(--accent);">Privacy Policy</a> | <a href="#" style="color: var(--accent);">Terms of Service</a></p>
-            </div>
-        </div>
+    @include('footer')
     </footer>
 
 

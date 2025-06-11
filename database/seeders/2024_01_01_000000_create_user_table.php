@@ -17,6 +17,16 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+
+            // Additional profile fields (all nullable)
+            $table->string('profile_picture')->nullable();
+            $table->string('cover_photo')->nullable();
+            $table->text('bio')->nullable();
+            $table->string('website')->nullable();
+            $table->string('location')->nullable();
+            $table->date('birthdate')->nullable();
+            $table->string('phone')->nullable();
+
             $table->timestamps();
         });
     }

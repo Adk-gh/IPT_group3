@@ -2,8 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Contact Us | Street & Ink</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -141,61 +146,8 @@
     </section>
 
     <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-about">
-                    <a href="#" class="footer-logo">Street & <span>Ink</span></a>
-                    <p>The world's most comprehensive street art discovery platform. Documenting urban creativity since 2018.</p>
-                    <div style="display: flex; gap: 15px; margin-top: 20px;">
-                        <a href="#" style="color: var(--white); font-size: 1.2rem;"><i class="fab fa-instagram"></i></a>
-                        <a href="#" style="color: var(--white); font-size: 1.2rem;"><i class="fab fa-twitter"></i></a>
-                        <a href="#" style="color: var(--white); font-size: 1.2rem;"><i class="fab fa-facebook"></i></a>
-                        <a href="#" style="color: var(--white); font-size: 1.2rem;"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="footer-title">Explore</h3>
-                    <ul class="footer-links">
-                        <li><a href="index.php#map">Map</a></li>
-                        <li><a href="index.php#art">Street Art</a></li>
-                        <li><a href="index.php#artists">Artists</a></li>
-                        <li><a href="index.php#categories">Categories</a></li>
-                        <li><a href="S&1Articles.php">Blog</a></li>
-                        <li><a href="#">Events</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="footer-title">Community</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Guidelines</a></li>
-                        <li><a href="#">Submit Art</a></li>
-                        <li><a href="#">Forums</a></li>
-                        <li><a href="#">Meetups</a></li>
-                        <li><a href="#">Wall of Fame</a></li>
-                        <li><a href="#">Get Involved</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="footer-title">Company</h3>
-                    <ul class="footer-links">
-                        <li><a href="index.php#about">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Press</a></li>
-                        <li><a href="#">Partners</a></li>
-                        <li><a href="#">Contact</a></li>
-                        <li><a href="#">FAQ</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2023 Street & Ink. All rights reserved. | <a href="#" style="color: var(--accent);">Privacy Policy</a> | <a href="#" style="color: var(--accent);">Terms of Service</a></p>
-            </div>
-        </div>
+   <footer>
+    @include('footer')
     </footer>
 
 <!-- Before closing </body> -->
