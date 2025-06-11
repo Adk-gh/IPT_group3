@@ -158,20 +158,22 @@ class AuthController extends Controller
 
 public function socialFeed()
 {
-    // Load all original posts
-    $originalPosts = Post::with(['user', 'tags', 'comments.user'])
+    // Original posts with likes count
+    $originalPosts = Post::withCount('likes')
+        ->with(['user', 'tags', 'comments.user'])
         ->latest()
         ->get();
 
-    // Load all shared posts, including their original post and relationships
-   $sharedPosts = SharedPost::with(['user', 'post.user', 'post.tags', 'post.comments.user'])
-       ->latest()
-       ->get();
+    // Shared posts with likes count
+    $sharedPosts = SharedPost::withCount('likes')
+        ->with(['user', 'comments.user', 'post.user', 'post.tags'])
+        ->latest()
+        ->get();
 
-    // Merge both types of posts into one collection and sort by creation time
+    // Merge and sort all posts (original + shared)
     $allPosts = $originalPosts->concat($sharedPosts)->sortByDesc('created_at');
 
-    // Paginate the merged result manually
+    // Manual pagination
     $perPage = 10;
     $currentPage = request()->get('page', 1);
     $paginatedPosts = new LengthAwarePaginator(
@@ -182,18 +184,18 @@ public function socialFeed()
         ['path' => request()->url(), 'query' => request()->query()]
     );
 
-     $tags = Tag::all();
-
-
-    // Load trending tags and user post count
+    // Load extra data
+    $tags = Tag::all();
     $trendingTags = Tag::orderByDesc('usage_count')->take(10)->get();
-    $artworksCount = auth()->check() ? Post::where('user_id', auth()->id())->count() : 0;
+    $artworksCount = auth()->check()
+        ? Post::where('user_id', auth()->id())->count()
+        : 0;
 
     return view('SocialFeed', [
-        'posts' => $paginatedPosts, // this now contains both original and shared posts
+        'posts' => $paginatedPosts,
+        'tags' => $tags,
         'trendingTags' => $trendingTags,
         'artworksCount' => $artworksCount,
-        'tags' => $tags,
     ]);
 }
 
@@ -237,7 +239,8 @@ public function socialFeed()
     // Homepage
     public function index()
     {
-        $posts = Post::with(['user', 'tags'])
+
+        $posts = Post::with(['user', 'tags', 'comments.user', 'likes', 'sharedPosts.user', 'sharedPosts.comments.user'])
             ->latest()
             ->paginate(10);
 
@@ -320,4 +323,6 @@ public function socialFeed()
     {
         return view('Contact');
     }
+
+
 }

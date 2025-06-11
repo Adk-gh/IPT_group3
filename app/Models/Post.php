@@ -36,10 +36,13 @@ class Post extends Model
 
 
     // One-to-many with Like
-    public function likes()
-    {
-        return $this->hasMany(Like::class);
-    }
+   
+public function comments()
+{
+    return $this->morphMany(Comment::class, 'commentable');
+}
+
+
 
     // Many-to-many with User (saved posts)
     public function savers()
@@ -52,10 +55,22 @@ class Post extends Model
     }
 
     // Check if the authenticated user has liked the post
-    public function isLikedByUser()
-    {
-        return $this->likes()->where('user_id', auth()->id())->exists();
+   // In Post.php and SharedPost.php
+public function likes()
+{
+    return $this->morphMany(Like::class, 'likeable');
+}
+
+public function isLikedByUser()
+{
+    if (!auth()->check()) {
+        return false;
     }
+
+    return $this->likes()
+        ->where('user_id', auth()->id())
+        ->exists();
+}
     public function userInfo()
     {
         return $this->belongsTo(UserInfo::class, 'user_id', 'user_id');
@@ -124,11 +139,6 @@ public function isSavedByUser($userId)
         return $this->hasMany(Comment::class, 'post_id');
     }
 
-    // Combined comments (for eager loading)
-    public function comments()
-{
-    return $this->morphMany(Comment::class, 'commentable');
-}
 
 
     // Accessor for all comments (legacy and polymorphic)
@@ -151,4 +161,6 @@ public function isSavedByUser($userId)
 {
     return $this->hasMany(PostReport::class);
 }
+
+
 }

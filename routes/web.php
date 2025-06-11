@@ -126,4 +126,8 @@ Route::post('/change-language', function (Request $request) {
 
 Route::get('/dashboard/chart-data', [AdminController::class, 'chartData']);
 
-?>
+Route::post('/likes/toggle', [LikeController::class, 'toggle'])->middleware('auth')->name('likes.toggle');
+
+
+
+
