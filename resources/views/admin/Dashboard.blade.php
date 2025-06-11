@@ -17,6 +17,7 @@
     <!-- chart -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
     <link href="{{ asset('css/admin-dashboard.css') }}" rel="stylesheet">
     <script src="{{ asset('js/admin-dashboard.js') }}" defer></script>
     <!-- Inside <head> -->
@@ -81,7 +82,7 @@
             </div>
         </div>
 
-       
+
         <!-- Recent Activity -->
         <div class="recent-activity">
             <h2 class="section-title">
@@ -90,6 +91,9 @@
             </h2>
             <div class="activity-list">
                 <!-- Activity items here -->
+            </div>
+             <div class="pagination">
+                <!-- Pagination here -->
             </div>
         </div>
 
@@ -116,83 +120,76 @@
             </div>
         </div>
 
-        <!-- Pending Artwork Approvals -->
-        <div class="data-table">
-            <div class="table-header">
-                <h3 class="table-title">Pending Artwork Approvals</h3>
-                <div class="table-actions">
-                    <button class="btn btn-primary btn-sm">
-                        <i class="fas fa-check"></i> Approve All
-                    </button>
-                    <button class="btn btn-secondary btn-sm">
-                        <i class="fas fa-filter"></i> Filter
-                    </button>
-                </div>
-            </div>
-            <div class="table-container">
-                <table>
-                    <!-- Table content here -->
-                </table>
-            </div>
-            <div class="pagination">
-                <!-- Pagination here -->
-            </div>
-        </div>
+        <div class="charts-section">
 
-        <!-- Card Grid Section -->
-        <div class="card-grid">
-            <div class="card">
-                <!-- Recent Reports card content -->
-            </div>
-            <div class="card">
-                <!-- System Status card content -->
-            </div>
-        </div>
+            <div class="charts-container">
 
-        <!-- Location Management -->
-        <div class="data-table">
-            <div class="table-header">
-                <h3 class="table-title">Location Management</h3>
-                <div class="table-actions">
-                    <button class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus"></i> Add Location
-                    </button>
-                    <button class="btn btn-secondary btn-sm">
-                        <i class="fas fa-filter"></i> Filter
-                    </button>
-                </div>
+    <h2 class="section-title">User Growth Over Time</h2>
+    <canvas id="userGrowthChart"></canvas>
             </div>
-            <div class="map-container">
-                <div id="adminMap"></div>
-            </div>
-            <div class="pagination">
-                <div class="pagination-info">Showing 1,200 locations in New York City</div>
-                <div class="pagination-btns">
-                    <button class="btn btn-primary btn-sm">View Full Map</button>
-                </div>
+             <div class="charts-container">
+    <h2 class="section-title">Artworks Uploaded Over Time</h2>
+    <canvas id="artUploadsChart"></canvas>
             </div>
         </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('/dashboard/chart-data')
+        .then(res => res.json())
+        .then(data => {
+            // Handle user growth chart
+            const userLabels = data.userGrowth.map(item => item.date);
+            const userCounts = data.userGrowth.map(item => item.count);
 
-        <!-- Artist Verification Requests -->
-        <div class="data-table">
-            <div class="table-header">
-                <h3 class="table-title">Artist Verification Requests</h3>
-                <div class="table-actions">
-                    <button class="btn btn-secondary btn-sm">
-                        <i class="fas fa-filter"></i> Filter
-                    </button>
-                </div>
-            </div>
-            <div class="table-container">
-                <table>
-                    <!-- Table content here -->
-                </table>
-            </div>
-            <div class="pagination">
-                <!-- Pagination here -->
-            </div>
-        </div>
-    </div>
+            const userCtx = document.getElementById('userGrowthChart').getContext('2d');
+            new Chart(userCtx, {
+                type: 'line',
+                data: {
+                    labels: userLabels,
+                    datasets: [{
+                        label: 'New Users',
+                        data: userCounts,
+                        borderColor: '#4e73df',
+                        backgroundColor: 'rgba(78, 115, 223, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // Handle art uploads chart
+            const artLabels = data.artUploads.map(item => item.date);
+            const artCounts = data.artUploads.map(item => item.count);
+
+            const artCtx = document.getElementById('artUploadsChart').getContext('2d');
+            new Chart(artCtx, {
+                type: 'bar',
+                data: {
+                    labels: artLabels,
+                    datasets: [{
+                        label: 'Artworks Uploaded',
+                        data: artCounts,
+                        backgroundColor: '#1cc88a'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching chart data:', error));
+});
+</script>
 
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script src="{{ asset('js/loading.js') }}"></script>

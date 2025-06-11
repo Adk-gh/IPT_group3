@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileSetupController;
 use App\Http\Controllers\SharedPostInteractionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -87,14 +88,15 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/posts/{post}/share', [AuthController::class, 'share'])->name('posts.share');
 
 
-Route::post('/shared-posts/{id}/like', [SharedPostInteractionController::class, 'likeSharedPost'])->middleware('auth');
-Route::post('/shared-posts/{id}/comment', [SharedPostInteractionController::class, 'commentOnSharedPost'])->middleware('auth');
+
 
 Route::get('/users', [UserController::class, 'index'])->name('admin.user.table');
 Route::get('/admin/users', [UserController::class, 'index'])->name('admin.UserManagement');
 
 
-
+Route::get('/admin/reports/{report}/details', [AdminController::class, 'getReportDetails'])
+    ->middleware('auth')
+    ->name('reports.details');
 
 // routes/web.php
 
@@ -108,4 +110,20 @@ Route::get('/api/tags', function () {
 });
 
 Route::post('/posts/{post}/report', [AuthController::class, 'report'])->name('posts.report')->middleware('auth');
+
+
+
+Route::post('/change-language', function (Request $request) {
+    $locale = $request->input('locale');
+
+    // Optional: add validation
+    if (in_array($locale, ['en', 'es', 'fr'])) {
+        session(['locale' => $locale]);
+    }
+
+    return redirect()->back();
+})->name('changeLang');
+
+Route::get('/dashboard/chart-data', [AdminController::class, 'chartData']);
+
 ?>

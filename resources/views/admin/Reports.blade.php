@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Street & Ink | Reports & Moderation</title>
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -27,7 +28,7 @@
         <!-- Header -->
          @include('admin.adminnavbar')
 
-        
+
 
         <!-- Reports Filter -->
         <div class="reports-filter">
@@ -86,612 +87,302 @@
             </div>
         </div>
 
-        <!-- Reports Table -->
         <div class="data-table">
-            <div class="table-header">
-                <h3 class="table-title">Recent Reports</h3>
-                <div class="table-actions">
-                    <button class="btn btn-secondary btn-sm">
-                        <i class="fas fa-download"></i> Export
-                    </button>
-                    <button class="btn btn-primary btn-sm">
-                        <i class="fas fa-check"></i> Bulk Actions
-                    </button>
-                </div>
-            </div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Type</th>
-                            <th>Content</th>
-                            <th>Reported By</th>
-                            <th>Against</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <span class="report-type art">
-                                    <i class="fas fa-paint-brush"></i> Artwork
-                                </span>
-                            </td>
-                            <td>
-                                <div class="art-cell">
-                                    <div class="art-thumb">
-                                        <img src="img/pexels-vincent-gerbouin-445991-2263686.jpg" alt="Artwork">
-                                    </div>
-                                    <div class="art-info">
-                                        <div class="art-title">Urban Flame</div>
-                                        <div class="art-artist">by @inkboi</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">Sarah Johnson</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">David Peterson</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Apr 7, 10:15 AM</td>
-                            <td><span class="status open">Open</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn view" title="View" data-report="1">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="action-btn resolve" title="Resolve">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                    <button class="action-btn ignore" title="Ignore">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="report-type comment">
-                                    <i class="fas fa-comment"></i> Comment
-                                </span>
-                            </td>
-                            <td>
-                                "This is clearly stolen art, the original..."
-                            </td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="User">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">Marcus Taylor</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="User">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">Priya Kumar</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Apr 6, 5:30 PM</td>
-                            <td><span class="status open">Open</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn view" title="View" data-report="2">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="action-btn resolve" title="Resolve">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                    <button class="action-btn ignore" title="Ignore">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="report-type user">
-                                    <i class="fas fa-user"></i> User
-                                </span>
-                            </td>
-                            <td>
-                                Harassment in DMs
-                            </td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="User">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">Emma Wilson</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="User">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">James Lee</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Apr 6, 2:45 PM</td>
-                            <td><span class="status resolved">Resolved</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn view" title="View" data-report="3">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="action-btn resolve" title="Resolve">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                    <button class="action-btn ignore" title="Ignore">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="report-type location">
-                                    <i class="fas fa-map-marker-alt"></i> Location
-                                </span>
-                            </td>
-                            <td>
-                                Incorrect geotag - artwork is in Berlin, not Munich
-                            </td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">Lena Kowalski</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/women/55.jpg" alt="User">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">Aisha Johnson</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Apr 5, 9:10 AM</td>
-                            <td><span class="status ignored">Ignored</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn view" title="View" data-report="4">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="action-btn resolve" title="Resolve">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                    <button class="action-btn ignore" title="Ignore">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="report-type art">
-                                    <i class="fas fa-paint-brush"></i> Artwork
-                                </span>
-                            </td>
-                            <td>
-                                <div class="art-cell">
-                                    <div class="art-thumb">
-                                        <img src="img/pexels-tobiasbjorkli-2119706 (1).jpg" alt="Artwork">
-                                    </div>
-                                    <div class="art-info">
-                                        <div class="art-title">Abstract Flow</div>
-                                        <div class="art-artist">by @felipe_pantone</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="User">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">Carlos Mendez</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/women/22.jpg" alt="User">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">Sophia Martinez</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Apr 4, 7:30 PM</td>
-                            <td><span class="status open">Open</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn view" title="View" data-report="5">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="action-btn resolve" title="Resolve">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                    <button class="action-btn ignore" title="Ignore">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="pagination">
-                <div class="pagination-info">Showing 1 to 5 of 42 reports</div>
-                <div class="pagination-btns">
-                    <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn">2</button>
-                    <button class="page-btn">3</button>
-                    <button class="page-btn">...</button>
-                    <button class="page-btn">9</button>
-                    <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Most Reported Users -->
-        <div class="data-table">
-            <div class="table-header">
-                <h3 class="table-title">Most Reported Users</h3>
-                <div class="table-actions">
-                    <button class="btn btn-secondary btn-sm">
-                        <i class="fas fa-filter"></i> Filter
-                    </button>
-                </div>
-            </div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Reports</th>
-                            <th>Last Report</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="User">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">James Lee</div>
-                                        <div class="user-email">@james_art</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>12</td>
-                            <td>Apr 6, 2023</td>
-                            <td><span class="status open">Warning Issued</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn" title="Warn">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                    </button>
-                                    <button class="action-btn" title="Suspend">
-                                        <i class="fas fa-lock"></i>
-                                    </button>
-                                    <button class="action-btn" title="Ban">
-                                        <i class="fas fa-ban"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/women/55.jpg" alt="User">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">Aisha Johnson</div>
-                                        <div class="user-email">@aisha_creates</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>8</td>
-                            <td>Apr 5, 2023</td>
-                            <td><span class="status resolved">No Action</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn" title="Warn">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                    </button>
-                                    <button class="action-btn" title="Suspend">
-                                        <i class="fas fa-lock"></i>
-                                    </button>
-                                    <button class="action-btn" title="Ban">
-                                        <i class="fas fa-ban"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="User">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">Carlos Mendez</div>
-                                        <div class="user-email">@carlos_streetart</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>6</td>
-                            <td>Apr 4, 2023</td>
-                            <td><span class="status open">Under Review</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn" title="Warn">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                    </button>
-                                    <button class="action-btn" title="Suspend">
-                                        <i class="fas fa-lock"></i>
-                                    </button>
-                                    <button class="action-btn" title="Ban">
-                                        <i class="fas fa-ban"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="pagination">
-                <div class="pagination-info">Showing 1 to 3 of 12 frequently reported users</div>
-                <div class="pagination-btns">
-                    <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn">2</button>
-                    <button class="page-btn">3</button>
-                    <button class="page-btn">4</button>
-                    <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Auto-Moderation Settings -->
-        <div class="data-table">
-            <div class="table-header">
-                <h3 class="table-title">Auto-Moderation Settings</h3>
-                <div class="table-actions">
-                    <button class="btn btn-primary btn-sm">
-                        <i class="fas fa-save"></i> Save Settings
-                    </button>
-                </div>
-            </div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Rule</th>
-                            <th>Action</th>
-                            <th>Threshold</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Hide content with multiple reports</td>
-                            <td>Hide content temporarily</td>
-                            <td>
-                                <input type="number" class="form-control" value="5" style="width: 60px;">
-                            </td>
-                            <td><span class="status active">Active</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Notify admins of frequently reported content</td>
-                            <td>Send notification</td>
-                            <td>
-                                <input type="number" class="form-control" value="3" style="width: 60px;">
-                            </td>
-                            <td><span class="status active">Active</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Temporarily restrict reported users</td>
-                            <td>24h posting restriction</td>
-                            <td>
-                                <input type="number" class="form-control" value="3" style="width: 60px;">
-                            </td>
-                            <td><span class="status active">Active</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Automatically flag offensive keywords</td>
-                            <td>Mark for review</td>
-                            <td>N/A</td>
-                            <td><span class="status active">Active</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <div class="table-header">
+        <h3 class="table-title">Recent Reports</h3>
+        <div class="table-actions">
+            <button class="btn btn-secondary btn-sm">
+                <i class="fas fa-download"></i> Export
+            </button>
+            <button class="btn btn-primary btn-sm">
+                <i class="fas fa-check"></i> Bulk Actions
+            </button>
         </div>
     </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Content</th>
+                    <th>Reported By</th>
+                    <th>Against</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($reports as $report)
+                <tr>
+                    <td>
+                        <span class="report-type art">
+                            <i class="fas fa-paint-brush"></i> Artwork
+                        </span>
+                    </td>
+                    <td>
+                        <div class="art-cell">
+                            @if($report->post->image)
+                            <div class="art-thumb">
+                                <img src="{{ asset('storage/' . $report->post->image_url) }}" alt="Artwork">
+                                 <img src="{{ asset('storage/' . $report->post->image_url) }}"
+                                    class="img-fluid rounded clickable-image"
+                                    alt="Post Image">
+                            </div>
+                            @endif
+                            <div class="art-info">
+                                <div class="art-title">{{ Str::limit($report->post->title, 20) }}</div>
+                                  <img src="{{ asset('storage/' . $report->post->image_url) }}"
+     class="img-thumbnail"
+     style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;"
+     alt="Post Image">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar-sm">
+                                <img src="{{ $report->user->profile_picture ? asset('storage/' . $report->user->profile_picture) : asset('img/default.jpg') }}" alt="User Avatar">
+                            </div>
+                            <div class="user-info">
+                                <div class="user-name-sm">{{ $report->user->name }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar-sm">
+                                <img src="{{ $report->post->user->profile_picture ? asset('storage/' . $report->post->user->profile_picture) : asset('img/default.jpg') }}" alt="User Avatar">
+                            </div>
+                            <div class="user-info">
+                                <div class="user-name-sm">{{ $report->post->user->name }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ $report->created_at->format('M j, g:i A') }}</td>
+                    <td>
+                        @if($report->status == 'resolved')
+                            <span class="status resolved">Resolved</span>
+                        @elseif($report->status == 'reviewed')
+                            <span class="status reviewed">Reviewed</span>
+                        @else
+                            <span class="status open">Pending</span>
+                        @endif
+                    </td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="action-btn view" title="View" data-report-id="{{ $report->id }}">
+    <i class="fas fa-eye"></i>
+</button>
+                            <button class="action-btn resolve" title="Resolve" data-id="{{ $report->id }}">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="action-btn ignore" title="Ignore" data-id="{{ $report->id }}">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination">
+        <div class="pagination-info">Showing {{ $reports->firstItem() }} to {{ $reports->lastItem() }} of {{ $reports->total() }} reports</div>
+        <div class="pagination-btns">
+            @if($reports->onFirstPage())
+                <button class="page-btn disabled"><i class="fas fa-chevron-left"></i></button>
+            @else
+                <a href="{{ $reports->previousPageUrl() }}" class="page-btn"><i class="fas fa-chevron-left"></i></a>
+            @endif
 
-    <!-- Report Detail Modal -->
-    <div class="modal" id="reportModal">
+            @foreach(range(1, $reports->lastPage()) as $page)
+                @if($page == $reports->currentPage())
+                    <button class="page-btn active">{{ $page }}</button>
+                @else
+                    <a href="{{ $reports->url($page) }}" class="page-btn">{{ $page }}</a>
+                @endif
+            @endforeach
+
+            @if($reports->hasMorePages())
+                <a href="{{ $reports->nextPageUrl() }}" class="page-btn"><i class="fas fa-chevron-right"></i></a>
+            @else
+                <button class="page-btn disabled"><i class="fas fa-chevron-right"></i></button>
+            @endif
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Report Details</h3>
-                <button class="modal-close" id="modalClose">&times;</button>
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">Report Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h4 class="section-title">
-                        <i class="fas fa-flag"></i> Reported Content
-                    </h4>
-                    <div class="report-content">
-                        <img src="img/pexels-vincent-gerbouin-445991-2263686.jpg" alt="Reported Artwork" class="report-preview">
-                        <div class="report-reason">Reason: Inappropriate Content (Nudity)</div>
-                        <div class="report-description">
-                            "This artwork contains explicit nudity that violates community guidelines. It's visible in a public space where children might see it."
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-section">
-                    <h4 class="section-title">
-                        <i class="fas fa-user"></i> Reporter Information
-                    </h4>
-                    <div class="user-details">
-                        <div class="user-avatar-md">
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Reporter">
-                        </div>
-                        <div class="user-meta">
-                            <div class="user-name-md">Sarah Johnson</div>
-                            <div class="user-stats">
-                                <div class="user-stat">
-                                    <i class="fas fa-flag"></i> 12 Reports
-                                </div>
-                                <div class="user-stat">
-                                    <i class="fas fa-check-circle"></i> 89% Accuracy
-                                </div>
-                                <div class="user-stat">
-                                    <i class="fas fa-user"></i> Member since Jun 2022
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-section">
-                    <h4 class="section-title">
-                        <i class="fas fa-user-shield"></i> Reported User
-                    </h4>
-                    <div class="user-details">
-                        <div class="user-avatar-md">
-                            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Reported User">
-                        </div>
-                        <div class="user-meta">
-                            <div class="user-name-md">David Peterson (@inkboi)</div>
-                            <div class="user-stats">
-                                <div class="user-stat">
-                                    <i class="fas fa-exclamation-triangle"></i> 3 Warnings
-                                </div>
-                                <div class="user-stat">
-                                    <i class="fas fa-paint-brush"></i> 128 Artworks
-                                </div>
-                                <div class="user-stat">
-                                    <i class="fas fa-user"></i> Verified Artist
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-section">
-                    <h4 class="section-title">
-                        <i class="fas fa-history"></i> Moderation History
-                    </h4>
-                    <div class="history-item">
-                        <div class="history-date">Apr 7, 2023 - 10:15 AM</div>
-                        <div class="history-action">Report Submitted</div>
-                        <div class="history-note">User reported artwork for inappropriate content</div>
-                    </div>
-                    <div class="history-item">
-                        <div class="history-date">Apr 7, 2023 - 10:30 AM</div>
-                        <div class="history-action">Auto-Moderated</div>
-                        <div class="history-note">Content temporarily hidden pending review (5+ reports)</div>
-                    </div>
-                </div>
-
-                <div class="modal-section">
-                    <h4 class="section-title">
-                        <i class="fas fa-edit"></i> Internal Notes
-                    </h4>
-                    <textarea class="form-control form-textarea" placeholder="Add notes about this report..."></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary">
-                    <i class="fas fa-times"></i> Dismiss Report
-                </button>
-                <button class="btn btn-warning">
-                    <i class="fas fa-exclamation-triangle"></i> Warn User
-                </button>
-                <button class="btn btn-danger">
-                    <i class="fas fa-trash"></i> Delete Content
-                </button>
-                <button class="btn btn-success">
-                    <i class="fas fa-check"></i> Resolve Report
-                </button>
+            <div class="modal-body" id="modalBody">
+                <!-- Content loaded dynamically -->
             </div>
         </div>
     </div>
+</div>
+
+<script>
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Use event delegation for view buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.action-btn.view')) {
+            const button = e.target.closest('.action-btn.view');
+            currentReportId = button.getAttribute('data-report-id');
+            loadReportDetails(currentReportId);
+        }
+    });
+
+    // Initialize modal
+    const reportModal = new bootstrap.Modal(document.getElementById('reportModal'));
+
+    window.openModal = function() {
+        reportModal.show();
+    };
+
+    window.closeModal = function() {
+        reportModal.hide();
+    };
+});
+// Store the current report ID
+let currentReportId = null;
+
+// Initialize modal functionality
+function initModal() {
+    // Close modal when clicking the X button
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+
+    // Close modal when clicking outside
+    document.getElementById('reportModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
+
+    // Attach click handlers to all view buttons
+    document.querySelectorAll('.action-btn.view').forEach(button => {
+        button.addEventListener('click', function() {
+            currentReportId = this.getAttribute('data-report-id');
+            loadReportDetails(currentReportId);
+        });
+    });
+}
+
+// Function to load report details
+function loadReportDetails(reportId) {
+    fetch(`/admin/reports/${reportId}/details`)
+        .then(response => response.json())
+        .then(data => {
+            populateModal(data);
+            openModal();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to load report details');
+        });
+}
+
+// Function to populate modal content
+function populateModal(report) {
+    const modalBody = document.getElementById('modalBody');
+
+    // Build the HTML content
+    modalBody.innerHTML = `
+        <div class="modal-section">
+            <h4 class="section-title">
+                <i class="fas fa-flag"></i> Reported Content
+            </h4>
+            <div class="report-content">
+                ${report.post && report.post.image_url ?
+                    `<img src="/storage/${report.post.image_url}" alt="Reported Artwork" class="report-preview">` : ''}
+                <div class="report-reason">Reason: ${report.reason}</div>
+                <div class="report-description">
+                    ${report.additional_info || 'No additional details provided'}
+                </div>
+            </div>
+        </div>
+
+        <!-- Other modal sections (reporter info, reported user, etc.) -->
+        <!-- ... (include all your modal sections from previous example) ... -->
+
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="dismissBtn">
+                <i class="fas fa-times"></i> Dismiss Report
+            </button>
+            <button class="btn btn-warning" id="warnBtn">
+                <i class="fas fa-exclamation-triangle"></i> Warn User
+            </button>
+            ${report.post ? `
+            <button class="btn btn-danger" id="deleteBtn">
+                <i class="fas fa-trash"></i> Delete Content
+            </button>
+            ` : ''}
+            <button class="btn btn-success" id="resolveBtn">
+                <i class="fas fa-check"></i> Resolve Report
+            </button>
+        </div>
+    `;
+
+    // Attach event listeners to action buttons
+    document.getElementById('dismissBtn')?.addEventListener('click', () => dismissReport(report.id));
+    document.getElementById('warnBtn')?.addEventListener('click', () => warnUser(report.reported_user?.id));
+    document.getElementById('deleteBtn')?.addEventListener('click', () => deleteContent(report.post?.id));
+    document.getElementById('resolveBtn')?.addEventListener('click', () => {
+        const notes = document.getElementById('reportNotes')?.value || '';
+        resolveReport(report.id, notes);
+    });
+}
+
+// Modal control functions
+function openModal() {
+    document.getElementById('reportModal').style.display = 'block';
+    document.body.style.overflow = 'hidden'; // Prevent scrolling
+}
+
+function closeModal() {
+    document.getElementById('reportModal').style.display = 'none';
+    document.body.style.overflow = ''; // Restore scrolling
+    currentReportId = null;
+}
+
+// Action functions
+function dismissReport(reportId) {
+    console.log('Dismissing report:', reportId);
+    // Add your AJAX call here
+    closeModal();
+}
+
+function warnUser(userId) {
+    console.log('Warning user:', userId);
+    // Add your AJAX call here
+}
+
+function deleteContent(postId) {
+    console.log('Deleting content:', postId);
+    // Add your AJAX call here
+    closeModal();
+}
+
+function resolveReport(reportId, notes) {
+    console.log('Resolving report:', reportId, 'with notes:', notes);
+    // Add your AJAX call here
+    closeModal();
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', initModal);
+
+// Reinitialize when content is loaded via AJAX (if needed)
+document.addEventListener('ajaxComplete', initModal);
+</script>
 
     <script src="resources/js/admin-reports.js"></script>
 

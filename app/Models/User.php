@@ -79,4 +79,9 @@ class User extends Authenticatable
     {
         return $this->posts()->count();
     }
+    //reports
+    public function reports()
+    {
+        return $this->hasMany(PostReport::class, 'user_id', 'user_id');
+    }
 }

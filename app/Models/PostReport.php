@@ -37,4 +37,9 @@ class PostReport extends Model
     {
         return $this->belongsTo(User::class, 'reviewed_by');
     }
+    //user
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

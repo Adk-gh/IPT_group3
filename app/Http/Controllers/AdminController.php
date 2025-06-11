@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Artwork;
 use App\Models\Location;
@@ -38,8 +39,11 @@ class AdminController extends Controller
             'comments' => Comment::count(),
             // Add other metrics as needed
         ];
+        $reports = PostReport::with(['post.user', 'user'])
+                ->orderBy('created_at', 'desc')
+                ->paginate(5);
 
-        return view('admin.Dashboard', compact('user', 'stats'));
+        return view('admin.Dashboard', compact('user', 'stats', 'reports'));
     }
 
     return redirect()->route('home')
@@ -53,7 +57,11 @@ class AdminController extends Controller
 
     public function showArtUpload()
     {
-        return view('admin.ArtUpload');
+          $posts = Post::with(['user', 'comments', 'likes'])
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+
+        return view('admin.ArtUpload', compact('posts'));
     }
 
     public function showBackup()
@@ -68,8 +76,45 @@ class AdminController extends Controller
 
     public function showReports()
     {
-        return view('admin.Reports');
+        $reports = PostReport::with(['post.user', 'user'])
+                ->orderBy('created_at', 'desc')
+                ->paginate(5);
+        return view('admin.Reports', compact('reports'));
     }
+    // In your ReportsController.php
+public function getReportDetails($reportId)
+{
+    try {
+        $report = PostReport::with([
+                'reporter',
+                'post.user',
+                'post'
+            ])
+            ->findOrFail($reportId);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id' => $report->id,
+                'reason' => $report->reason,
+                'additional_info' => $report->additional_info,
+                'status' => $report->status,
+                'created_at' => $report->created_at,
+                'reviewed_at' => $report->reviewed_at,
+                'moderator_notes' => $report->moderator_notes,
+                'reporter' => $report->reporter,
+                'reported_user' => $report->post->user ?? null,
+                'post' => $report->post
+            ]
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Report not found',
+            'error' => $e->getMessage()
+        ], 404);
+    }
+}
 
     public function showSettings()
     {
@@ -85,6 +130,26 @@ class AdminController extends Controller
     {
         return $query->where('verified_artist', 1);
     }
+public function chartData()
+{
+    // Users grouped by date
+    $userGrowth = DB::table('users')
+        ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+        ->groupBy('date')
+        ->orderBy('date')
+        ->get();
 
+    // Posts grouped by date
+    $artUploads = DB::table('posts')
+        ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+        ->groupBy('date')
+        ->orderBy('date')
+        ->get();
+
+    return response()->json([
+        'userGrowth' => $userGrowth,
+        'artUploads' => $artUploads,
+    ]);
+}
 }
 

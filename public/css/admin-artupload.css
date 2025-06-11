@@ -582,6 +582,15 @@
             align-items: center;
             gap: 10px;
         }
+        .art-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.view-btn.active {
+    background-color: #333;
+    color: #fff;
+}
 
         .art-thumb {
             width: 50px;
@@ -995,6 +1004,119 @@
         .detail-value a {
             color: var(--accent);
         }
+
+        /* Grid View Styles */
+.art-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.art-card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #eee;
+}
+
+.art-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.art-card-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.art-card-body {
+    padding: 15px;
+}
+
+.art-card-title {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.art-card-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.art-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.art-card-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.art-card-status {
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.art-card-status.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.art-card-status.approved {
+    background: #d4edda;
+    color: #155724;
+}
+
+.art-card-status.featured {
+    background: #cce5ff;
+    color: #004085;
+}
+
+/* View Toggle Styles */
+.view-toggle {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.view-btn {
+    padding: 8px 15px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+}
+
+.view-btn.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.view-btn i {
+    font-size: 14px;
+}
 
         /* Responsive */
         @media (max-width: 1200px) {
