@@ -90,31 +90,38 @@
 
                 </div>
 
-                <!-- Social Links -->
-                <div class="social-links">
-                    @if (Auth::user()->instagram)
-                        <a href="{{ Auth::user()->instagram }}" class="social-link" target="_blank" aria-label="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                    @endif
-                    @if (Auth::user()->tiktok)
-                        <a href="{{ Auth::user()->tiktok }}" class="social-link" target="_blank" aria-label="TikTok">
-                            <i class="fab fa-tiktok"></i>
-                        </a>
-                    @endif
-                    @if (Auth::user()->website)
-                        <a href="{{ Auth::user()->website }}" class="social-link" target="_blank" aria-label="Website">
-                            <i class="fas fa-globe"></i>
-                        </a>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>
+              <!-- Update the Social Links section to include Facebook and Twitter: -->
+<div class="social-links">
+    @if (Auth::user()->facebook)
+        <a href="{{ Auth::user()->facebook }}" class="social-link" target="_blank" aria-label="Facebook">
+            <i class="fab fa-facebook-f"></i>
+        </a>
+    @endif
+    @if (Auth::user()->twitter)
+        <a href="{{ Auth::user()->twitter }}" class="social-link" target="_blank" aria-label="Twitter">
+            <i class="fab fa-twitter"></i>
+        </a>
+    @endif
+    @if (Auth::user()->instagram)
+        <a href="{{ Auth::user()->instagram }}" class="social-link" target="_blank" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+        </a>
+    @endif
+    @if (Auth::user()->tiktok)
+        <a href="{{ Auth::user()->tiktok }}" class="social-link" target="_blank" aria-label="TikTok">
+            <i class="fab fa-tiktok"></i>
+        </a>
+    @endif
+    @if (Auth::user()->website)
+        <a href="{{ Auth::user()->website }}" class="social-link" target="_blank" aria-label="Website">
+            <i class="fas fa-globe"></i>
+        </a>
+    @endif
+</div>
 
     <!-- Edit Form Overlay -->
     <div class="edit-form-overlay" id="editFormOverlay"></div>
-     <button id="openModalBtn" class="btn btn-primary mb-2" style="width: 900px;">Open Profile Setup</button>
+    
 </section>
 
     <!-- Stats Section -->
@@ -200,40 +207,40 @@
 </section>
 
 
-    <!-- Artist Spotlight -->
-    <section class="artist-spotlight">
-        <div class="container">
-            <div class="spotlight-header">
-                <h2>Artist Spotlight</h2>
-                <p>Get to know the artist behind the artworks</p>
+    <!-- Replace the Artist Spotlight section with this: -->
+<section class="artist-spotlight">
+    <div class="container">
+        <div class="spotlight-header">
+            <h2>Artist Spotlight</h2>
+            <p>Get to know the artist behind the artworks</p>
+        </div>
+        <div class="spotlight-content">
+            <div class="spotlight-image">
+                <img src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Featured Artwork">
             </div>
-            <div class="spotlight-content">
-                <div class="spotlight-image">
-                    <img src="https://images.unsplash.com/photo-1578926375602-3ad9e91ec0a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Featured Artwork">
+            <div class="spotlight-info">
+                <h3>Featured Artwork: "Urban Dreams"</h3>
+                <p class="spotlight-statement">
+                    "My work explores the intersection of urban decay and vibrant renewal. I see walls as blank canvases that tell the stories of our cities. Through bold colors and abstract forms, I aim to transform forgotten spaces into places of beauty and conversation."
+                </p>
+                <div class="spotlight-tools">
+                    <div class="tools-title">Tools & Styles I Use:</div>
+                    <div class="tools-list">
+                        <span class="tool-tag">Spray Paint</span>
+                        <span class="tool-tag">Acrylic</span>
+                        <span class="tool-tag">Stencils</span>
+                        <span class="tool-tag">Abstract</span>
+                        <span class="tool-tag">Geometric</span>
+                        <span class="tool-tag">Street Art</span>
+                    </div>
                 </div>
-                <div class="spotlight-info">
-                    <h3>Featured Artwork: "Urban Dreams"</h3>
-                    <p class="spotlight-statement">
-                        "My work explores the intersection of urban decay and vibrant renewal. I see walls as blank canvases that tell the stories of our cities. Through bold colors and abstract forms, I aim to transform forgotten spaces into places of beauty and conversation."
-                    </p>
-                    <div class="spotlight-tools">
-                        <div class="tools-title">Tools & Styles I Use:</div>
-                        <div class="tools-list">
-                            <span class="tool-tag">Spray Paint</span>
-                            <span class="tool-tag">Acrylic</span>
-                            <span class="tool-tag">Stencils</span>
-                            <span class="tool-tag">Abstract</span>
-                            <span class="tool-tag">Geometric</span>
-                            <span class="tool-tag">Street Art</span>
-                        </div>
-                    </div>
-                    <div style="margin-top: 30px;">
-                        <a href="#" class="btn btn-primary"><i class="fas fa-play"></i> Watch Process Video</a>
-                    </div>
+                <div style="margin-top: 30px;">
+                    <a href="#" class="btn btn-primary"><i class="fas fa-play"></i> Watch Process Video</a>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Testimonials -->
     <section class="testimonials-section">
@@ -260,9 +267,10 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section class="contact-section">
-        <div class="container contact-container">
+   <!-- Update the Contact Section with better spacing: -->
+<section class="contact-section">
+    <div class="container contact-container">
+        <div class="contact-content">
             <h2 class="contact-title">Contact Juno Art</h2>
             <p class="contact-description">
                 Interested in commissioning work or collaborating? Get in touch with Juno for project inquiries, exhibition opportunities, or just to say hello.
@@ -272,7 +280,8 @@
                 <a href="#" class="btn btn-outline btn-large"><i class="fas fa-calendar-check"></i> Book Commission</a>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Map View (Hidden by default) -->
     <section class="container" id="map-tab" style="display: none;">
@@ -342,7 +351,10 @@
                 </div>
             </div>
         </div>
+        <!-- Add this empty div for spacing before footer -->
+<div class="pre-footer-spacing" style="height: 60px;"></div>
     </section>
+    
     <!-- Footer -->
     <footer>
     @include('footer')

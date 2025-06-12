@@ -12,6 +12,9 @@ use App\Http\Controllers\DashboardController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\SavedPostController;
 
+use App\Http\Controllers\ContactController;
+
+
 use Illuminate\Support\Facades\Auth;
 
 // 🔓 Public Routes (manually guarded in controllers)
@@ -98,6 +101,8 @@ Route::get('/admin/users', [UserController::class, 'index'])->name('admin.UserMa
 Route::get('/admin/reports/{report}/details', [AdminController::class, 'getReportDetails'])
     ->middleware('auth')
     ->name('reports.details');
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+
 
 // routes/web.php
 
