@@ -12,6 +12,7 @@ use App\Models\Post;
 use App\Models\Tag;
 use App\Models\Comment;
 use App\Models\SharedPost;
+use App\Models\SavedPost;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\PostReport;
 
@@ -158,8 +159,15 @@ class AuthController extends Controller
 
 public function socialFeed()
 {
-    // Original posts with likes count
-    $originalPosts = Post::withCount('likes')
+    // Original posts with saved status
+    $originalPosts = Post::withCount(['likes', 'sharedPosts', 'comments'])
+        ->when(auth()->check(), function($query) {
+            $query->addSelect([
+                'is_saved' => SavedPost::selectRaw('COUNT(*)')
+                    ->whereColumn('post_id', 'posts.id')
+                    ->where('user_id', auth()->id())
+            ]);
+        })
         ->with(['user', 'tags', 'comments.user'])
         ->latest()
         ->get();

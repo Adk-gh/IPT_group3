@@ -10,6 +10,7 @@ use App\Http\Controllers\SharedPostInteractionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\SavedPostController;
 
 use App\Http\Controllers\ContactController;
 
@@ -132,7 +133,10 @@ Route::post('/change-language', function (Request $request) {
 Route::get('/dashboard/chart-data', [AdminController::class, 'chartData']);
 
 Route::post('/likes/toggle', [LikeController::class, 'toggle'])->middleware('auth')->name('likes.toggle');
-
+// routes/web.php
+Route::post('/posts/save', [SavedPostController::class, 'toggleSave'])
+    ->name('posts.save')
+    ->middleware('auth');
 
 
 
