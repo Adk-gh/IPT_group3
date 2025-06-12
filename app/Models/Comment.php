@@ -22,14 +22,30 @@ class Comment extends Model
 
 
    public function commentable()
+    {
+        return $this->morphTo();
+    }
+
+   public function user()
 {
-    return $this->morphTo();
+    return $this->belongsTo(User::class, 'user_id', 'user_id')->withDefault([
+        'username' => 'Anonymous',
+        'name' => 'Anonymous User',
+        'profile_picture' => null,
+    ]);
 }
 
+
+    /*
+// In Comment.php
 public function user()
 {
-    return $this->belongsTo(User::class);
+    return $this->belongsTo(User::class)->withDefault([
+        'username' => 'Anonymous',
+        'name' => 'Anonymous User',
+        'profile_picture' => null
+    ]);
 }
-
+*/
 
 }

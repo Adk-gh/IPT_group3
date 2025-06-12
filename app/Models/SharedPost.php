@@ -15,13 +15,11 @@ class SharedPost extends Model
         return $this->belongsTo(Post::class);
     }
 
-    // Relationship to the User who shared the post
+    // Relationship to the user who shared the post
     public function user()
-{
-    return $this->belongsTo(User::class, 'user_id', 'user_id');
-}
-
-
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
 
     // Polymorphic relationship for likes
     public function likes()
@@ -32,6 +30,9 @@ class SharedPost extends Model
     // Check if the current user has liked this shared post
     public function isLikedByUser()
     {
+        if (!auth()->check()) {
+        return false;
+    }
         return $this->likes()->where('user_id', Auth::id())->exists();
     }
 

@@ -26,79 +26,15 @@
         <!-- Header -->
  @include('admin.adminnavbar')
 
-        <!-- Uploads Summary -->
-        <div class="dashboard">
-            <div class="stat-card">
-                <div class="stat-icon uploads">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                </div>
-                <div class="stat-title">Total Uploads</div>
-                <div class="stat-value">25,189</div>
-                <div class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> 8.3% from last month
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon pending">
-                    <i class="fas fa-hourglass-half"></i>
-                </div>
-                <div class="stat-title">Pending Submissions</div>
-                <div class="stat-value">12</div>
-                <div class="stat-change negative">
-                    <i class="fas fa-arrow-down"></i> 2.1% from last week
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon approved">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="stat-title">Approved</div>
-                <div class="stat-value">23,456</div>
-                <div class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> 5.7% from last month
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon rejected">
-                    <i class="fas fa-times-circle"></i>
-                </div>
-                <div class="stat-title">Rejected</div>
-                <div class="stat-value">1,721</div>
-                <div class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> 1.2% from last month
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon flagged">
-                    <i class="fas fa-flag"></i>
-                </div>
-                <div class="stat-title">Flagged Reports</div>
-                <div class="stat-value">8</div>
-                <div class="stat-change negative">
-                    <i class="fas fa-arrow-down"></i> 3.5% from last week
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon weekly">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <div class="stat-title">Uploads This Week</div>
-                <div class="stat-value">342</div>
-                <div class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> 12.8% from last week
-                </div>
-            </div>
-        </div>
-
         <!-- View Toggle -->
         <div class="view-toggle">
-            <button class="view-btn active" id="tableViewBtn">
-                <i class="fas fa-list"></i> Table View
-            </button>
-            <button class="view-btn" id="gridViewBtn">
-                <i class="fas fa-th-large"></i> Grid View
-            </button>
-        </div>
+    <button class="view-btn active" id="tableViewBtn">
+        <i class="fas fa-list"></i> Table View
+    </button>
+    <button class="view-btn" id="gridViewBtn">
+        <i class="fas fa-th-large"></i> Grid View
+    </button>
+</div>
 
         <!-- Filters Section -->
         <div class="filter-section">
@@ -183,590 +119,353 @@
         <div class="bulk-actions">
             <input type="checkbox" id="selectAll" class="bulk-checkbox">
             <label for="selectAll">Select All</label>
-            <button class="btn btn-secondary btn-sm">
-                <i class="fas fa-check"></i> Approve Selected
-            </button>
-            <button class="btn btn-secondary btn-sm">
-                <i class="fas fa-times"></i> Reject Selected
-            </button>
-            <button class="btn btn-secondary btn-sm">
-                <i class="fas fa-star"></i> Feature Selected
-            </button>
+
             <button class="btn btn-secondary btn-sm">
                 <i class="fas fa-trash"></i> Delete Selected
             </button>
-            <button class="btn btn-secondary btn-sm">
-                <i class="fas fa-file-export"></i> Export Selected
+
+        </div>
+
+      <div class="data-table" id="tableView">
+            <div class="table-header">
+        <h3 class="table-title">Social Feed Posts</h3>
+    </div>
+   <div class="table-container">
+    <table class="posts-table">
+        <thead>
+            <tr>
+                <th style="width: 30px;"><input type="checkbox"></th>
+                <th>Artwork</th>
+                <th>Artist</th>
+                <th>Location</th>
+                <th>Tags</th>
+                <th>Uploaded</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($posts ?? [] as $post)
+            @php
+                $isShared = $post instanceof \App\Models\SharedPost;
+                $originalPost = $isShared ? $post->post : $post;
+                $sharedByUser = $isShared ? $post->user : null;
+            @endphp
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>
+                    <div class="art-cell">
+                        @if($originalPost->image_url ?? false)
+                        <div class="art-thumb">
+                            <img src="{{ asset('storage/' . $originalPost->image_url) }}"
+                                 alt="Post Image">
+                        </div>
+                        @endif
+                        <div class="art-info">
+                            <div class="art-title">{{ Str::limit($originalPost->caption ?? 'Untitled', 20) }}</div>
+                            @if($isShared)
+                            <div class="shared-by">Shared by {{ $sharedByUser->name ?? 'User' }}</div>
+                            @endif
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="user-cell">
+                        <div class="user-avatar-sm">
+                            <img src="{{ ($originalPost->user->profile_picture ?? false) ? asset('storage/' . $originalPost->user->profile_picture) : asset('img/default.jpg') }}"
+                                 alt="User Avatar">
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name-sm">{{ $originalPost->user->name ?? 'Unknown' }}</div>
+                            <div class="user-email">{{ $originalPost->user->email ?? 'unknown' }}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>{{ Str::limit($originalPost->location_name ?? 'Unknown', 15) }}</td>
+                <td>
+                    <div class="tags">
+                        <span class="tag">#{{ $isShared ? 'shared' : 'original' }}</span>
+                        @if($originalPost->image_url ?? false)
+                        <span class="tag">#photo</span>
+                        @endif
+                    </div>
+                </td>
+                <td>{{ ($originalPost->created_at ?? now())->diffForHumans() }}</td>
+                <td>
+                    <div class="action-btns">
+                        <button class="action-btn view" title="View" data-post-id="{{ $originalPost->id ?? '' }}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn approve" title="Approve" data-post-id="{{ $originalPost->id ?? '' }}">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="action-btn reject" title="Reject" data-post-id="{{ $originalPost->id ?? '' }}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="7" class="text-center">No posts found</td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
+
+@if(isset($posts) && $posts->count())
+<div class="pagination">
+    <div class="pagination-info">Showing {{ $posts->firstItem() }} to {{ $posts->lastItem() }} of {{ $posts->total() }} posts</div>
+    <div class="pagination-btns">
+        @if($posts->onFirstPage())
+            <button class="page-btn disabled"><i class="fas fa-chevron-left"></i></button>
+        @else
+            <a href="{{ $posts->previousPageUrl() }}" class="page-btn"><i class="fas fa-chevron-left"></i></a>
+        @endif
+
+        @foreach(range(1, $posts->lastPage()) as $page)
+            @if($page == $posts->currentPage())
+                <button class="page-btn active">{{ $page }}</button>
+            @else
+                <a href="{{ $posts->url($page) }}" class="page-btn">{{ $page }}</a>
+            @endif
+        @endforeach
+
+        @if($posts->hasMorePages())
+            <a href="{{ $posts->nextPageUrl() }}" class="page-btn"><i class="fas fa-chevron-right"></i></a>
+        @else
+            <button class="page-btn disabled"><i class="fas fa-chevron-right"></i></button>
+        @endif
+    </div>
+</div>
+@endif
+      </div>
+
+       <!-- Grid View (Dynamic) -->
+<div class="art-grid" id="gridView" style="display: none;">
+    @forelse($posts ?? [] as $post)
+        @php
+            $isShared = $post instanceof \App\Models\SharedPost;
+            $originalPost = $isShared ? $post->post : $post;
+            $sharedByUser = $isShared ? $post->user : null;
+        @endphp
+        <div class="art-card">
+            @if($originalPost->image_url ?? false)
+                <img src="{{ asset('storage/' . $originalPost->image_url) }}"
+                     alt="{{ $originalPost->caption ?? 'Artwork' }}"
+                     class="art-card-img"
+                     onclick="openArtModal('{{ $originalPost->caption ?? 'Untitled' }}')">
+            @endif
+            <div class="art-card-body">
+                <div class="art-card-title">{{ Str::limit($originalPost->caption ?? 'Untitled', 25) }}</div>
+                <div class="art-card-meta">
+                    <span>{{ '@' . ($originalPost->user->username ?? 'unknown') }}</span><br>
+                    <span class="art-card-date">{{ ($originalPost->created_at ?? now())->diffForHumans() }}</span>
+                    <span>{{ $originalPost->location_name ?? 'Unknown' }}</span>
+                </div>
+                <div class="tags">
+                    <span class="tag">#{{ $isShared ? 'shared' : 'original' }}</span>
+                    @if($originalPost->image_url)
+                        <span class="tag">#photo</span>
+                    @endif
+                </div>
+                <div class="art-card-footer">
+                    <div class="art-card-actions">
+                        <button class="action-btn view" title="View" data-post-id="{{ $originalPost->id }}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn approve" title="Approve" data-post-id="{{ $originalPost->id }}">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="action-btn reject" title="Reject" data-post-id="{{ $originalPost->id }}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @empty
+        <p class="text-center w-full">No posts found.</p>
+    @endforelse
+</div>
+
+<!-- Artwork Detail Modal - Updated Dynamic Version -->
+<div class="modal" id="artModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modalArtTitle">Artwork Details</h3>
+            <button class="modal-close" onclick="closeArtModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <img id="modalArtImage" src="" alt="Artwork Preview" class="art-preview">
+            <div class="art-details">
+                <div>
+                    <div class="detail-group">
+                        <div class="detail-label">Artist</div>
+                        <div class="detail-value" id="modalArtist">
+                            <!-- Dynamic content will go here -->
+                        </div>
+                    </div>
+                    <div class="detail-group">
+                        <div class="detail-label">Location</div>
+                        <div class="detail-value" id="modalLocation">
+                            <!-- Dynamic content will go here -->
+                        </div>
+                    </div>
+                    <div class="detail-group">
+                        <div class="detail-label">Coordinates</div>
+                        <div class="detail-value" id="modalCoordinates">
+                            <!-- Dynamic content will go here -->
+                        </div>
+                    </div>
+                    <div class="detail-group">
+                        <div class="detail-label">Upload Date</div>
+                        <div class="detail-value" id="modalUploadDate">
+                            <!-- Dynamic content will go here -->
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="detail-group">
+                        <div class="detail-label">Tags</div>
+                        <div class="tags" id="modalTags">
+                            <!-- Dynamic content will go here -->
+                        </div>
+                    </div>
+                    <div class="detail-group">
+                        <div class="detail-label">Description</div>
+                        <div class="detail-value" id="modalDescription">
+                            <!-- Dynamic content will go here -->
+                        </div>
+                    </div>
+                    <div class="detail-group">
+                        <div class="detail-label">Reports</div>
+                        <div class="detail-value" id="modalReports">
+                            No reports
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeArtModal()">
+                <i class="fas fa-times"></i> Close
+            </button>
+            <button class="btn btn-secondary" id="modalEditBtn">
+                <i class="fas fa-edit"></i> Edit
             </button>
         </div>
-
-        <!-- Table View -->
-        <div class="data-table" id="tableView">
-            <div class="table-header">
-                <h3 class="table-title">Artwork Submissions</h3>
-                <div class="table-actions">
-                    <button class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus"></i> Add Artwork
-                    </button>
-                    <button class="btn btn-secondary btn-sm">
-                        <i class="fas fa-download"></i> Export
-                    </button>
-                </div>
-            </div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width: 30px;"><input type="checkbox"></th>
-                            <th>Artwork</th>
-                            <th>Artist</th>
-                            <th>Location</th>
-                            <th>Tags</th>
-                            <th>Uploaded</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="checkbox"></td>
-                            <td>
-                                <div class="art-cell">
-                                    <div class="art-thumb">
-                                        <img src="img/pexels-vincent-gerbouin-445991-2263686.jpg" alt="Urban Flame">
-                                    </div>
-                                    <div class="art-info">
-                                        <div class="art-title">Urban Flame</div>
-
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Artist">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">David Peterson</div>
-                                        <div class="user-email">@inkboi</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Manila, PH</td>
-                            <td>
-                                <div class="tags">
-                                    <span class="tag">#Graffiti</span>
-                                    <span class="tag">#Street</span>
-                                </div>
-                            </td>
-                            <td>Today, 10:15 AM</td>
-                            <td><span class="status pending">Pending</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn view" title="View">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="action-btn approve" title="Approve">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                    <button class="action-btn reject" title="Reject">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                    <button class="action-btn feature" title="Feature">
-                                        <i class="fas fa-star"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox"></td>
-                            <td>
-                                <div class="art-cell">
-                                    <div class="art-thumb">
-                                        <img src="img/pexels-conojeghuo-173301.jpg" alt="Color Explosion">
-                                    </div>
-                                    <div class="art-info">
-                                        <div class="art-title">Color Explosion</div>
-                                        <div class="art-artist">@maya_hayuk</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Artist">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">Sarah Johnson</div>
-                                        <div class="user-email">@maya_hayuk</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Williamsburg, NYC</td>
-                            <td>
-                                <div class="tags">
-                                    <span class="tag">#Mural</span>
-                                    <span class="tag">#Abstract</span>
-                                </div>
-                            </td>
-                            <td>Today, 9:30 AM</td>
-                            <td><span class="status pending">Pending</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn view" title="View">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="action-btn approve" title="Approve">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                    <button class="action-btn reject" title="Reject">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                    <button class="action-btn feature" title="Feature">
-                                        <i class="fas fa-star"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox"></td>
-                            <td>
-                                <div class="art-cell">
-                                    <div class="art-thumb">
-                                        <img src="img/pexels-fernando-dos-santos-campos-1309016-2510245 (1).jpg" alt="The Thinker">
-                                    </div>
-                                    <div class="art-info">
-                                        <div class="art-title">The Thinker</div>
-                                        <div class="art-artist">Unknown Artist</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">Lena Kowalski</div>
-                                        <div class="user-email">@lena_k</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Berlin, Germany</td>
-                            <td>
-                                <div class="tags">
-                                    <span class="tag">#Sculpture</span>
-                                    <span class="tag">#Classic</span>
-                                </div>
-                            </td>
-                            <td>Yesterday, 5:45 PM</td>
-                            <td><span class="status pending">Pending</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn view" title="View">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="action-btn approve" title="Approve">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                    <button class="action-btn reject" title="Reject">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                    <button class="action-btn feature" title="Feature">
-                                        <i class="fas fa-star"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox"></td>
-                            <td>
-                                <div class="art-cell">
-                                    <div class="art-thumb">
-                                        <img src="img/pexels-heftiba-1194420.jpg" alt="Neon Dreams">
-                                    </div>
-                                    <div class="art-info">
-                                        <div class="art-title">Neon Dreams</div>
-                                        <div class="art-artist">@dface</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Artist">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">James Lee</div>
-                                        <div class="user-email">@dface</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Downtown LA</td>
-                            <td>
-                                <div class="tags">
-                                    <span class="tag">#Neon</span>
-                                    <span class="tag">#Installation</span>
-                                </div>
-                            </td>
-                            <td>Yesterday, 3:20 PM</td>
-                            <td><span class="status approved">Approved</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn view" title="View">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="action-btn edit" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="action-btn feature" title="Feature">
-                                        <i class="fas fa-star"></i>
-                                    </button>
-                                    <button class="action-btn reject" title="Reject">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox"></td>
-                            <td>
-                                <div class="art-cell">
-                                    <div class="art-thumb">
-                                        <img src="img/pexels-tobiasbjorkli-2119706 (1).jpg" alt="Abstract Flow">
-                                    </div>
-                                    <div class="art-info">
-                                        <div class="art-title">Abstract Flow</div>
-                                        <div class="art-artist">@felipe_pantone</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-avatar-sm">
-                                        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Artist">
-                                    </div>
-                                    <div class="user-info">
-                                        <div class="user-name-sm">Priya Kumar</div>
-                                        <div class="user-email">@felipe_pantone</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Wynwood, Miami</td>
-                            <td>
-                                <div class="tags">
-                                    <span class="tag">#Abstract</span>
-                                    <span class="tag">#Modern</span>
-                                </div>
-                            </td>
-                            <td>Yesterday, 1:10 PM</td>
-                            <td><span class="status featured">Featured</span></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn view" title="View">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="action-btn edit" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="action-btn feature" title="Unfeature">
-                                        <i class="fas fa-star"></i>
-                                    </button>
-                                    <button class="action-btn reject" title="Reject">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="pagination">
-                <div class="pagination-info">Showing 1 to 5 of 12 pending approvals</div>
-                <div class="pagination-btns">
-                    <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn">2</button>
-                    <button class="page-btn">3</button>
-                    <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Grid View (Hidden by default) -->
-        <div class="art-grid" id="gridView" style="display: none;">
-            <div class="art-card">
-                <img src="img/pexels-vincent-gerbouin-445991-2263686.jpg" alt="Urban Flame" class="art-card-img" onclick="openArtModal('Urban Flame')">
-                <div class="art-card-body">
-                    <div class="art-card-title">Urban Flame</div>
-                    <div class="art-card-meta">
-                        <span>@inkboi</span>
-                        <span>Manila, PH</span>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">#Graffiti</span>
-                        <span class="tag">#Street</span>
-                    </div>
-                    <div class="art-card-footer">
-                        <span class="art-card-status pending">Pending</span>
-                        <div class="art-card-actions">
-                            <button class="action-btn view" title="View">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="action-btn approve" title="Approve">
-                                <i class="fas fa-check"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="art-card">
-                <img src="img/pexels-conojeghuo-173301.jpg" alt="Color Explosion" class="art-card-img" onclick="openArtModal('Color Explosion')">
-                <div class="art-card-body">
-                    <div class="art-card-title">Color Explosion</div>
-                    <div class="art-card-meta">
-                        <span>@maya_hayuk</span>
-                        <span>Williamsburg, NYC</span>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">#Mural</span>
-                        <span class="tag">#Abstract</span>
-                    </div>
-                    <div class="art-card-footer">
-                        <span class="art-card-status pending">Pending</span>
-                        <div class="art-card-actions">
-                            <button class="action-btn view" title="View">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="action-btn approve" title="Approve">
-                                <i class="fas fa-check"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="art-card">
-                <img src="img/pexels-fernando-dos-santos-campos-1309016-2510245 (1).jpg" alt="The Thinker" class="art-card-img" onclick="openArtModal('The Thinker')">
-                <div class="art-card-body">
-                    <div class="art-card-title">The Thinker</div>
-                    <div class="art-card-meta">
-                        <span>@lena_k</span>
-                        <span>Berlin, Germany</span>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">#Sculpture</span>
-                        <span class="tag">#Classic</span>
-                    </div>
-                    <div class="art-card-footer">
-                        <span class="art-card-status pending">Pending</span>
-                        <div class="art-card-actions">
-                            <button class="action-btn view" title="View">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="action-btn approve" title="Approve">
-                                <i class="fas fa-check"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="art-card">
-                <img src="img/pexels-heftiba-1194420.jpg" alt="Neon Dreams" class="art-card-img" onclick="openArtModal('Neon Dreams')">
-                <div class="art-card-body">
-                    <div class="art-card-title">Neon Dreams</div>
-                    <div class="art-card-meta">
-                        <span>@dface</span>
-                        <span>Downtown LA</span>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">#Neon</span>
-                        <span class="tag">#Installation</span>
-                    </div>
-                    <div class="art-card-footer">
-                        <span class="art-card-status approved">Approved</span>
-                        <div class="art-card-actions">
-                            <button class="action-btn view" title="View">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="action-btn feature" title="Feature">
-                                <i class="fas fa-star"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="art-card">
-                <img src="img/pexels-tobiasbjorkli-2119706 (1).jpg" alt="Abstract Flow" class="art-card-img" onclick="openArtModal('Abstract Flow')">
-                <div class="art-card-body">
-                    <div class="art-card-title">Abstract Flow</div>
-                    <div class="art-card-meta">
-                        <span>@felipe_pantone</span>
-                        <span>Wynwood, Miami</span>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">#Abstract</span>
-                        <span class="tag">#Modern</span>
-                    </div>
-                    <div class="art-card-footer">
-                        <span class="art-card-status featured">Featured</span>
-                        <div class="art-card-actions">
-                            <button class="action-btn view" title="View">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="action-btn feature" title="Unfeature">
-                                <i class="fas fa-star"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Artwork Detail Modal -->
-        <div class="modal" id="artModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="modalArtTitle">Artwork Details</h3>
-                    <button class="modal-close" onclick="closeArtModal()">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <img src="img/pexels-vincent-gerbouin-445991-2263686.jpg" alt="Artwork Preview" class="art-preview">
-                    <div class="art-details">
-                        <div>
-                            <div class="detail-group">
-                                <div class="detail-label">Artist</div>
-                                <div class="detail-value">
-
-                                </div>
-                            </div>
-                            <div class="detail-group">
-                                <div class="detail-label">Location</div>
-                                <div class="detail-value">Manila, Philippines</div>
-                            </div>
-                            <div class="detail-group">
-                                <div class="detail-label">Coordinates</div>
-                                <div class="detail-value">14.5995° N, 120.9842° E</div>
-                            </div>
-                            <div class="detail-group">
-                                <div class="detail-label">Upload Date</div>
-                                <div class="detail-value">June 15, 2023 at 10:15 AM</div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="detail-group">
-                                <div class="detail-label">Status</div>
-                                <div class="detail-value"><span class="status pending">Pending Approval</span></div>
-                            </div>
-                            <div class="detail-group">
-                                <div class="detail-label">Tags</div>
-                                <div class="tags">
-                                    <span class="tag">#Graffiti</span>
-                                    <span class="tag">#Street</span>
-                                    <span class="tag">#Urban</span>
-                                </div>
-                            </div>
-                            <div class="detail-group">
-                                <div class="detail-label">Description</div>
-                                <div class="detail-value">A vibrant graffiti piece depicting urban life with fiery colors and dynamic shapes. Captured in the streets of Manila during the annual street art festival.</div>
-                            </div>
-                            <div class="detail-group">
-                                <div class="detail-label">Reports</div>
-                                <div class="detail-value">No reports</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" onclick="closeArtModal()">
-                        <i class="fas fa-times"></i> Close
-                    </button>
-                    <button class="btn btn-primary">
-                        <i class="fas fa-check"></i> Approve
-                    </button>
-                    <button class="btn btn-secondary">
-                        <i class="fas fa-star"></i> Feature
-                    </button>
-                    <button class="btn btn-secondary">
-                        <i class="fas fa-edit"></i> Edit
-                    </button>
-                    <button class="btn btn-secondary">
-                        <i class="fas fa-times"></i> Reject
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Edit Artwork Modal -->
-        <div class="modal" id="editArtModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Edit Artwork Details</h3>
-                    <button class="modal-close" onclick="closeEditArtModal()">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-row">
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label class="form-label">Artwork Title</label>
-                                    <input type="text" class="form-control" value="Urban Flame">
-                                </div>
-                            </div>
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label class="form-label">Artist</label>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label class="form-label">Location</label>
-                                    <input type="text" class="form-control" value="Manila, Philippines">
-                                </div>
-                            </div>
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label class="form-label">Coordinates</label>
-                                    <input type="text" class="form-control" value="14.5995° N, 120.9842° E">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Tags (comma separated)</label>
-                            <input type="text" class="form-control" value="Graffiti, Street, Urban">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Description</label>
-                            <textarea class="form-control form-textarea">A vibrant graffiti piece depicting urban life with fiery colors and dynamic shapes. Captured in the streets of Manila during the annual street art festival.</textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Status</label>
-                            <select class="form-control">
-                                <option>Pending</option>
-                                <option selected>Approved</option>
-                                <option>Rejected</option>
-                                <option>Featured</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Replacement Image (optional)</label>
-                            <input type="file" class="form-control">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" onclick="closeEditArtModal()">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                    <button class="btn btn-primary">
-                        <i class="fas fa-save"></i> Save Changes
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
+</div>
+
+<!-- Add this JavaScript either in your admin-artupload.js or in a script tag -->
+<script>
+    // Function to open modal with post data
+ function openArtModalFromElement(element) {
+    const post = JSON.parse(element.dataset.post);
+    const user = JSON.parse(element.dataset.user);
+
+    if (post) {
+        document.getElementById('modalArtTitle').textContent = post.caption || 'Untitled';
+        document.getElementById('modalArtImage').src = post.image_url ?
+            `/storage/${post.image_url}` :
+            '/img/default-artwork.jpg';
+
+        document.getElementById('modalArtist').innerHTML = `
+            <div class="user-cell">
+                <div class="user-avatar-sm">
+                    <img src="${user.profile_picture ? `/storage/${user.profile_picture}` : '/img/default.jpg'}" alt="User Avatar">
+                </div>
+                <div class="user-info">
+                    <div class="user-name-sm">${user.name || 'Unknown'}</div>
+                    <div class="user-email">${user.email || 'unknown'}</div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('modalLocation').textContent = post.location_name || 'Unknown';
+        document.getElementById('modalCoordinates').textContent =
+            post.latitude && post.longitude ?
+                `${post.latitude}° N, ${post.longitude}° E` : 'Not specified';
+        document.getElementById('modalUploadDate').textContent =
+            new Date(post.created_at).toLocaleString();
+
+        const statusElement = document.getElementById('modalStatus');
+        let statusClass = 'pending';
+        let statusText = 'Pending';
+
+        if (post.is_featured) {
+            statusClass = 'featured';
+            statusText = 'Featured';
+        } else if (post.is_approved) {
+            statusClass = 'approved';
+            statusText = 'Approved';
+        }
+
+        statusElement.innerHTML = `<span class="status ${statusClass}">${statusText}</span>`;
+
+        const tagsElement = document.getElementById('modalTags');
+        tagsElement.innerHTML = `
+            <span class="tag">#${post.shared_by ? 'shared' : 'original'}</span>
+            ${post.image_url ? '<span class="tag">#photo</span>' : ''}
+            ${post.tags ? post.tags.split(',').map(tag => `<span class="tag">#${tag.trim()}</span>`).join('') : ''}
+        `;
+
+        document.getElementById('modalDescription').textContent = post.description || 'No description provided';
+
+        ['Approve', 'Feature', 'Edit', 'Reject'].forEach(action => {
+            const btn = document.getElementById(`modal${action}Btn`);
+            if (btn) btn.dataset.postId = post.id;
+        });
+
+        document.getElementById('artModal').style.display = 'block';
+    }
+}
+
+
+    // Function to close modal
+    function closeArtModal() {
+        document.getElementById('artModal').style.display = 'none';
+    }
+
+    // Function to find post by ID (mock implementation - replace with your actual data fetching)
+    function findPostById(postId) {
+        // In a real implementation, you might:
+        // 1. Search through your existing rendered posts
+        // 2. Make an API call to fetch the post details
+        // 3. Use a data attribute on the clicked element
+
+        // This is a mock implementation - replace with your actual data
+        return { };
+    }
+
+    // Event listeners for view buttons
+    document.addEventListener('DOMContentLoaded', function() {
+        // For table view
+        document.querySelectorAll('.action-btn.view').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const postId = this.dataset.postId;
+                openArtModal(postId);
+            });
+        });
+
+        // For grid view
+        document.querySelectorAll('.art-card .action-btn.view').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const postId = this.dataset.postId;
+                openArtModal(postId);
+            });
+        });
+
+        // Close modal when clicking outside content
+        document.getElementById('artModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeArtModal();
+            }
+        });
+    });
+</script>
+
 <!-- Before closing </body> -->
 <script src="{{ asset('js/loading.js') }}"></script>
 </body>

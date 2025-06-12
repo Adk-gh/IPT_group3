@@ -110,19 +110,18 @@ Happy exploring!
 The Street & Ink Team</textarea>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label class="form-label">Default Language</label>
-                                <select class="form-control">
-                                    <option>English</option>
-                                    <option>Spanish</option>
-                                    <option>French</option>
-                                    <option>German</option>
-                                    <option>Japanese</option>
-                                </select>
-                            </div>
-                        </div>
+<form action="{{ route('changeLang') }}" method="POST">
+    @csrf
+    <select name="locale" onchange="this.form.submit()" class="form-control">
+        <option value="en" {{ app()->getLocale() === 'en' ? 'selected' : '' }}>English</option>
+        <option value="es" {{ app()->getLocale() === 'es' ? 'selected' : '' }}>Spanish</option>
+        <option value="fr" {{ app()->getLocale() === 'fr' ? 'selected' : '' }}>French</option>
+    </select>
+</form>
+
+
+
+
                         <div class="form-col">
                             <div class="form-group">
                                 <label class="form-label">Timezone</label>

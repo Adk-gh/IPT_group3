@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Social Feed | Street & Ink</title>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -35,6 +37,8 @@
     <!-- Meta -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="user-id" content="{{ Auth::id() ?? 'guest' }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 </head>
 <body>
     <header id="header">
@@ -148,12 +152,15 @@
     @foreach($posts as $post)
 
         @php
-             $commentable = $post instanceof \App\Models\SharedPost ? $post->post : $post;
-            $isShared = $post instanceof \App\Models\SharedPost;
-            $originalPost = $isShared ? $post->post : $post;
-            $sharedByUser = $isShared ? $post->user : null;
-            $originalAuthor = $isShared ? $post->post->user : $post->user;
-        @endphp
+    $isShared = $post instanceof \App\Models\SharedPost;
+    $originalPost = $isShared ? $post->post : $post;
+    $sharedByUser = $isShared ? $post->user : null;
+    $originalAuthor = $originalPost->user;
+
+    // ✅ Important fix here: $commentable is the actual post object — shared or original
+    $commentable = $post;
+@endphp
+
 
         <div class="post-card card mb-4" data-post-id="{{ $originalPost->id }}">
             @if($isShared)
@@ -197,6 +204,65 @@
                             <small class="text-muted"><i class="far fa-clock me-1"></i>{{ $originalPost->created_at->diffForHumans() }}</small>
 
                         </div>
+           <!-- Three-dot menu button -->
+<div class="dropdown d-inline-block ms-2">
+    <button class="btn btn-sm btn-link text-muted" type="button" id="postOptionsDropdown-{{ $originalPost->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-ellipsis-h"></i>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="postOptionsDropdown-{{ $originalPost->id }}">
+        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#reportModal-{{ $originalPost->id }}">Report Post</a></li>
+    </ul>
+</div>
+
+<!-- Report Modal -->
+<div class="modal fade" id="reportModal-{{ $originalPost->id }}" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportModalLabel">Report Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('posts.report', $originalPost->id) }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <p>Why are you reporting this post?</p>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="report_reason" id="reason1-{{ $originalPost->id }}" value="Inappropriate Content" checked>
+                            <label class="form-check-label" for="reason1-{{ $originalPost->id }}">
+                                <i class="fas fa-exclamation-triangle text-warning me-2"></i>Inappropriate Content
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="report_reason" id="reason2-{{ $originalPost->id }}" value="Hate Speech">
+                            <label class="form-check-label" for="reason2-{{ $originalPost->id }}">
+                                <i class="fas fa-ban text-danger me-2"></i>Hate Speech
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="report_reason" id="reason3-{{ $originalPost->id }}" value="Harassment">
+                            <label class="form-check-label" for="reason3-{{ $originalPost->id }}">
+                                <i class="fas fa-user-slash text-danger me-2"></i>Harassment
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label for="additionalInfo-{{ $originalPost->id }}" class="form-label">Additional details (optional):</label>
+                        <textarea class="form-control" id="additionalInfo-{{ $originalPost->id }}" name="additional_info" rows="3" placeholder="Please provide more information..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-flag me-1"></i> Submit Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
                     </div>
 
                     <div class="post-content mb-3">
@@ -211,14 +277,20 @@
                     </div>
 
                     <div class="post-actions d-flex justify-content-between border-top border-bottom py-2 mb-3">
+@auth
                         <!-- Like -->
-                        <button class="post-action-btn like-btn btn btn-sm btn-outline-secondary"
-                                data-post-id="{{ $isShared ? $post->id : $originalPost->id }}"
-                                data-is-shared="{{ $isShared ? 'true' : 'false' }}"
-                                data-liked="{{ $isShared ? $post->isLikedByUser() : ($originalPost->isLikedByUser() ? 'true' : 'false') }}">
-                            <i class="{{ $isShared ? ($post->isLikedByUser() ? 'fas fa-heart text-danger' : 'far fa-heart') : ($originalPost->isLikedByUser() ? 'fas fa-heart text-danger' : 'far fa-heart') }} me-1"></i>
-                            <span class="like-count">{{ $isShared ? $post->likes_count : $originalPost->likes()->count() }}</span>
-                        </button>
+            <!-- Replace your like button with this -->
+<button class="like-btn btn btn-sm btn-outline-secondary"
+        data-likeable-id="{{ $commentable->id }}"
+        data-likeable-type="{{ get_class($commentable) }}"
+        data-liked="{{ $commentable->isLikedByUser() ? 'true' : 'false' }}">
+    <i class="{{ $commentable->isLikedByUser() ? 'fas fa-heart text-danger' : 'far fa-heart' }} me-1"></i>
+    <span class="like-count">{{ $commentable->likes_count }}</span>
+</button>
+
+@endauth
+
+
 
                         <!-- Comment -->
                         <button class="post-action-btn comment-btn btn btn-sm btn-outline-secondary"
@@ -245,30 +317,39 @@
                         </button>
                     </div>
 
-                    <!-- First Comment Preview -->
-                    @php $firstComment = $commentable->comments->first(); @endphp
-                    @if($firstComment)
-                        <div class="comment d-flex align-items-start mb-3">
-                            <img src="{{ $firstComment->user?->profile_picture ? asset('storage/' . $firstComment->user->profile_picture) : asset('img/default.jpg') }}"
-                                class="rounded-circle me-2" style="width: 40px; height: 40px;">
-                            <div class="flex-grow-1">
-                                <strong>{{ $firstComment->user?->username ?? $firstComment->user?->name ?? 'Unknown User' }}</strong>
-                                <p class="mb-1">{{ $firstComment->text }}</p>
-                                <small class="text-muted" class="far fa-clock me-1">{{ $firstComment->created_at->diffForHumans() }}</small>
+             @php
+    $firstComment = $commentable->comments?->first();
+@endphp
 
-                            </div>
-                        </div>
-                    @endif
+@if($firstComment)
+    @php
+        $user = $firstComment->user;
+        $username = $user->username ?? $user->name ?? 'Unknown User';
+        $profilePic = $user?->profile_picture
+            ? asset('storage/' . $user->profile_picture)
+            : asset('img/default.jpg');
+    @endphp
 
-                    <!-- View All Comments -->
-                    @if($commentable->comments->count() > 1)
-                        <button type="button" class="btn btn-link p-0 mb-3"
-                                data-bs-toggle="modal"
-                                data-bs-target="#commentModal-{{ $commentable->id }}"
-                                style="text-decoration: underline;">
-                            View all {{ $commentable->comments->count() }} comments
-                        </button>
-                    @endif
+    <div class="comment d-flex align-items-start mb-3">
+        <img src="{{ $profilePic }}" class="rounded-circle me-2" style="width: 40px; height: 40px;">
+        <div class="flex-grow-1">
+            <strong>{{ $username }}</strong>
+            <p class="mb-1">{{ $firstComment->text }}</p>
+            <small class="text-muted">{{ $firstComment->created_at->diffForHumans() }}</small>
+        </div>
+    </div>
+@endif
+
+@if($commentable->comments->count() > 1)
+    <button type="button" class="btn btn-link p-0 mb-3"
+            data-bs-toggle="modal"
+            data-bs-target="#commentModal-{{ $commentable->id }}"
+            style="text-decoration: underline;">
+        View all {{ $commentable->comments->count() }} comments
+    </button>
+@endif
+
+
 
                     <!-- Add Comment -->
 
@@ -282,34 +363,33 @@
                 </div>
             </div>
 
-            <!-- Comment Modal -->
             <div class="modal fade" id="commentModal-{{ $commentable->id }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-scrollable">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Comments</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            @if($commentable->comments->count())
-                                @foreach($commentable->comments as $comment)
-                                    <div class="d-flex mb-3">
-                                        <img src="{{ $comment->user?->profile_picture ? asset('storage/' . $comment->user->profile_picture) : asset('img/default.jpg') }}"
-                                            class="rounded-circle me-2" style="width: 40px; height: 40px;">
-                                        <div>
-                                            <strong>{{ $comment->user?->username ?? $comment->user?->name ?? 'Unknown User' }}</strong>
-                                            <p class="mb-1">{{ $comment->text }}</p>
-                                             <small class="text-muted" class="far fa-clock me-1">{{ $firstComment->created_at->diffForHumans() }}</small>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @else
-                                <p class="text-muted">No comments yet.</p>
-                            @endif
-                        </div>
-                    </div>
-                </div>
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Comments</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div class="modal-body">
+                @if($commentable->comments->count())
+                    @foreach($commentable->comments as $comment)
+                        <div class="d-flex mb-3">
+                            <img src="{{ $comment->user?->profile_picture ? asset('storage/' . $comment->user->profile_picture) : asset('img/default.jpg') }}"
+                                class="rounded-circle me-2" style="width: 40px; height: 40px;">
+                            <div>
+                                <strong>{{ $comment->user?->username ?? $comment->user?->name ?? 'Unknown User' }}</strong>
+                                <p class="mb-1">{{ $comment->text }}</p>
+                                <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                            </div>
+                        </div>
+                    @endforeach
+                @else
+                    <p class="text-muted">No comments yet.</p>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
 
             <!-- Share Modal -->
             <div class="modal fade" id="shareModal-{{ $originalPost->id }}" tabindex="-1" aria-hidden="true">
@@ -360,6 +440,78 @@
         </div>
     </div>
 </div>
+
+<script>document.addEventListener('DOMContentLoaded', function() {
+    // Handle like button clicks
+    document.querySelectorAll('.like-btn').forEach(button => {
+        button.addEventListener('click', async function(e) {
+            e.preventDefault();
+
+            // Check if user is logged in
+            const userId = document.querySelector('meta[name="user-id"]').content;
+            if (userId === 'guest') {
+                window.location.href = "{{ route('login') }}";
+                return;
+            }
+
+            const likeableId = this.getAttribute('data-likeable-id');
+            const likeableType = this.getAttribute('data-likeable-type');
+            const isLiked = this.getAttribute('data-liked') === 'true';
+
+            // Add loading state
+            const icon = this.querySelector('i');
+            const originalIconClass = icon.className;
+            icon.className = 'fas fa-spinner fa-spin me-1';
+            this.disabled = true;
+
+            try {
+                const response = await fetch("{{ route('likes.toggle') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        likeable_id: likeableId,
+                        likeable_type: likeableType
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to toggle like');
+                }
+
+                if (data.success) {
+                    // Update button state
+                    this.setAttribute('data-liked', data.liked.toString());
+
+                    // Update icon
+                    icon.className = data.liked
+                        ? 'fas fa-heart text-danger me-1'
+                        : 'far fa-heart me-1';
+
+                    // Update count
+                    const countElement = this.querySelector('.like-count');
+                    if (countElement) {
+                        countElement.textContent = data.likes_count;
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred: ' + error.message);
+                // Revert to original icon on error
+                icon.className = originalIconClass;
+            } finally {
+                this.disabled = false;
+            }
+        });
+    });
+});
+</script>
 
 
     <!-- Scripts -->
