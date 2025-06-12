@@ -9,6 +9,11 @@ use App\Http\Controllers\ProfileSetupController;
 use App\Http\Controllers\SharedPostInteractionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use Illuminate\Http\Request;
+use App\Http\Controllers\SavedPostController;
+
+use App\Http\Controllers\ContactController;
+
 
 use Illuminate\Support\Facades\Auth;
 
@@ -32,7 +37,7 @@ Route::middleware(['auth','profile.complete'])->group(function () {
     Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
     Route::post('/user/cover-update', [AuthController::class, 'updateCoverPhoto'])->name('user.cover.update');
     Route::post('/user/bio-update', [AuthController::class, 'updateBio'])->name('user.bio.update');
-     Route::get('/ProfileSetup', [ProfileSetupController::class, 'show'])->name('profile.setup');
+    Route::get('/ProfileSetup', [ProfileSetupController::class, 'show'])->name('profile.setup');
 
     // Posts
     Route::post('/posts', [AuthController::class, 'storePost'])->name('posts.store');
@@ -57,19 +62,21 @@ Route::middleware(['auth','profile.complete'])->group(function () {
         return App\Models\Tag::orderBy('name')->get();
     });
 
-    // Admin dashboard
-    Route::prefix('admin')->group(function () {
-        Route::get('/dashboard', [AdminController::class, 'showAdminDashboard'])->name('admin.dashboard');
-        Route::get('/ArtistPartners', [AdminController::class, 'showArtistPartner'])->name('admin.ArtistPartners');
-        Route::get('/ArtUpload', [AdminController::class, 'showArtUpload'])->name('admin.ArtUpload');
-        Route::get('/Backup', [AdminController::class, 'showBackup'])->name('admin.Backup');
-        Route::get('/Location', [AdminController::class, 'showLocation'])->name('admin.Location');
-        Route::get('/Reports', [AdminController::class, 'showReports'])->name('admin.Reports');
-        Route::get('/Settings', [AdminController::class, 'showSettings'])->name('admin.Settings');
-        Route::get('/UserManagement', [AdminController::class, 'showUserManagement'])->name('admin.UserManagement');
-    });
+  // Admin dashboard routes with simple email check
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'showAdminDashboard'])->name('admin.dashboard');
+    Route::get('/ArtistPartners', [AdminController::class, 'showArtistPartner'])->name('admin.ArtistPartners');
+    Route::get('/ArtUpload', [AdminController::class, 'showArtUpload'])->name('admin.ArtUpload');
+    Route::get('/Backup', [AdminController::class, 'showBackup'])->name('admin.Backup');
+    Route::get('/Location', [AdminController::class, 'showLocation'])->name('admin.Location');
+    Route::get('/Reports', [AdminController::class, 'showReports'])->name('admin.Reports');
+    Route::get('/Settings', [AdminController::class, 'showSettings'])->name('admin.Settings');
+    Route::get('/UserManagement', [AdminController::class, 'showUserManagement'])->name('admin.UserManagement');
+});
 
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+// Logout route
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -85,13 +92,16 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/posts/{post}/share', [AuthController::class, 'share'])->name('posts.share');
 
 
-Route::post('/shared-posts/{id}/like', [SharedPostInteractionController::class, 'likeSharedPost'])->middleware('auth');
-Route::post('/shared-posts/{id}/comment', [SharedPostInteractionController::class, 'commentOnSharedPost'])->middleware('auth');
+
 
 Route::get('/users', [UserController::class, 'index'])->name('admin.user.table');
 Route::get('/admin/users', [UserController::class, 'index'])->name('admin.UserManagement');
 
 
+Route::get('/admin/reports/{report}/details', [AdminController::class, 'getReportDetails'])
+    ->middleware('auth')
+    ->name('reports.details');
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
 
 // routes/web.php
@@ -104,4 +114,33 @@ Route::get('/api/tags', function () {
 });
 
 });
-?>
+
+Route::post('/posts/{post}/report', [AuthController::class, 'report'])->name('posts.report')->middleware('auth');
+
+
+
+Route::post('/change-language', function (Request $request) {
+    $locale = $request->input('locale');
+
+    // Optional: add validation
+    if (in_array($locale, ['en', 'es', 'fr'])) {
+        session(['locale' => $locale]);
+    }
+
+    return redirect()->back();
+})->name('changeLang');
+
+Route::get('/dashboard/chart-data', [AdminController::class, 'chartData']);
+
+Route::post('/likes/toggle', [LikeController::class, 'toggle'])->middleware('auth')->name('likes.toggle');
+// routes/web.php
+Route::post('/posts/save', [SavedPostController::class, 'toggleSave'])
+    ->name('posts.save')
+    ->middleware('auth');
+
+Route::middleware('auth')->get('/tags/list', [AuthController::class, 'listTags']);
+
+Route::middleware('auth')->group(function () {
+    Route::post('/posts', [AuthController::class, 'storePost'])->name('posts.store');
+    Route::get('/posts/filter', [AuthController::class, 'filterPosts'])->name('posts.filter');
+});

@@ -21,8 +21,6 @@
             <div class="header-right">
                 <nav id="nav">
                     <ul>
-
-
                         @auth
                          <li><a href="{{ route('social_feed') }}">Social Feed</a></li>
                         <li><a href="{{ route('articles') }}">Articles</a></li>
@@ -30,32 +28,22 @@
                         <li><a href="{{ route('contact') }}">Contact</a></li>
                         <li><a href="{{ route('aboutus') }}">About</a></li>
 
-                       <li class="theme-toggle-container">
+                        <li class="theme-toggle-container">
                             <button class="theme-toggle" id="themeToggle">
                                 <i class="fas fa-moon"></i>
                             </button>
                         </li>
-                        <!--<li class="notification-container">
-                            <button class="notification-btn">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
-                </button>
-                        </li>
-                    -->
 
                         <li class="profile-container">
                             <button class="profile-btn">
-                                <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : 'img/default.jpg' }}" alt="Profile" class="profile-img">
                                 <span>{{ Auth::user()->name }}</span>
+                                <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : 'img/default.jpg' }}" alt="Profile" class="profile-img">
                             </button>
                             <div class="profile-dropdown">
-
-                                 <a href="{{ route('profile') }}"><i class="fas fa-user-cog mr-2"></i> Manage Profile</a>
-
+                                <a href="{{ route('profile') }}"><i class="fas fa-user-cog mr-2"></i> Manage Profile</a>
                                 <div class="divider"></div>
                                 @auth
                                     @if(Auth::user()->email === 'admin@gmail.com')
-                                        <!-- Admin-only content here -->
                                         <a href="{{ route('admin.dashboard') }}">
                                             <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                                         </a>
@@ -83,7 +71,5 @@
     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="logout-form" style="display: none;">
         @csrf
     </form>
-
-
 </body>
 </html>

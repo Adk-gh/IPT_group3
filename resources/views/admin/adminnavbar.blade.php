@@ -24,18 +24,16 @@
                     <input type="text" class="search-input" placeholder="Search...">
                     <button class="search-btn"><i class="fas fa-search"></i></button>
                 </div>
-                <button class="notification-btn">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
-                </button>
+
                 <button class="theme-toggle" id="themeToggle">
                     <i class="fas fa-moon"></i>
                 </button>
                 <div class="user-menu">
                     <div class="user-avatar">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Admin">
+                        <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : 'img/default.jpg' }}"
+                     alt="{{ Auth::user()->username }}" class="profile-avatar" id="avatarImage">
                     </div>
-                    <div class="user-name">Admin User</div>
+                    <div class="user-name">{{ Auth::user()->name }}</div>
                     <div class="user-dropdown">
                         <a href="{{ route('profile') }}" class="dropdown-item"><i class="fas fa-user"></i> Profile</a>
                         <a href="{{ route('admin.Settings') }}" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>

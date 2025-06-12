@@ -793,7 +793,103 @@ header.scrolled {
   border-radius: 6px;
   flex-shrink: 0;
 }
+/* Add this to your CSS file */
+.post-meta .dropdown-toggle::after {
+    display: none;
+}
 
+.post-meta .dropdown-menu {
+    min-width: 150px;
+}
+
+.post-meta .btn-link {
+    text-decoration: none;
+    padding: 0 5px;
+}
+#tagsPreview {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #333;
+    display: none;
+}
+#photoPreviewContainer {
+    margin-top: 10px;
+}
+#photoPreview {
+    max-width: 100%;
+    max-height: 200px;
+}
+#locationModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+#tagsDropdown {
+    display: none;
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    z-index: 1000;
+}
+.tag-checkbox:checked + .form-check-label {
+    font-weight: bold;
+    color: #e63946;
+}
+
+.feed-tabs {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.feed-tab {
+    cursor: pointer;
+}
+
+.feed-tab-link {
+    text-decoration: none;
+    color: #333;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.feed-tab-link.active {
+    background-color: #e63946;
+    color: white;
+}
+
+.feed-tab-link:hover {
+    background-color: #f1f1f1;
+}
+
+#postsContainer {
+    transition: opacity 0.3s ease;
+}
+
+#postsContainer.loading {
+    opacity: 0.5;
+}
+
+.post-card {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 /* Create post section */
 .create-post {
   width: 92%;

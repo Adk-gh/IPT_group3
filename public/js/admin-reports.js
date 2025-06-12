@@ -82,3 +82,43 @@
         document.addEventListener('click', () => {
             document.querySelector('.user-dropdown').classList.remove('active');
         });
+
+
+        // Function to open specific modal
+    function openReportModal(reportId) {
+        document.getElementById('reportModal-' + reportId).style.display = 'block';
+    }
+
+    // Function to close specific modal
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        document.querySelectorAll('[id^="reportModal-"]').forEach(function(modal) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    }
+
+    // Action functions
+    function dismissReport(reportId) {
+        // AJAX call to dismiss report
+        closeModal('reportModal-' + reportId);
+    }
+
+    function warnUser(userId) {
+        // AJAX call to warn user
+    }
+
+    function deleteContent(postId) {
+        // AJAX call to delete content
+    }
+
+    function resolveReport(reportId) {
+        const notes = document.getElementById('notes-' + reportId).value;
+        // AJAX call to resolve report with notes
+        closeModal('reportModal-' + reportId);
+    }

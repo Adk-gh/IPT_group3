@@ -55,10 +55,14 @@ class User extends Authenticatable
     }
 
     public function savedPosts()
-    {
-        return $this->belongsToMany(Post::class, 'saved_posts', 'user_id', 'post_id')->withTimestamps();
-    }
+{
+    return $this->belongsToMany(Post::class, 'saved_posts', 'user_id', 'post_id');
+}
 
+public function hasSavedPost($postId)
+{
+    return $this->savedPosts()->where('post_id', $postId)->exists();
+}
     public function following()
     {
         return $this->belongsToMany(User::class, 'followers', 'follower_id', 'following_id');
@@ -78,5 +82,10 @@ class User extends Authenticatable
     public function getArtworksCountAttribute()
     {
         return $this->posts()->count();
+    }
+    //reports
+    public function reports()
+    {
+        return $this->hasMany(PostReport::class, 'user_id', 'user_id');
     }
 }

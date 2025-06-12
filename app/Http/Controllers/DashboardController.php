@@ -11,11 +11,20 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $users = User::all(); // Fetch all users
-        return view('admin.user.table', compact('users')); // Pass $users to the view
+       // Fetch all users
+$users = User::all();
+
+// Count unique locations from posts
+$uniqueLocationsCount = Post::whereNotNull('location_name')
+                            ->distinct('location_name')
+                            ->count('location_name');
+
+// Pass both variables to the 'dashboard' view
+return view('admin.dashboard', compact('users', 'uniqueLocationsCount'));
     }
+
     // app/Http/Controllers/DashboardController.php
- public function chartData()
+    public function chartData()
     {
         // User growth data (last 6 months)
         $userGrowth = User::select(
