@@ -64,86 +64,93 @@
                 <div class="social-container">
                     <div class="feed-content">
                         <!-- Post Creation Form -->
-                        <div class="create-post card mb-4">
-                            <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
-                                @csrf
-                                <div class="card-body">
-                                    <div class="create-post-header mb-3">
-                                        <div class="user-avatar d-flex align-items-center gap-5">
-                                            <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : 'img/default.jpg' }}"
-                                                alt="User Avatar"
-                                                class="rounded-circle me-2">
-                                            <span class="fw-bold">{{ Auth::user()->username }}</span>
-                                        </div>
-                                        <input type="text" name="caption" class="form-control post-input mt-2" placeholder="What street art did you discover today?" required>
-                                    </div>
+<div class="create-post card mb-4">
+    <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data" id="postForm">
+        @csrf
+        <div class="card-body">
+            <div class="create-post-header mb-3">
+                <div class="user-avatar d-flex align-items-center gap-5">
+                    <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : 'img/default.jpg' }}"
+                         alt="User Avatar"
+                         class="rounded-circle me-2">
+                    <span class="fw-bold">{{ Auth::user()->username }}</span>
+                </div>
+                <input type="text" name="caption" class="form-control post-input mt-2" placeholder="What street art did you discover today?" required>
+            </div>
 
-                                    <!-- Preview Area -->
-                                    <div id="photoPreviewContainer" style="margin-top: 10px; display: none;">
-                                        <img id="photoPreview" src="" alt="Selected Photo Preview" style="max-width: 100%; border-radius: 8px;">
-                                        <div id="locationPreview" style="margin-top:10px; font-weight: bold; color: #333; display:none;"></div>
-                                    </div>
+            <!-- Preview Area -->
+            <div id="photoPreviewContainer" style="margin-top: 10px; display: none;">
+                <img id="photoPreview" src="" alt="Selected Photo Preview" style="max-width: 100%; border-radius: 8px;">
+                <div id="locationPreview" style="margin-top:10px; font-weight: bold; color: #333; display:none;"></div>
+                <div id="tagsPreview" style="margin-top:10px; font-weight: bold; color: #333; display:none;"></div>
+            </div>
 
-                                    <input type="file" name="image_url" id="photoInput" class="d-none">
+            <input type="file" id="photoInput" accept="image/*" name="image_url" class="d-none">
 
-                                    <!-- Post Actions -->
-                                    <div class="post-actions d-flex align-items-center gap-2">
-                                        <button type="button" class="btn btn-outline-secondary post-action-btn" onclick="document.getElementById('photoInput').click();">
-                                            <i class="fas fa-image me-1"></i> Photo
-                                        </button>
+            <!-- Post Actions -->
+            <div class="post-actions d-flex align-items-center gap-2">
+                <button type="button" class="btn btn-outline-secondary post-action-btn" onclick="document.getElementById('photoInput').click();">
+                    <i class="fas fa-image me-1"></i> Photo
+                </button>
 
-                                        <!-- Location Modal Trigger -->
-                                        <button type="button" class="btn btn-outline-secondary post-action-btn" id="locationToggle">
-                                            <i class="fas fa-map-marker-alt me-1"></i> Location
-                                        </button>
+                <!-- Location Modal Trigger -->
+                <button type="button" class="btn btn-outline-secondary post-action-btn" id="locationToggle">
+                    <i class="fas fa-map-marker-alt me-1"></i> Location
+                </button>
 
-                                        <div id="locationModal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center;">
-                                            <div style="background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 600px; position: relative;">
-                                                <button type="button" id="closeModal" style="position: absolute; top: 10px; right: 15px; font-size: 1.5rem; border:none; background:none; cursor:pointer;">×</button>
-                                                <h3>Select Location</h3>
-                                                <div id="map" style="height: 400px; margin-bottom: 10px;"></div>
-                                                <input type="text" name="location_name" id="location_name" placeholder="Location name" style="width: 100%; padding: 8px; margin-bottom: 10px;"/>
-                                                <input type="hidden" name="latitude" id="latitude" />
-                                                <input type="hidden" name="longitude" id="longitude" />
-                                                <button type="button" id="clearLocation" class="btn btn-secondary">Clear Location</button>
-                                                <button type="button" id="saveLocation" class="btn btn-primary" style="float: right;">Save Location</button>
-                                                <div style="clear: both;"></div>
-                                            </div>
-                                        </div>
-                                         <!-- Tags Dropdown -->
-                                        <div class="dropdown">
-                                            <button class="btn btn-outline-secondary post-action-btn dropdown-toggle" type="button" id="tagsButton" data-bs-toggle="dropdown">
-                                                <i class="fas fa-tag me-1"></i> Tags
-                                            </button>
-                                            <div class="dropdown-menu p-3" id="tagsDropdown">
-                                                <!-- dynamically populated -->
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="tags[]" id="selectedTags">
+                <div id="locationModal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center;">
+                    <div style="background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 600px; position: relative;">
+                        <button type="button" id="closeModal" style="position: absolute; top: 10px; right: 15px; font-size: 1.5rem; border:none; background:none; cursor:pointer;">×</button>
+                        <h3>Select Location</h3>
+                        <div id="map" style="height: 400px; margin-bottom: 10px;"></div>
+                        <input type="text" name="location_name" id="location_name" placeholder="Location name" style="width: 100%; padding: 8px; margin-bottom: 10px;"/>
+                        <input type="hidden" name="latitude" id="latitude" />
+                        <input type="hidden" name="longitude" id="longitude" />
+                        <button type="button" id="clearLocation" class="btn btn-secondary">Clear Location</button>
+                        <button type="button" id="saveLocation" class="btn btn-primary" style="float: right;">Save Location</button>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>
+
+                <!-- Tags Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary post-action-btn" type="button" id="tagsButton">
+                        <i class="fas fa-tag me-1"></i> Tags
+                    </button>
+                    <div class="dropdown-menu p-3" id="tagsDropdown" style="display: none;">
+                        @foreach ($tags as $tag)
+                            <div class="form-check">
+                                <input class="form-check-input tag-checkbox" type="checkbox" name="tags[]" value="{{ $tag->name }}" id="tag{{ $tag->id }}">
+                                <label class="form-check-label" for="tag{{ $tag->id }}">{{ $tag->name }}</label>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                <input type="hidden" name="tags[]" id="selectedTags">
+
+                <button type="button" class="btn btn-primary ms-auto" id="postSubmitBtn">Post</button>
+            </div>
+        </div>
+    </form>
+</div>
 
 
+                       <!-- Feed Tabs -->
+<ul class="feed-tabs">
+    <li class="feed-tab">
+        <a class="feed-tab-link active" href="#" data-filter="all">All</a>
+    </li>
+    <li class="feed-tab">
+        <a class="feed-tab-link" href="#" data-filter="following">Following</a>
+    </li>
+    <li class="feed-tab">
+        <a class="feed-tab-link" href="#" data-filter="popular">Popular</a>
+    </li>
+    <li class="feed-tab">
+        <a class="feed-tab-link" href="#" data-filter="shared">Shared</a>
+    </li>
+</ul>
 
-                                        <button type="submit" class="btn btn-primary ms-auto">Post</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!-- Feed Tabs -->
-                        <ul class="feed-tabs">
-                            <li class="feed-tab">
-                                <a class="feed-tab-link active" href="#">All</a>
-                            </li>
-                            <li class="feed-tab">
-                                <a class="feed-tab-link" href="#">Following</a>
-                            </li>
-                            <li class="feed-tab">
-                                <a class="feed-tab-link" href="#">Popular</a>
-                            </li>
-                            <li class="feed-tab">
-                                <a class="feed-tab-link" href="#">Shared</a>
-                            </li>
-                        </ul>
 <!-- Feed Posts Section -->
 <div class="feed-posts mb-4">
     @if($posts->isEmpty())
@@ -302,19 +309,21 @@
                         </button>
 
                         <!-- Share -->
-                        <button class="post-action-btn share-btn btn btn-sm btn-outline-secondary"
-                                data-bs-toggle="modal"
-                                data-bs-target="#shareModal-{{ $originalPost->id }}">
-                            <i class="fas fa-share me-1"></i>
-                            {{ $originalPost->shared_posts_count ?? 0 }}
-                        </button>
+                       <button class="post-action-btn share-btn btn btn-sm btn-outline-secondary"
+        data-bs-toggle="modal"
+        data-bs-target="#shareModal-{{ $originalPost->id }}"
+        data-post-id="{{ $originalPost->id }}">
+    <i class="fas fa-share me-1"></i>
+
+</button>
 
                         <!-- Save -->
                         <button class="post-action-btn save-btn btn btn-sm btn-outline-secondary"
-                                data-post-id="{{ $originalPost->id }}"
-                                data-saved="">
-                            <i class="fas fa-bookmark me-1"></i> Save
-                        </button>
+        data-post-id="{{ $originalPost->id }}"
+        data-saved="{{ auth()->check() && auth()->user()->hasSavedPost($originalPost->id) ? 'true' : 'false' }}">
+    <i class="{{ auth()->check() && auth()->user()->hasSavedPost($originalPost->id) ? 'fas' : 'far' }} fa-bookmark me-1"></i>
+    Save
+</button>
                     </div>
 
              @php
@@ -505,6 +514,59 @@
                 alert('An error occurred: ' + error.message);
                 // Revert to original icon on error
                 icon.className = originalIconClass;
+            } finally {
+                this.disabled = false;
+            }
+        });
+    });
+});
+
+
+
+
+//#
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.save-btn').forEach(button => {
+        button.addEventListener('click', async function(e) {
+            e.preventDefault();
+
+            const postId = this.getAttribute('data-post-id');
+            const isSaved = this.getAttribute('data-saved') === 'true';
+
+            // Add loading state
+            const icon = this.querySelector('i');
+            const originalIconClass = icon.className;
+            icon.className = 'fas fa-spinner fa-spin me-1';
+            this.disabled = true;
+
+            try {
+                const response = await fetch("{{ route('posts.save') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        post_id: postId
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Update button state
+                    this.setAttribute('data-saved', data.saved.toString());
+
+                    // Update icon
+                    icon.className = data.saved
+                        ? 'fas fa-bookmark me-1'
+                        : 'far fa-bookmark me-1';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to save post');
             } finally {
                 this.disabled = false;
             }
