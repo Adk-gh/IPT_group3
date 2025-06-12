@@ -302,19 +302,21 @@
                         </button>
 
                         <!-- Share -->
-                        <button class="post-action-btn share-btn btn btn-sm btn-outline-secondary"
-                                data-bs-toggle="modal"
-                                data-bs-target="#shareModal-{{ $originalPost->id }}">
-                            <i class="fas fa-share me-1"></i>
-                            {{ $originalPost->shared_posts_count ?? 0 }}
-                        </button>
+                       <button class="post-action-btn share-btn btn btn-sm btn-outline-secondary"
+        data-bs-toggle="modal"
+        data-bs-target="#shareModal-{{ $originalPost->id }}"
+        data-post-id="{{ $originalPost->id }}">
+    <i class="fas fa-share me-1"></i>
+
+</button>
 
                         <!-- Save -->
                         <button class="post-action-btn save-btn btn btn-sm btn-outline-secondary"
-                                data-post-id="{{ $originalPost->id }}"
-                                data-saved="">
-                            <i class="fas fa-bookmark me-1"></i> Save
-                        </button>
+        data-post-id="{{ $originalPost->id }}"
+        data-saved="{{ auth()->check() && auth()->user()->hasSavedPost($originalPost->id) ? 'true' : 'false' }}">
+    <i class="{{ auth()->check() && auth()->user()->hasSavedPost($originalPost->id) ? 'fas' : 'far' }} fa-bookmark me-1"></i>
+    Save
+</button>
                     </div>
 
              @php
@@ -505,6 +507,59 @@
                 alert('An error occurred: ' + error.message);
                 // Revert to original icon on error
                 icon.className = originalIconClass;
+            } finally {
+                this.disabled = false;
+            }
+        });
+    });
+});
+
+
+
+
+//#
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.save-btn').forEach(button => {
+        button.addEventListener('click', async function(e) {
+            e.preventDefault();
+
+            const postId = this.getAttribute('data-post-id');
+            const isSaved = this.getAttribute('data-saved') === 'true';
+
+            // Add loading state
+            const icon = this.querySelector('i');
+            const originalIconClass = icon.className;
+            icon.className = 'fas fa-spinner fa-spin me-1';
+            this.disabled = true;
+
+            try {
+                const response = await fetch("{{ route('posts.save') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        post_id: postId
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Update button state
+                    this.setAttribute('data-saved', data.saved.toString());
+
+                    // Update icon
+                    icon.className = data.saved
+                        ? 'fas fa-bookmark me-1'
+                        : 'far fa-bookmark me-1';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to save post');
             } finally {
                 this.disabled = false;
             }

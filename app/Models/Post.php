@@ -36,7 +36,7 @@ class Post extends Model
 
 
     // One-to-many with Like
-   
+
 public function comments()
 {
     return $this->morphMany(Comment::class, 'commentable');
@@ -112,10 +112,7 @@ public function shareCount()
     return $this->sharedPosts()->count();
 }
 
-public function savedByUsers()
-{
-    return $this->belongsToMany(User::class, 'saved_posts')->withTimestamps();
-}
+
 
 public function isSavedByUser($userId)
 {
@@ -162,5 +159,20 @@ public function isSavedByUser($userId)
     return $this->hasMany(PostReport::class);
 }
 
+// In User.php
+public function savedPosts()
+{
+    return $this->hasMany(SavedPost::class);
+}
 
+public function hasSavedPost($postId)
+{
+    return $this->savedPosts()->where('post_id', $postId)->exists();
+}
+
+// In Post.php
+public function savedByUsers()
+{
+    return $this->hasMany(SavedPost::class);
+}
 }
