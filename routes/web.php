@@ -138,5 +138,9 @@ Route::post('/posts/save', [SavedPostController::class, 'toggleSave'])
     ->name('posts.save')
     ->middleware('auth');
 
+Route::middleware('auth')->get('/tags/list', [AuthController::class, 'listTags']);
 
-
+Route::middleware('auth')->group(function () {
+    Route::post('/posts', [AuthController::class, 'storePost'])->name('posts.store');
+    Route::get('/posts/filter', [AuthController::class, 'filterPosts'])->name('posts.filter');
+});

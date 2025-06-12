@@ -145,7 +145,7 @@ class AuthController extends Controller
             }
         }
 
-        $user->update($validated);
+
 
         return response()->json([
             'success' => true,
@@ -182,7 +182,7 @@ public function socialFeed()
     $allPosts = $originalPosts->concat($sharedPosts)->sortByDesc('created_at');
 
     // Manual pagination
-    $perPage = 10;
+    $perPage = 20;
     $currentPage = request()->get('page', 1);
     $paginatedPosts = new LengthAwarePaginator(
         $allPosts->forPage($currentPage, $perPage),
@@ -208,41 +208,93 @@ public function socialFeed()
 }
 
 
-    // Handle storing a new post
-    public function storePost(Request $request)
-    {
-        $validatedData = $request->validate([
-            'caption' => 'required|string|max:255',
-            'tags' => 'nullable|array',
-            'tags.*' => 'integer|exists:tags,id', // Ensure tags are valid IDs
-            'image_url' => 'required|image|mimes:jpg,jpeg,png,gif,webp|max:40960',
-            'location_name' => 'nullable|string|max:255',
-            'latitude' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
-        ]);
+   public function storePost(Request $request)
+{
+    $validatedData = $request->validate([
+        'caption' => 'required|string|max:255',
+        'tags' => 'nullable|array',
+        'tags.*' => 'string|max:50',
+        'image_url' => 'required|image|mimes:jpg,jpeg,png,gif,webp|max:40960',
+        'location_name' => 'nullable|string|max:255',
+        'latitude' => 'nullable|numeric',
+        'longitude' => 'nullable|numeric',
+    ]);
 
-        $post = Post::create([
-            'user_id' => Auth::id(),
-            'caption' => $validatedData['caption'],
-            'tags' => $validatedData['tags'] ? json_encode($validatedData['tags']) : null,
-            'image_url' => $request->file('image_url')->store('uploads/posts', 'public'),
-            'location_name' => $validatedData['location_name'],
-            'latitude' => $validatedData['latitude'],
-            'longitude' => $validatedData['longitude'],
-        ]);
+    $cleanTags = !empty($validatedData['tags'])
+        ? array_filter($validatedData['tags'], fn($tag) => !empty(trim($tag)))
+        : [];
 
-        // Sync tags
-        if ($validatedData['tags']) {
-            $post->tags()->sync($validatedData['tags']);
-        }
-        if (!empty($validatedData['tags'])) {
-    $cleanTags = array_filter($validatedData['tags'], fn($tag) => !empty($tag));
-    $post->tags()->sync($cleanTags);
+    $post = Post::create([
+        'user_id' => Auth::id(),
+        'caption' => $validatedData['caption'],
+        'tags' => $cleanTags ? implode(',', $cleanTags) : null,
+        'image_url' => $request->file('image_url')->store('uploads/posts', 'public'),
+        'location_name' => $validatedData['location_name'],
+        'latitude' => $validatedData['latitude'],
+        'longitude' => $validatedData['longitude'],
+    ]);
+
+    if ($request->expectsJson()) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Your post was successfully created!',
+            'post' => $post,
+        ], 201);
+    }
+
+    return redirect()->back()->with('success', 'Your post was successfully created!');
 }
 
+public function filterPosts(Request $request)
+{
+    $filterType = $request->query('type', 'all');
 
-        return redirect()->back()->with('success', 'Your post was successfully created!');
+    $query = Post::with(['user', 'likes'])
+        ->select('posts.*')
+        ->withCount('likes');
+
+    switch ($filterType) {
+        case 'popular':
+            $query->orderBy('likes_count', 'desc')->orderBy('created_at', 'desc');
+            break;
+        case 'shared':
+            $query->where('share_count', '>', 0)->orderBy('created_at', 'desc');
+            break;
+        case 'all':
+        default:
+            $query->orderBy('created_at', 'desc');
+            break;
     }
+
+    $posts = $query->get()->map(function ($post) {
+        return [
+            'id' => $post->id,
+            'caption' => $post->caption,
+            'tags' => $post->tags,
+            'image_url' => $post->image_url,
+            'location_name' => $post->location_name,
+            'latitude' => $post->latitude,
+            'longitude' => $post->longitude,
+            'likes_count' => $post->likes_count,
+            'share_count' => $post->share_count,
+            'comments_count' => $post->comments_count,
+            'created_at' => $post->created_at->toISOString(),
+            'created_at_diff' => $post->created_at->diffForHumans(),
+            'user' => [
+                'username' => $post->user->username,
+                'profile_picture' => $post->user->profile_picture,
+            ],
+            'is_liked' => Auth::check() && $post->likes->contains(Auth::id()),
+        ];
+    });
+
+    return response()->json(['posts' => $posts]);
+}
+
+public function listTags()
+{
+    return response()->json(Tag::pluck('name'));
+}
 
     // Homepage
     public function index()

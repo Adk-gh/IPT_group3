@@ -56,8 +56,9 @@ class User extends Authenticatable
 
     public function savedPosts()
 {
-    return $this->belongsToMany(Post::class, 'saved_posts'); // or your pivot table name
+    return $this->belongsToMany(Post::class, 'saved_posts', 'user_id', 'post_id');
 }
+
 public function hasSavedPost($postId)
 {
     return $this->savedPosts()->where('post_id', $postId)->exists();

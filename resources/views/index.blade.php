@@ -74,13 +74,22 @@
             </div>
         </div>
     </section>
+<!-- Modal Wrapper -->
+<div id="postModal" class="hidden position-fixed top-0 start-0 w-100 h-100" style="z-index: 1050;">
+  <div id="modalContent" class="h-100 d-flex align-items-center justify-content-center"></div>
+</div>
+
+    <!-- Post Modal -->
+<div id="postModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div id="modalContent" class="bg-white rounded-xl shadow-xl p-5 max-w-md w-full max-h-[90vh] overflow-y-auto"></div>
+</div>
 
    <!-- Artists Section -->
 <section class="section artists" id="artists">
     <div class="container">
         <h2 class="section-title">Featured Artists</h2>
         <p class="text-center">Meet the creative minds behind the art. Discover their styles, stories, and contributions to the street art scene.</p>
-        
+
         <div class="artist-grid">
             @forelse ($users as $user)
                 <div class="artist-card">
@@ -97,7 +106,7 @@
                             @if($user->twitter) <a href="{{ $user->twitter }}" target="_blank"><i class="fab fa-twitter"></i></a> @endif
                             @if($user->website) <a href="{{ $user->website }}" target="_blank"><i class="fas fa-globe"></i></a> @endif
                         </div>
-                       
+
                     </div>
                 </div>
             @empty
@@ -249,7 +258,7 @@
                 <!-- Blog Post 1 -->
                 <div class="blog-card">
                     <div class="blog-card-img">
-                        <img src="img/pexels-brett-sayles-1123894.jpg" alt="Blog Post">
+                        <img src="" alt="Blog Post">
                     </div>
                     <div class="blog-card-content">
                         <div class="blog-card-date">January 15, 2024</div>
@@ -262,7 +271,7 @@
                 <!-- Blog Post 2 -->
                 <div class="blog-card">
                     <div class="blog-card-img">
-                        <img src="img/pexels-brett-sayles-1123894.jpg" alt="Blog Post">
+                        <img src="" alt="Blog Post">
                     </div>
                     <div class="blog-card-content">
                         <div class="blog-card-date">January 8, 2024</div>
@@ -275,7 +284,7 @@
                 <!-- Blog Post 3 -->
                 <div class="blog-card">
                     <div class="blog-card-img">
-                        <img src="img/pexels-brett-sayles-1123894.jpg" alt="Blog Post">
+                        <img src="" alt="Blog Post">
                     </div>
                     <div class="blog-card-content">
                         <div class="blog-card-date">December 30, 2023</div>
