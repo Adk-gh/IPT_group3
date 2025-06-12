@@ -44,7 +44,7 @@
 
             <div class="mission-container">
                 <div class="mission-image">
-                    <img src="https://images.unsplash.com/photo-1578926375602-3ad9e91ec0a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Our Mission">
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1528&q=80" alt="Our Mission">
                 </div>
                 <div class="mission-content">
                     <h3>Documenting Urban Creativity</h3>
@@ -123,7 +123,7 @@
                     </div>
                     <div class="team-card-content">
                         <h3 class="team-card-name">Bermas, Aderik P.</h3>
-                        <div class="team-card-role">Team Leader, Project Manager, System Analyst  and Full Stack Programmer</div>
+                        <div class="team-card-role">Team Leader, Project Manager, System Analyst and Full Stack Programmer</div>
                         <p class="team-card-bio">Oversees the entire project, manages team coordination, defines system requirements, and contributes to both front-end and back-end development.</p>
                         <div class="team-social">
                             <a href="#"><i class="fab fa-facebook"></i></a>
@@ -162,7 +162,7 @@
                         <div class="team-card-role">UI/UX Designer and Back End Programmer</div>
                         <p class="team-card-bio">Designs intuitive user interfaces and experiences while also developing the server-side logic and APIs to support application functionality.</p>
                         <div class="team-social">
-                            <<a href="#"><i class="fab fa-facebook"></i></a>
+                            <a href="#"><i class="fab fa-facebook"></i></a>
                             <a href="#"><i class="fab fa-instagram"></i></a>
                             <a href="#"><i class="fab fa-linkedin"></i></a>
                             <a href="#"><i class="fab fa-github"></i></a>
@@ -197,7 +197,7 @@
                         <div class="team-card-role">User Researcher</div>
                         <p class="team-card-bio">Conducts research and gathers feedback to understand user needs, behavior, and preferences, guiding the design and development process.</p>
                         <div class="team-social">
-                           <a href="#"><i class="fab fa-facebook"></i></a>
+                            <a href="#"><i class="fab fa-facebook"></i></a>
                             <a href="#"><i class="fab fa-instagram"></i></a>
                             <a href="#"><i class="fab fa-linkedin"></i></a>
                             <a href="#"><i class="fab fa-github"></i></a>
@@ -211,7 +211,7 @@
                     </div>
                     <div class="team-card-content">
                         <h3 class="team-card-name">Samsaman, Paul Benedict E.</h3>
-                        <div class="team-card-role">The Technical Writer and Database Administrator (DBA)</div>
+                        <div class="team-card-role">Technical Writer and Database Administrator (DBA)</div>
                         <p class="team-card-bio">Documents technical processes and system architecture while managing database design, performance, and data integrity.</p>
                         <div class="team-social">
                             <a href="#"><i class="fab fa-facebook"></i></a>
@@ -295,10 +295,22 @@
             <p class="text-center">Organizations that support our mission</p>
 
             <div class="partners-grid">
-                <img src="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Urban Arts Fund" class="partner-logo">
-                <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Street Art Cities" class="partner-logo">
-                <img src="https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1415&q=80" alt="Art Everywhere" class="partner-logo">
-                <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Creative Cities" class="partner-logo">
+                <div class="partner-card">
+                    <img src="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Urban Arts Fund">
+                    <h3>Urban Arts Fund</h3>
+                </div>
+                <div class="partner-card">
+                    <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Street Art Cities">
+                    <h3>Street Art Cities</h3>
+                </div>
+                <div class="partner-card">
+                    <img src="https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1415&q=80" alt="Art Everywhere">
+                    <h3>Art Everywhere</h3>
+                </div>
+                <div class="partner-card">
+                    <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Creative Cities">
+                    <h3>Creative Cities</h3>
+                </div>
             </div>
         </div>
     </section>

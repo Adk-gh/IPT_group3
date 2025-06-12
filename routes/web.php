@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileSetupController;
 use App\Http\Controllers\SharedPostInteractionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ContactController;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -92,7 +93,7 @@ Route::get('/users', [UserController::class, 'index'])->name('admin.user.table')
 Route::get('/admin/users', [UserController::class, 'index'])->name('admin.UserManagement');
 
 
-
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
 // routes/web.php
 
