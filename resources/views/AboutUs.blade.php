@@ -95,11 +95,11 @@
             <h2 class="section-title">How It Started</h2>
 
             <div class="story-container">
-                <p class="story-quote">It started with a single alley in Manila. A mural that spoke louder than words. We realized street art needs a home online — and so, Street and Ink was born.</p>
+                <p class="story-quote">It started with a single alley in San Pablo. A mural that spoke louder than words. We realized street art needs a home online — and so, Street & Ink was born.</p>
 
-                <p>In 2018, our founder was traveling through Southeast Asia when they stumbled upon a breathtaking mural in a Manila backstreet. With no information about the artist or the artwork available, the experience sparked an idea: what if there was a way to document and share these urban masterpieces?</p>
+                <p>In March 2025, this project was chosen by my professor as one of only three standout proposals from our class. Out of many ideas submitted, Street & Ink was selected for its creative vision, social relevance, and potential to bridge culture and technology. That recognition became a turning point — a green light to bring this idea to life, not just as a class requirement, but as something meaningful and lasting.</p>
 
-                <p>The first version of Street & Ink was a simple map with a few dozen pins marking street art locations. Today, it's grown into a global community of thousands, documenting tens of thousands of artworks across six continents.</p>
+                <p>This is more than a website or app. Street & Ink is a space where culture meets community. It’s where local voices, hidden talents, and urban stories find a place to live on — digitally preserved, globally shared.</p>
 
                 <div style="margin-top: 50px;">
                     <img src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="First Mural" style="border-radius: var(--border-radius); max-height: 500px; object-fit: cover; width: 100%;">
@@ -126,10 +126,10 @@
                         <div class="team-card-role">Team Leader, Project Manager, System Analyst and Full Stack Programmer</div>
                         <p class="team-card-bio">Oversees the entire project, manages team coordination, defines system requirements, and contributes to both front-end and back-end development.</p>
                         <div class="team-social">
-                            <a href="#"><i class="fab fa-facebook"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.facebook.com/pasobillo.bermas.aderik"><i class="fab fa-facebook"></i></a>
+                            <a href="https://www.instagram.com/this.ade_/"><i class="fab fa-instagram"></i></a>
                             <a href="#"><i class="fab fa-linkedin"></i></a>
-                            <a href="#"><i class="fab fa-github"></i></a>
+                            <a href="https://github.com/Adk-gh"><i class="fab fa-github"></i></a>
                         </div>
                     </div>
                 </div>
@@ -137,17 +137,17 @@
                 <!-- Team Member 2 -->
                 <div class="team-card">
                     <div class="team-card-img">
-                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Jamie Chen">
+                        <img src="https://kahimyang.com/resources-18/fernando-poe-jr.webp" alt="Jamie Chen">
                     </div>
                     <div class="team-card-content">
                         <h3 class="team-card-name">De Rama, John Cedrick</h3>
                         <div class="team-card-role">Quality Assurance (QA) Engineer</div>
                         <p class="team-card-bio">Ensures the final product meets quality standards through thorough testing and bug tracking, maintaining system reliability and performance.</p>
                         <div class="team-social">
-                            <a href="#"><i class="fab fa-facebook"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.facebook.com/cedderama27A"><i class="fab fa-facebook"></i></a>
+                            <a href="https://www.instagram.com/johncedd27/"><i class="fab fa-instagram"></i></a>
                             <a href="#"><i class="fab fa-linkedin"></i></a>
-                            <a href="#"><i class="fab fa-github"></i></a>
+                            <a href="https://github.com/Cedd27"><i class="fab fa-github"></i></a>
                         </div>
                     </div>
                 </div>
@@ -155,17 +155,17 @@
                 <!-- Team Member 3 -->
                 <div class="team-card">
                     <div class="team-card-img">
-                        <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Marcus Johnson">
+                        <img src="https://boroktimes.com/storage/2023/07/channels4_profile.jpeg" alt="Marcus Johnson">
                     </div>
                     <div class="team-card-content">
                         <h3 class="team-card-name">Marabe, John Francis</h3>
                         <div class="team-card-role">UI/UX Designer and Back End Programmer</div>
                         <p class="team-card-bio">Designs intuitive user interfaces and experiences while also developing the server-side logic and APIs to support application functionality.</p>
                         <div class="team-social">
-                            <a href="#"><i class="fab fa-facebook"></i></a>
+                            <a href="https://www.facebook.com/johnfrancis.marabe.7"><i class="fab fa-facebook"></i></a>
                             <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-linkedin"></i></a>
-                            <a href="#"><i class="fab fa-github"></i></a>
+                            <a href="https://www.linkedin.com/in/john-francis-marabe-427a43334/"><i class="fab fa-linkedin"></i></a>
+                            <a href="https://github.com/Buttercookiez"><i class="fab fa-github"></i></a>
                         </div>
                     </div>
                 </div>
@@ -173,15 +173,15 @@
                 <!-- Team Member 4 -->
                 <div class="team-card">
                     <div class="team-card-img">
-                        <img src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Samira Khan">
+                        <img src="img/mendoza.jpg" alt="Samira Khan">
                     </div>
                     <div class="team-card-content">
                         <h3 class="team-card-name">Mendoza, Lawrence Kier</h3>
                         <div class="team-card-role">Front End Programmer</div>
                         <p class="team-card-bio">Implements user-facing features using modern frameworks and ensures responsive, accessible, and seamless interaction across devices.</p>
                         <div class="team-social">
-                            <a href="#"><i class="fab fa-facebook"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.facebook.com/lawrencekier.mendoza.3"><i class="fab fa-facebook"></i></a>
+                            <a href="https://www.instagram.com/lwrnc_kr?igsh=MWhvN25pMjV1eW4wZg=="><i class="fab fa-instagram"></i></a>
                             <a href="#"><i class="fab fa-linkedin"></i></a>
                             <a href="#"><i class="fab fa-github"></i></a>
                         </div>
@@ -197,10 +197,10 @@
                         <div class="team-card-role">User Researcher</div>
                         <p class="team-card-bio">Conducts research and gathers feedback to understand user needs, behavior, and preferences, guiding the design and development process.</p>
                         <div class="team-social">
-                            <a href="#"><i class="fab fa-facebook"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.facebook.com/amiel.oliveros.5/about"><i class="fab fa-facebook"></i></a>
+                            <a href="https://www.instagram.com/grazachee/"><i class="fab fa-instagram"></i></a>
                             <a href="#"><i class="fab fa-linkedin"></i></a>
-                            <a href="#"><i class="fab fa-github"></i></a>
+                            <a href="https://github.com/grazachee"><i class="fab fa-github"></i></a>
                         </div>
                     </div>
                 </div>
@@ -214,10 +214,10 @@
                         <div class="team-card-role">Technical Writer and Database Administrator (DBA)</div>
                         <p class="team-card-bio">Documents technical processes and system architecture while managing database design, performance, and data integrity.</p>
                         <div class="team-social">
-                            <a href="#"><i class="fab fa-facebook"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.facebook.com/share/1PgYTd46BA/?mibextid=wwXIfr"><i class="fab fa-facebook"></i></a>
+                            <a href="https://www.instagram.com/paulsamsaman?igsh=MTN0a21wNzB3Znh4bA%3D%3D&utm_source=qr"><i class="fab fa-instagram"></i></a>
                             <a href="#"><i class="fab fa-linkedin"></i></a>
-                            <a href="#"><i class="fab fa-github"></i></a>
+                            <a href="https://github.com/kiruzo06"><i class="fab fa-github"></i></a>
                         </div>
                     </div>
                 </div>
@@ -231,10 +231,10 @@
                         <div class="team-card-role">Test Engineer / QA Tester / Test Framer</div>
                         <p class="team-card-bio">Develops and executes test cases, automates testing processes, and ensures the software behaves as expected under various conditions.</p>
                         <div class="team-social">
-                            <a href="#"><i class="fab fa-facebook"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.facebook.com/share/1AjDw2eE5S/"><i class="fab fa-facebook"></i></a>
+                            <a href="https://www.instagram.com/tanoersss._/profilecard/?igsh=MTd3cGZuOXk5amtseg=="><i class="fab fa-instagram"></i></a>
                             <a href="#"><i class="fab fa-linkedin"></i></a>
-                            <a href="#"><i class="fab fa-github"></i></a>
+                            <a href="https://github.com/tanoerzz"><i class="fab fa-github"></i></a>
                         </div>
                     </div>
                 </div>
@@ -289,45 +289,73 @@
     </section>
 
     <!-- Partners Section -->
-    <section class="section partners">
-        <div class="container">
-            <h2 class="section-title">Our Partners</h2>
-            <p class="text-center">Organizations that support our mission</p>
+<section class="section partners">
+    <div class="container">
+        <h2 class="section-title">Our Partners</h2>
+        <p class="text-center">Organizations that share our vision for urban art</p>
 
-            <div class="partners-grid">
-                <div class="partner-card">
-                    <img src="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Urban Arts Fund">
-                    <h3>Urban Arts Fund</h3>
+        <div class="partners-grid">
+            <div class="partner-card">
+                <div class="partner-logo-container">
+                    <img src="img/partners/urban-arts.png" alt="Urban Arts Fund">
                 </div>
-                <div class="partner-card">
-                    <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Street Art Cities">
-                    <h3>Street Art Cities</h3>
+                <h3>Urban Arts Fund</h3>
+            </div>
+            <div class="partner-card">
+                <div class="partner-logo-container">
+                    <img src="img/partners/street-art-cities.png" alt="Street Art Cities">
                 </div>
-                <div class="partner-card">
-                    <img src="https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1415&q=80" alt="Art Everywhere">
-                    <h3>Art Everywhere</h3>
+                <h3>Street Art Cities</h3>
+            </div>
+            <div class="partner-card">
+                <div class="partner-logo-container">
+                    <img src="img/partners/art-everywhere.png" alt="Art Everywhere">
                 </div>
-                <div class="partner-card">
-                    <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Creative Cities">
-                    <h3>Creative Cities</h3>
+                <h3>Art Everywhere</h3>
+            </div>
+            <div class="partner-card">
+                <div class="partner-logo-container">
+                    <img src="img/partners/creative-cities.png" alt="Creative Cities">
                 </div>
+                <h3>Creative Cities</h3>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- CTA Section -->
-    <section class="section cta">
-        <div class="container">
-            <h2 class="section-title">Join the Movement</h2>
-            <p>Help us document street art from around the world and connect with a community of urban art enthusiasts.</p>
-
-            <div class="cta-btns">
-                <a href="#" class="btn btn-primary btn-large">Submit Street Art</a>
-                <a href="index.php#community" class="btn btn-secondary btn-large">Join Our Community</a>
-                <a href="Support.php" class="btn btn-secondary btn-large">Support the Project</a>
+  <!-- Join the Movement Section -->
+<section class="section cta" id="join">
+    <div class="container">
+        <h2 class="section-title">Join the Movement</h2>
+        <p>Become part of our growing community of street art enthusiasts and creators</p>
+        
+        <div class="cta-cards">
+            <!-- Card 1 -->
+            <div class="cta-card">
+                <i class="fas fa-map-marked-alt"></i>
+                <h3>Submit Art</h3>
+                <p>Share street art you've discovered with our global community</p>
+                <a href="#" class="btn btn-primary">Contribute</a>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="cta-card">
+                <i class="fas fa-users"></i>
+                <h3>Join Community</h3>
+                <p>Connect with other street art lovers around the world</p>
+                <a href="#" class="btn btn-secondary">Sign Up</a>
+            </div>
+            
+            <!-- Card 3 -->
+            <div class="cta-card">
+                <i class="fas fa-hand-holding-heart"></i>
+                <h3>Support Us</h3>
+                <p>Help us preserve and promote urban art culture</p>
+                <a href="#" class="btn btn-primary">Donate</a>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Footer -->
    <footer>
