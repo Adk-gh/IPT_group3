@@ -513,3 +513,240 @@
                 padding: 0;
             }
         }
+        /* ===== MODERN UPLOAD UI ===== */
+.avatar-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-preview {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: #f8f8f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  position: relative;
+  overflow: hidden;
+  border: 2px dashed #e0e0e0;
+  transition: all 0.3s;
+}
+
+.avatar-preview:hover {
+  border-color: #FF7E71;
+}
+
+.avatar-placeholder {
+  color: #aaa;
+  font-size: 30px;
+}
+
+#avatarImage {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+.avatar-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.avatar-btn {
+  padding: 10px 20px;
+  background: white;
+  border: 1px solid #FF7E71;
+  color: #FF7E71;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-btn i {
+  margin-right: 8px;
+}
+
+.avatar-btn:hover {
+  background: #FF7E71;
+  color: white;
+}
+
+.avatar-btn.remove {
+  border-color: #ff4d4d;
+  color: #ff4d4d;
+}
+
+.avatar-btn.remove:hover {
+  background: #ff4d4d;
+  color: white;
+}
+
+.avatar-input {
+  display: none;
+}
+
+
+
+
+
+
+        
+/* ===== MODERN CORAL CALENDAR ===== */
+  .flatpickr-calendar {
+    background: #FF7E71;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    width: 320px;
+    font-family: 'Inter', sans-serif;
+    padding: 0;
+  }
+
+  /* Header */
+  .flatpickr-months {
+    padding: 15px 0;
+    border-bottom: 1px solid #f5f5f5;
+  }
+
+  .flatpickr-month {
+    color: #333;
+    font-weight: 600;
+  }
+
+  /* Navigation Arrows */
+  .flatpickr-prev-month,
+  .flatpickr-next-month {
+    top: 15px;
+  }
+
+  .flatpickr-prev-month svg,
+  .flatpickr-next-month svg {
+    fill: #666;
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Weekdays */
+  .flatpickr-weekdays {
+    background: white;
+    border-bottom: 1px solid #f5f5f5;
+    padding: 8px 0;
+  }
+
+  .flatpickr-weekday {
+    color: #777;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  /* Days - Modern Square Cells */
+  .flatpickr-day {
+    border-radius: 6px;
+    height: 36px;
+    line-height: 36px;
+    margin: 2px;
+    color: #333;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  /* Hover State */
+  .flatpickr-day:hover {
+    background: #f9f9f9;
+  }
+
+  /* Selected Date */
+  .flatpickr-day.selected {
+    background: #FF7E71 !important;
+    color: white !important;
+    font-weight: 500;
+  }
+
+  /* Today Indicator */
+  .flatpickr-day.today {
+    position: relative;
+    color: #FF7E71;
+    font-weight: 600;
+  }
+
+  .flatpickr-day.today:not(.selected):after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: #FF7E71;
+    border-radius: 50%;
+  }
+
+  /* Input Field */
+  .date-input-container {
+    position: relative;
+  }
+
+  .date-input-container i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #FF7E71;
+  }
+
+  .flatpickr-input {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+
+  .flatpickr-input:focus {
+    border-color: #FF7E71;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 126, 113, 0.1);
+  }
+
+  /* Center the upload button */
+.avatar-actions {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Optional: Adjust button width if needed */
+.avatar-btn {
+    min-width: 150px;
+    text-align: center;
+    justify-content: center;
+}
+
+/* Keep remove button aligned when visible */
+.avatar-btn.remove {
+    margin-left: 10px;
+}
+
+.avatar-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.avatar-actions {
+    margin-top: 15px;
+}

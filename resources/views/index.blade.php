@@ -25,17 +25,14 @@
     <script src="{{ asset('js/index.js') }}"></script>
     <!-- Add this to both files -->
 
-
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
-<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <header id="header">
         @include('header')
     </header>
-
 </head>
 <body>
     <!-- Header -->
@@ -74,48 +71,50 @@
             </div>
         </div>
     </section>
-<!-- Modal Wrapper -->
-<div id="postModal" class="hidden position-fixed top-0 start-0 w-100 h-100" style="z-index: 1050;">
-  <div id="modalContent" class="h-100 d-flex align-items-center justify-content-center"></div>
-</div>
+
+    <!-- Modal Wrapper -->
+    <div id="postModal" class="hidden position-fixed top-0 start-0 w-100 h-100" style="z-index: 1050;">
+      <div id="modalContent" class="h-100 d-flex align-items-center justify-content-center"></div>
+    </div>
 
     <!-- Post Modal -->
-<div id="postModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-    <div id="modalContent" class="bg-white rounded-xl shadow-xl p-5 max-w-md w-full max-h-[90vh] overflow-y-auto"></div>
-</div>
-
-   <!-- Artists Section -->
-<section class="section artists" id="artists">
-    <div class="container">
-        <h2 class="section-title">Featured Artists</h2>
-        <p class="text-center">Meet the creative minds behind the art. Discover their styles, stories, and contributions to the street art scene.</p>
-
-        <div class="artist-grid">
-            @forelse ($users as $user)
-                <div class="artist-card">
-                    <div class="artist-card-img">
-                        <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('img/default.jpg') }}" alt="User Avatar">
-                    </div>
-                    <div class="artist-card-content">
-                        <h3 class="artist-card-name">{{ $user->name }}</h3>
-                        <h4 class="artist-card-username">{{ $user->username }}</h4>
-                        <div class="artist-card-style">{{ $user->style ?? 'Unknown Style' }}</div>
-                        <p class="artist-card-bio">{{ $user->bio ?? 'No bio available.' }}</p>
-                        <div class="artist-social">
-                            @if($user->instagram) <a href="{{ $user->instagram }}" target="_blank"><i class="fab fa-instagram"></i></a> @endif
-                            @if($user->twitter) <a href="{{ $user->twitter }}" target="_blank"><i class="fab fa-twitter"></i></a> @endif
-                            @if($user->website) <a href="{{ $user->website }}" target="_blank"><i class="fas fa-globe"></i></a> @endif
-                        </div>
-
-                    </div>
-                </div>
-            @empty
-                <p>No artists found.</p>
-            @endforelse
-        </div>
-         <a href="{{ route('artist', $user->id) }}" class="btn btn-primary btn-view-artist">View All Artist</a>
+    <div id="postModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div id="modalContent" class="bg-white rounded-xl shadow-xl p-5 max-w-md w-full max-h-[90vh] overflow-y-auto"></div>
     </div>
-</section>
+
+    <!-- Artists Section -->
+    <section class="section artists" id="artists">
+        <div class="container">
+            <h2 class="section-title">Featured Artists</h2>
+            <p class="text-center">Meet the creative minds behind the art. Discover their styles, stories, and contributions to the street art scene.</p>
+
+            <div class="artist-grid">
+                @forelse ($users as $user)
+                    <div class="artist-card">
+                        <div class="artist-card-img">
+                            <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : 'img/default.jpg' }}" alt="User Avatar">
+                        </div>
+                        <div class="artist-card-content">
+                            <h3 class="artist-card-name">{{ $user->name }}</h3>
+                            <h4 class="artist-card-username">{{ $user->username }}</h4>
+                            <div class="artist-card-style">{{ $user->style ?? 'Unknown Style' }}</div>
+                            <p class="artist-card-bio">{{ $user->bio ?? 'No bio available.' }}</p>
+                            <div class="artist-social">
+                                @if($user->instagram) <a href="{{ $user->instagram }}" target="_blank"><i class="fab fa-instagram"></i></a> @endif
+                                @if($user->twitter) <a href="{{ $user->twitter }}" target="_blank"><i class="fab fa-twitter"></i></a> @endif
+                                @if($user->website) <a href="{{ $user->website }}" target="_blank"><i class="fas fa-globe"></i></a> @endif
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <p>No artists found.</p>
+                @endforelse
+            </div>
+            <div class="view-all-container">
+                <a href="{{ route('artist', $user->id ?? '#') }}" class="btn btn-primary btn-view-artist">View All Artist</a>
+            </div>
+        </div>
+    </section>
 
     <!-- Categories Section -->
     <section class="section" id="categories">
@@ -258,7 +257,7 @@
                 <!-- Blog Post 1 -->
                 <div class="blog-card">
                     <div class="blog-card-img">
-                        <img src="" alt="Blog Post">
+                        <img src="https://images.pexels.com/photos/1045534/pexels-photo-1045534.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Blog Post">
                     </div>
                     <div class="blog-card-content">
                         <div class="blog-card-date">January 15, 2024</div>
@@ -271,7 +270,7 @@
                 <!-- Blog Post 2 -->
                 <div class="blog-card">
                     <div class="blog-card-img">
-                        <img src="" alt="Blog Post">
+                        <img src="https://images.pexels.com/photos/177283/pexels-photo-177283.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Blog Post">
                     </div>
                     <div class="blog-card-content">
                         <div class="blog-card-date">January 8, 2024</div>
@@ -284,7 +283,7 @@
                 <!-- Blog Post 3 -->
                 <div class="blog-card">
                     <div class="blog-card-img">
-                        <img src="" alt="Blog Post">
+                        <img src="https://images.pexels.com/photos/8275181/pexels-photo-8275181.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Blog Post">
                     </div>
                     <div class="blog-card-content">
                         <div class="blog-card-date">December 30, 2023</div>
@@ -368,21 +367,21 @@
         </div>
     </section>
 
-   <!-- Newsletter Section -->
-<section class="section newsletter">
-    <div class="container">
-        <div class="newsletter-content">
-            <h2 class="section-title">Stay in Touch</h2>
-            <p class="newsletter-text">Sign up for our newsletter to get the latest updates on street art and events.</p>
-            <form class="newsletter-form">
-                <div class="form-group">
-                    <input type="email" class="newsletter-input" placeholder="Enter your email" required>
-                    <button type="submit" class="btn btn-primary newsletter-btn">Subscribe</button>
-                </div>
-            </form>
+    <!-- Newsletter Section -->
+    <section class="section newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <h2 class="section-title">Stay in Touch</h2>
+                <p class="newsletter-text">Sign up for our newsletter to get the latest updates on street art and events.</p>
+                <form class="newsletter-form">
+                    <div class="form-group">
+                        <input type="email" class="newsletter-input" placeholder="Enter your email" required>
+                        <button type="submit" class="btn btn-primary newsletter-btn">Subscribe</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
     <!-- Include Footer-->
     <footer>

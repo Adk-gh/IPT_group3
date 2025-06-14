@@ -1,36 +1,79 @@
 // loading.js
 document.addEventListener('DOMContentLoaded', () => {
-  // Create loading overlay element and append it to body
+  // Create and style the loading overlay
   const loadingOverlay = document.createElement('div');
   loadingOverlay.id = 'loading-overlay';
   loadingOverlay.style.cssText = `
-    display: none;
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(255, 255, 255, 0.8);
-    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: none;
     justify-content: center;
     align-items: center;
+    z-index: 9999;
   `;
 
+  // Create spinner element
   const spinner = document.createElement('div');
   spinner.className = 'spinner';
+  spinner.style.cssText = `
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #FF5E5B;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+  `;
+
+  // Add spinner to overlay and overlay to body
   loadingOverlay.appendChild(spinner);
   document.body.appendChild(loadingOverlay);
 
-  // Show loading on link clicks (except blank targets & anchors)
-  document.querySelectorAll('a:not([target="_blank"])').forEach(link => {
-    link.addEventListener('click', (e) => {
-      const href = link.getAttribute('href');
-      if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
-      loadingOverlay.style.display = 'flex';
-    });
+  // Add spin animation keyframes dynamically
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Show/hide functions
+  window.showLoading = () => {
+    loadingOverlay.style.display = 'flex';
+  };
+
+  window.hideLoading = () => {
+    loadingOverlay.style.display = 'none';
+  };
+
+  // Auto-attach to links and forms
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a:not([target="_blank"]):not([href^="#"]):not([href^="javascript:"])');
+    if (link) {
+      showLoading();
+      // Fallback in case navigation fails
+      setTimeout(hideLoading, 5000);
+    }
   });
 
-  // Show loading on form submits
-  document.querySelectorAll('form').forEach(form => {
-    form.addEventListener('submit', () => {
-      loadingOverlay.style.display = 'flex';
-    });
+  document.addEventListener('submit', (e) => {
+    showLoading();
+    // Fallback in case submission fails
+    setTimeout(hideLoading, 5000);
+  });
+
+  // Hide when page fully loads
+  window.addEventListener('load', hideLoading);
+
+  // Handle back/forward navigation
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+      hideLoading();
+    }
   });
 });
