@@ -205,15 +205,15 @@
                     <span>Dashboard</span>
                 </a>
                 <div class="menu-title">Management</div>
-                <a href="{{ route('admin.UserManagement') }}" class="menu-item">
+                <a href="{{ route('admin.user-management') }}" class="menu-item">
                     <i class="fas fa-users"></i>
                     <span>User Management</span>
                 </a>
-                <a href="{{ route('admin.ArtUpload') }}" class="menu-item">
+                <a href="{{ route('admin.arts-upload') }}" class="menu-item">
                     <i class="fas fa-paint-brush"></i>
                     <span>Art Uploads</span>
                 </a>
-                <a href="{{ route('admin.Reports') }}" class="menu-item">
+                <a href="{{ route('admin.reports') }}" class="menu-item">
                     <i class="fas fa-flag"></i>
                     <span>Reports & Moderation</span>
                 </a>
@@ -225,7 +225,7 @@
                     <i class="fas fa-user"></i>
                     <span>Profile</span>
                 </a>
-                <a href="{{ route('admin.Settings') }}" class="menu-item">
+                <a href="{{ route('admin.settings') }}" class="menu-item">
                     <i class="fas fa-cog"></i>
                     <span>Settings</span>
                 </a>

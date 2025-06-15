@@ -55,7 +55,7 @@
                     <i class="fas fa-map-marker-alt"></i>
                 </div>
                 <div class="stat-title">Tagged Locations</div>
-                <div class="stat-value">{{ number_format($stats['locations']) }}</div>
+
             </div>
 
             <div class="stat-card">

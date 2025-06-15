@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Routing\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use App\Models\Artwork;
 use App\Models\Location;
 use App\Models\ArtistPartner;
@@ -20,30 +19,113 @@ use App\Models\Tag;
 
 class AdminController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth', 'profile.complete', 'admin']);
+    }
+
     public function showAdminDashboard()
     {
-        $user = Auth::user();
+        $reportCount = PostReport::count();
+        $stats = [
+            'locations' => Post::count(),
+            'users' => User::count(),
+            'artworks' => Post::count(),
+            'reports' => $reportCount,
+            'verified_artists' => User::where('verified_artist', 1)->count(),
+            'comments' => Comment::count(),
+        ];
+        $reports = PostReport::with(['post.user', 'user'])
+                ->orderBy('created_at', 'desc')
+                ->paginate(5);
+Log::debug('Showing view: ' . request()->path());
+       return view('admin.Dashboard', ['stats' => $stats, 'reports' => $reports]);
+    }
 
-        if ($user && $user->email === 'admin@gmail.com') {
-            $reportCount = PostReport::count();
-            $stats = [
-                'locations' => Post::count(),
-                'users' => User::count(),
-                'artworks' => Post::count(),
-                'reports' => $reportCount,
-                'verified_artists' => User::where('verified_artist', 1)->count(),
-                'comments' => Comment::count(),
-            ];
-            $reports = PostReport::with(['post.user', 'user'])
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(5);
+    // User Management Methods
+public function showUserManagement(Request $request)
+{
+    // Get all non-admin users with post counts
+    $users = User::where('email', '!=', 'admin@gmail.com')
+        ->withCount('posts')
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
 
-            return view('admin.Dashboard', compact('user', 'stats', 'reports'));
+    // Get verified artists separately
+    $artists = User::where('verified_artist', 1)
+        ->orderBy('name')
+        ->get();
+
+    return $request->expectsJson()
+        ? response()->json($users)
+        : view('admin.UserManagement', [
+            'users' => $users,
+            'verifiedArtists' => $artists  // Changed variable name for clarity
+        ]);
+}
+    public function getUser(User $user)
+    {
+        return response()->json([
+            'user' => $user->loadCount('posts'),
+            'profile_picture_url' => $user->profile_picture
+                ? Storage::url($user->profile_picture)
+                : asset('/img/default.jpg')
+        ]);
+    }
+
+    public function updateUser(Request $request, User $user)
+    {
+        if ($user->id === Auth::id()) {
+            return response()->json(['message' => 'You cannot modify your own account'], 403);
         }
 
-        return redirect()->route('home')
-               ->withErrors(['You do not have permission to access this page.']);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,'.$user->id,
+            'phone' => 'nullable|string|max:20',
+            'location' => 'nullable|string|max:255',
+            'bio' => 'nullable|string',
+            'role' => 'required|in:user,artist,admin',
+            'status' => 'required|in:active,inactive,banned',
+            'verified_artist' => 'nullable|boolean',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        try {
+            if ($request->hasFile('profile_picture')) {
+                Storage::delete($user->profile_picture);
+                $validated['profile_picture'] = $request->file('profile_picture')
+                    ->store('profile_pictures', 'public');
+            }
+
+            $user->update($validated);
+
+            return response()->json([
+                'message' => 'User updated successfully',
+                'user' => $user->fresh()
+            ]);
+        } catch (\Exception $e) {
+            Log::error("User update failed: {$e->getMessage()}");
+            return response()->json(['message' => 'Error updating user'], 500);
+        }
     }
+
+    public function deleteUser(User $user)
+    {
+        if ($user->id === Auth::id()) {
+            return response()->json(['message' => 'You cannot deactivate your own account'], 403);
+        }
+
+        try {
+            $user->update(['status' => 'inactive']);
+            return response()->json(['message' => 'User deactivated successfully']);
+        } catch (\Exception $e) {
+            Log::error("User deactivation failed: {$e->getMessage()}");
+            return response()->json(['message' => 'Error deactivating user'], 500);
+        }
+    }
+
+
 
     public function showArtistPartner()
     {
@@ -52,6 +134,7 @@ class AdminController extends Controller
 
     public function showArtUpload()
     {
+        Log::debug('Showing view: ' . request()->path());
         $posts = Post::with(['user', 'comments', 'likes'])
                 ->orderBy('created_at', 'desc')
                 ->paginate(10);
@@ -74,11 +157,15 @@ class AdminController extends Controller
         $reports = PostReport::with(['post.user', 'user'])
                 ->orderBy('created_at', 'desc')
                 ->paginate(5);
+                // In any controller method
+Log::debug('Showing view: ' . request()->path());
         return view('admin.Reports', compact('reports'));
+
     }
 
     public function getReportDetails($reportId)
     {
+        Log::debug('Showing view: ' . request()->path());
         try {
             $report = PostReport::with([
                     'reporter',
@@ -116,29 +203,8 @@ class AdminController extends Controller
         return view('admin.Settings');
     }
 
-    public function showUserManagement()
-{
-    $user = Auth::user();
 
-    if ($user && $user->email === 'admin@gmail.com') {
-        // Regular users (non-artists)
-        $users = User::withCount('posts')
-            ->where('verified_artist', 0)
-            ->orderBy('created_at', 'desc')
-            ->paginate(15, ['*'], 'users_page');
 
-        // Verified artists
-        $artists = User::withCount('posts')
-            ->where('verified_artist', 1)
-            ->orderBy('created_at', 'desc')
-            ->paginate(15, ['*'], 'artists_page');
-
-        return view('admin.UserManagement', compact('users', 'artists'));
-    }
-
-    return redirect()->route('home')
-           ->withErrors(['You do not have permission to access this page.']);
-}
 
     public function scopeVerifiedArtists($query)
     {

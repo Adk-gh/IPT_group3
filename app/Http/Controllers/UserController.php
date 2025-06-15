@@ -12,24 +12,19 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('admin');
+        
+        $this->middleware('auth:api'); // API-only authentication
+        $this->middleware('admin'); // Only admins can access these endpoints
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        $query = User::where('email', '!=', 'admin@gmail.com')
+        $users = User::where('email', '!=', 'admin@gmail.com')
             ->withCount('posts')
-            ->orderBy('created_at', 'desc');
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
-        // For API responses
-        if ($request->expectsJson()) {
-            return response()->json($query->paginate(10));
-        }
-
-        // For web view
-        $users = $query->paginate(10);
-        return view('admin.user-management', compact('users'));
+        return response()->json($users);
     }
 
     public function show(User $user)
