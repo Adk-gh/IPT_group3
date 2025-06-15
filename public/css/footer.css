@@ -85,6 +85,8 @@
 
         [data-theme="dark"] .btn-secondary {
             background-color: var(--secondary);
+            color: var(--white); /* Add this line to make text white in dark mode */
+            border-color: var(--white); /* Optional: make border white for better visibility */
         }
 
         .btn-secondary:hover {
@@ -221,8 +223,15 @@
             margin-bottom: 30px;
         }
 
+        /* Also update the footer-specific secondary button */
         .footer-support-btn-secondary {
             padding: 10px 20px;
+            background-color: transparent;
+            border-color: var(--white);
+            color: var(--white);
+        }
+
+        [data-theme="dark"] .footer-support-btn-secondary {
             background-color: transparent;
             border-color: var(--white);
             color: var(--white);

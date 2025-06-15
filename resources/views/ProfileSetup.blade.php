@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Street & Ink - Profile Setup</title>
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="{{ asset('css/ProfileSetup.css') }}" rel="stylesheet">
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 </head>
 <body>
     <!-- Split Layout -->
@@ -66,25 +68,27 @@
 
                     <form id="profileForm" action="{{ route('profile.setup.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <!-- Profile Picture Upload -->
-                        <div class="form-group">
-                            <label>Profile Picture</label>
-                            <div class="avatar-upload">
-                                <div class="avatar-preview" id="avatarPreview">
-                                    <i class="fas fa-user"></i>
-                                    <img id="avatarImage" src="" alt="Preview">
-                                </div>
-                                <div class="avatar-actions">
-                                    <button type="button" class="avatar-btn" id="uploadBtn">
-                                        <i class="fas fa-upload"></i> Upload photo
-                                    </button>
-                                    <button type="button" class="avatar-btn remove" id="removeBtn" style="display: none;">
-                                        <i class="fas fa-trash"></i> Remove
-                                    </button>
-                                    <input type="file" name="profile_picture" id="avatarInput" class="avatar-input" accept="image/*">
-                                </div>
-                            </div>
-                        </div>
+                       <!-- Profile Picture Upload -->
+<div class="form-group">
+    <label>Profile Picture</label>
+    <div class="avatar-upload">
+        <div class="avatar-preview" id="avatarPreview">
+            <div class="avatar-placeholder">
+                <i class="fas fa-user"></i>
+            </div>
+            <img id="avatarImage" src="" alt="Preview">
+        </div>
+        <input type="file" name="profile_picture" id="avatarInput" class="avatar-input" accept="image/*">
+        <div class="avatar-actions">
+            <label for="avatarInput" class="avatar-btn">
+                <i class="fas fa-cloud-upload-alt"></i> Choose photo
+            </label>
+            <button type="button" class="avatar-btn remove" id="removeBtn" style="display: none;">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    </div>
+</div>
 
                         <!-- Display Name -->
                         <div class="form-group">
@@ -119,11 +123,13 @@
                     </div>
 
                     <!-- Birthdate -->
-                    <div class="form-group">
-                        <label for="birthdate">BirthDate</label>
-                        <input type="date" id="birthdate" name="birthdate" class="form-control">
-                    </div>
-
+<div class="form-group">
+    <label for="birthdate">Birthdate</label>
+    <div class="date-input-container">
+        <i class="fas fa-calendar-alt"></i>
+        <input type="text" id="birthdate" name="birthdate" class="form-control" placeholder="Select date" readonly>
+    </div>
+</div>
                     <!-- Phone Number -->
                     <div class="form-group">
                         <label for="phone">Phone Number</label>
@@ -214,6 +220,18 @@
             </div>
         </div>
     </div>
+    <!-- Add this AFTER jQuery but BEFORE your ProfileSetup.js -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+   flatpickr("#birthdate", {
+  theme: "none", // Disable default theme
+  dateFormat: "Y-m-d",
+  maxDate: "today",
+  disableMobile: true, // Force desktop UI on mobile
+  nextArrow: '<i class="fas fa-chevron-right"></i>',
+  prevArrow: '<i class="fas fa-chevron-left"></i>',
+});
+</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{{ asset('js/ProfileSetup.js') }}"></script>
