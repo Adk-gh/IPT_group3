@@ -13,7 +13,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\SavedPostController;
 
 use App\Http\Controllers\ContactController;
-
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserManagementController;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -62,6 +63,8 @@ Route::middleware(['auth','profile.complete'])->group(function () {
         return App\Models\Tag::orderBy('name')->get();
     });
 
+
+
   // Admin dashboard routes with simple email check
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'showAdminDashboard'])->name('admin.dashboard');
@@ -72,6 +75,15 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/Reports', [AdminController::class, 'showReports'])->name('admin.Reports');
     Route::get('/Settings', [AdminController::class, 'showSettings'])->name('admin.Settings');
     Route::get('/UserManagement', [AdminController::class, 'showUserManagement'])->name('admin.UserManagement');
+
+
+       // User management routes
+  // Route::resource('admin/users', UserController::class)->only(['index', 'show', 'update', 'destroy'])->middleware(['auth']);
+
+    Route::get('/users/{user_id}', [UserController::class, 'show']);
+
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
 });
 
 // Logout route
@@ -94,8 +106,6 @@ Route::post('/posts/{post}/share', [AuthController::class, 'share'])->name('post
 
 
 
-Route::get('/users', [UserController::class, 'index'])->name('admin.user.table');
-Route::get('/admin/users', [UserController::class, 'index'])->name('admin.UserManagement');
 
 
 Route::get('/admin/reports/{report}/details', [AdminController::class, 'getReportDetails'])
@@ -144,3 +154,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/posts', [AuthController::class, 'storePost'])->name('posts.store');
     Route::get('/posts/filter', [AuthController::class, 'filterPosts'])->name('posts.filter');
 });
+
+
+Route::get('/admin/posts/{post}', [PostController::class, 'show'])->name('admin.posts.show');
+Route::put('/admin/posts/{post}/status', [PostController::class, 'updateStatus'])->name('admin.posts.updateStatus');
+
+Route::prefix('admin')->group(function() {
+    Route::get('/users', [UserManagementController::class, 'index'])->name('admin.users');
+    Route::get('/users/{user}', [UserManagementController::class, 'show']);
+    Route::put('/users/{user}', [UserManagementController::class, 'update']);
+    Route::delete('/users/{user}', [UserManagementController::class, 'destroy']);
+    Route::post('/users/bulk-delete', [UserManagementController::class, 'bulkDestroy']);
+});
+Route::get('/admin/users', [App\Http\Controllers\UserManagementController::class, 'index'])
+    ->name('admin.users.index')
+    ->middleware('auth:admin');
