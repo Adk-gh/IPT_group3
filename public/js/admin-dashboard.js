@@ -340,3 +340,34 @@
     }
 });
 
+async function fetchChartData() {
+    try {
+        const response = await fetch('/api/chart-data', {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            credentials: 'include'
+        });
+
+        // First check if response is OK
+        if (!response.ok) {
+            const errorData = await response.text();
+            throw new Error(`Server responded with ${response.status}: ${errorData}`);
+        }
+
+        // Then try to parse as JSON
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching chart data:', error);
+
+        // Handle unauthorized (401) specifically
+        if (error.message.includes('401')) {
+            window.location.reload(); // Force page refresh which should redirect to login
+        }
+
+        return null;
+    }
+}

@@ -21,7 +21,6 @@
     <link href="{{ asset('css/loading.css') }}" rel="stylesheet">
 
     <style>
-        /* Enhanced Tab styles */
         .tabs {
             display: flex;
             border-bottom: 1px solid #ddd;
@@ -60,7 +59,6 @@
             display: block;
         }
 
-        /* Toast notification */
         .toast-container {
             position: fixed;
             bottom: 20px;
@@ -68,7 +66,6 @@
             z-index: 1100;
         }
 
-        /* Avatar styling */
         .avatar {
             width: 50px;
             height: 50px;
@@ -76,7 +73,6 @@
             object-fit: cover;
         }
 
-        /* Badge enhancements */
         .badge {
             font-size: 0.8rem;
             padding: 0.35em 0.65em;
@@ -112,305 +108,307 @@
             <div class="tab" data-target="artists-tab-content">Artists</div>
         </div>
 
-<!-- Users Tab Content -->
-<div class="tab-content active" id="users-tab-content">
-    <div class="data-table">
-        <div class="table-header">
-            <h1 class="table-title">User Management</h1>
-            <div class="search-filter-container">
-                <div class="input-group">
-                    <!-- Search input would go here -->
-                </div>
-                <div>
-                    <button class="btn btn-secondary me-2" id="filterBtn">
-                        <i class="fas fa-filter"></i> Filters
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bulk Actions -->
-        <div class="bulk-actions mb-3">
-            <button class="btn btn-outline-danger btn-sm me-2" id="deleteSelectedBtn" disabled>
-                <i class="fas fa-trash"></i> Delete Selected (<span id="selectedCount">0</span>)
-            </button>
-            <button class="btn btn-outline-secondary btn-sm" id="exportUsersBtn">
-                <i class="fas fa-download"></i> Export
-            </button>
-        </div>
-
-        @if(isset($error))
-            <div class="alert alert-danger">{{ $error }}</div>
-        @endif
-
-        @if(isset($users) && $users->count())
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th width="40"><input type="checkbox" id="selectAllCheckbox"></th>
-                            <th>User</th>
-                            <th>Artworks</th>
-                            <th>Location</th>
-                            <th>Last Active</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($users as $user)
-                        <tr>
-                            <td><input type="checkbox" class="user-checkbox" value="{{ $user->user_id }}"></td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ $user->profile_picture ? Storage::url($user->profile_picture) : asset('img/default.jpg') }}"
-                                         alt="User Avatar" class="avatar me-3">
-                                    <div>
-                                        <div class="fw-bold">{{ $user->name }}</div>
-                                        <div class="text-muted small">{{ $user->email }}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>{{ $user->posts_count ?? 0 }}</td>
-                            <td>{{ $user->location ?? 'Unknown' }}</td>
-                            <td>{{ $user->last_active_at ? $user->last_active_at->diffForHumans() : 'Never' }}</td>
-                            <td class="text-end">
-                                <div class="d-flex justify-content-end gap-2">
-                                    <button class="btn btn-sm btn-outline-primary view-user-btn"
-                                            data-user-id="{{ $user->user_id }}"
-                                            data-user="{{ htmlspecialchars(json_encode($user), ENT_QUOTES, 'UTF-8') }}">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-secondary edit-user-btn"
-                                            data-user-id="{{ $user->user_id }}">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger delete-user-btn"
-                                            data-user-id="{{ $user->user_id }}">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Pagination -->
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <div>
-                    Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} users
-                </div>
-                <div>
-                    @if($users->onFirstPage())
-                        <span class="btn btn-outline-secondary disabled">Previous</span>
-                    @else
-                        <a class="btn btn-outline-secondary" href="{{ $users->previousPageUrl() }}">Previous</a>
-                    @endif
-
-                    @foreach(range(1, min(5, $users->lastPage())) as $page)
-                        @if($page == $users->currentPage())
-                            <span class="btn btn-primary disabled">{{ $page }}</span>
-                        @else
-                            <a class="btn btn-outline-primary" href="{{ $users->url($page) }}">{{ $page }}</a>
-                        @endif
-                    @endforeach
-
-                    @if($users->hasMorePages())
-                        <a class="btn btn-outline-secondary" href="{{ $users->nextPageUrl() }}">Next</a>
-                    @else
-                        <span class="btn btn-outline-secondary disabled">Next</span>
-                    @endif
-                </div>
-            </div>
-        @else
-            <div class="alert alert-info">No users found.</div>
-        @endif
-    </div>
-</div>
-
-<!-- Artists Table -->
-<div class="tab-content" id="artists-content">
-    @if(isset($error))
-        <div class="alert alert-danger">{{ $error }}</div>
-    @endif
-
-    @if(isset($artists) && $artists->count())
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" id="selectAllCheckbox"></th>
-                    <th>Artist</th>
-                    <th>Artworks</th>
-                    <th>Location</th>
-                    <th>Last Active</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="artistsTableBody">
-                @foreach($artists as $user)
-                    <tr data-user-id="{{ $user->user_id }}">
-                        <td><input type="checkbox" class="user-checkbox" value="{{ $user->user_id }}"></td>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <img src="{{ $user->profile_picture ? Storage::url($user->profile_picture) : asset('img/default.jpg') }}"
-                                     alt="User Avatar" class="avatar me-3" style="width: 40px; height: 40px;">
-                                <div>
-                                    <div class="fw-bold">{{ $user->name }}</div>
-                                    <div class="text-muted small">{{ $user->email }}</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>{{ $user->posts_count ?? 0 }}</td>
-                        <td>{{ $user->location ?? 'Unknown' }}</td>
-                        <td>{{ $user->last_active_at ? $user->last_active_at->diffForHumans() : 'Never' }}</td>
-                        <td class="text-end">
-                            <!-- View Button -->
-                            <button class="btn btn-sm btn-outline-primary view-user-btn"
-                                    data-user-id="{{ $user->user_id }}"
-                                    data-user="{{ htmlspecialchars(json_encode([
-                                        'user_id' => $user->user_id,
-                                        'name' => $user->name,
-                                        'email' => $user->email,
-                                        'phone' => $user->phone,
-                                        'location' => $user->location,
-                                        'bio' => $user->bio,
-                                        'verified_artist' => $user->verified_artist,
-                                        'profile_picture' => $user->profile_picture,
-                                        'created_at' => $user->created_at ? $user->created_at->toISOString() : null,
-                                        'last_active_at' => $user->last_active_at ? $user->last_active_at->toISOString() : null,
-                                        'artworks_count' => $user->posts_count ?? 0
-                                    ]), ENT_QUOTES, 'UTF-8') }}">
-                                <i class="fas fa-eye"></i>
-                            </button>
-
-                            <!-- Edit Button -->
-                            <button class="btn btn-sm btn-outline-secondary edit-user-btn"
-                                    data-user-id="{{ $user->user_id }}"
-                                    data-user-data="{{ htmlspecialchars(json_encode([
-                                        'user_id' => $user->user_id,
-                                        'name' => $user->name,
-                                        'email' => $user->email,
-                                        'phone' => $user->phone,
-                                        'location' => $user->location,
-                                        'bio' => $user->bio,
-                                        'verified_artist' => $user->verified_artist,
-                                        'profile_picture' => $user->profile_picture
-                                    ]), ENT_QUOTES, 'UTF-8') }}">
-                                <i class="fas fa-edit"></i>
-                            </button>
-
-                            <!-- Delete Button -->
-                            <button class="btn btn-sm btn-outline-danger delete-user-btn"
-                                    data-user-id="{{ $user->user_id }}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-
-        <!-- Pagination -->
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <div>
-                Showing {{ $artists->firstItem() }} to {{ $artists->lastItem() }} of {{ $artists->total() }} artists
-            </div>
-            <div>
-                @if($artists->onFirstPage())
-                    <span class="btn btn-outline-secondary disabled">Previous</span>
-                @else
-                    <a class="btn btn-outline-secondary" href="{{ $artists->previousPageUrl() }}">Previous</a>
-                @endif
-
-                @foreach(range(1, min(5, $artists->lastPage())) as $page)
-                    @if($page == $artists->currentPage())
-                        <span class="btn btn-primary disabled">{{ $page }}</span>
-                    @else
-                        <a class="btn btn-outline-primary" href="{{ $artists->url($page) }}">{{ $page }}</a>
-                    @endif
-                @endforeach
-
-                @if($artists->hasMorePages())
-                    <a class="btn btn-outline-secondary" href="{{ $artists->nextPageUrl() }}">Next</a>
-                @else
-                    <span class="btn btn-outline-secondary disabled">Next</span>
-                @endif
-            </div>
-        </div>
-    @else
-        <p>No verified artists found.</p>
-    @endif
-</div>
-
-<!-- Edit User Modal -->
-<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form id="editUserForm" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-                <div class="modal-body">
-                    <div class="mb-3 text-center">
-                        <img id="editUserAvatar" src="{{ asset('img/default.jpg') }}" alt="User Avatar" class="rounded-circle mb-2" style="width: 100px; height: 100px;">
+        <!-- Users Tab Content -->
+        <div class="tab-content active" id="users-tab-content">
+            <div class="data-table">
+                <div class="table-header">
+                    <h1 class="table-title">User Management</h1>
+                    <div class="search-filter-container">
+                        <div class="input-group">
+                            <input type="text" id="userSearch" class="form-control" placeholder="Search users...">
+                        </div>
                         <div>
-                            <label class="btn btn-outline-primary">
-                                Change Avatar
-                                <input type="file" id="editProfilePicture" name="profile_picture" accept="image/*" hidden>
-                            </label>
+                            <button class="btn btn-secondary me-2" id="filterBtn">
+                                <i class="fas fa-filter"></i> Filters
+                            </button>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="editName" class="form-label">Name *</label>
-                        <input type="text" class="form-control" id="editName" name="name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editEmail" class="form-label">Email *</label>
-                        <input type="email" class="form-control" id="editEmail" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editPhone" class="form-label">Phone</label>
-                        <input type="text" class="form-control" id="editPhone" name="phone">
-                    </div>
-                    <div class="mb-3">
-                        <label for="editLocation" class="form-label">Location</label>
-                        <input type="text" class="form-control" id="editLocation" name="location">
-                    </div>
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="editVerifiedArtist" name="verified_artist" value="1">
-                        <label class="form-check-label" for="editVerifiedArtist">Verified Artist</label>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editBio" class="form-label">Bio</label>
-                        <textarea class="form-control" id="editBio" name="bio" rows="4"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editPassword" class="form-label">New Password</label>
-                        <input type="password" class="form-control" id="editPassword" name="password">
-                        <small class="form-text text-muted">Minimum 8 characters</small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editPasswordConfirmation" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" id="editPasswordConfirmation" name="password_confirmation">
-                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-    </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
-        <!-- Modal content remains the same as original -->
+                <!-- Bulk Actions -->
+                <div class="bulk-actions mb-3">
+                    <button class="btn btn-outline-danger btn-sm me-2" id="deleteSelectedBtn" disabled>
+                        <i class="fas fa-trash"></i> Delete Selected (<span id="selectedCount">0</span>)
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" id="exportUsersBtn">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+
+                @if(isset($error))
+                    <div class="alert alert-danger">{{ $error }}</div>
+                @endif
+
+                @if($users->count())
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="40"><input type="checkbox" id="selectAllUsersCheckbox"></th>
+                                    <th>User</th>
+                                    <th>Artworks</th>
+                                    <th>Location</th>
+                                    <th>Last Active</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                @foreach($users as $user)
+                                <tr>
+                                    <td><input type="checkbox" class="user-checkbox" value="{{ $user->id }}"></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{ $user->profile_picture ? Storage::url($user->profile_picture) : asset('img/default.jpg') }}"
+                                                 alt="User Avatar" class="avatar me-3">
+                                            <div>
+                                                <div class="fw-bold">{{ $user->name }}</div>
+                                                <div class="text-muted small">{{ $user->email }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ $user->posts_count ?? 0 }}</td>
+                                    <td>{{ $user->location ?? 'Unknown' }}</td>
+                                    <td>{{ $user->last_active_at ? $user->last_active_at->diffForHumans() : 'Never' }}</td>
+                                    <td class="text-end">
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <button class="btn btn-sm btn-outline-primary view-user-btn"
+                                                    data-user-id="{{ $user->id }}"
+                                                    data-user="{{ htmlspecialchars(json_encode($user), ENT_QUOTES, 'UTF-8') }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary edit-user-btn"
+                                                    data-user-id="{{ $user->id }}">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger delete-user-btn"
+                                                    data-user-id="{{ $user->id }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} users
+                        </div>
+                        <div class="pagination">
+                            @if($users->onFirstPage())
+                                <span class="btn btn-outline-secondary disabled">Previous</span>
+                            @else
+                                <a class="btn btn-outline-secondary" href="{{ $users->previousPageUrl() }}">Previous</a>
+                            @endif
+
+                            @foreach($users->getUrlRange(1, $users->lastPage()) as $page => $url)
+                                @if($page == $users->currentPage())
+                                    <span class="btn btn-primary disabled">{{ $page }}</span>
+                                @else
+                                    <a class="btn btn-outline-primary" href="{{ $url }}">{{ $page }}</a>
+                                @endif
+                            @endforeach
+
+                            @if($users->hasMorePages())
+                                <a class="btn btn-outline-secondary" href="{{ $users->nextPageUrl() }}">Next</a>
+                            @else
+                                <span class="btn btn-outline-secondary disabled">Next</span>
+                            @endif
+                        </div>
+                    </div>
+                @else
+                    <div class="alert alert-info">No users found.</div>
+                @endif
+            </div>
+        </div>
+
+        <!-- Artists Tab Content -->
+        <div class="tab-content" id="artists-tab-content">
+            <div class="data-table">
+                <div class="table-header">
+                    <h1 class="table-title">Artist Management</h1>
+                    <div class="search-filter-container">
+                        <div class="input-group">
+                            <input type="text" id="artistSearch" class="form-control" placeholder="Search artists...">
+                        </div>
+                    </div>
+                </div>
+
+                @if($artists->count())
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="40"><input type="checkbox" id="selectAllArtistsCheckbox"></th>
+                                    <th>Artist</th>
+                                    <th>Artworks</th>
+                                    <th>Location</th>
+                                    <th>Last Active</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="artistsTableBody">
+                                @foreach($artists as $artist)
+                                <tr>
+                                    <td><input type="checkbox" class="artist-checkbox" value="{{ $artist->id }}"></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{ $artist->profile_picture ? Storage::url($artist->profile_picture) : asset('img/default.jpg') }}"
+                                                 alt="Artist Avatar" class="avatar me-3">
+                                            <div>
+                                                <div class="fw-bold">{{ $artist->name }}</div>
+                                                <div class="text-muted small">{{ $artist->email }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ $artist->posts_count ?? 0 }}</td>
+                                    <td>{{ $artist->location ?? 'Unknown' }}</td>
+                                    <td>{{ $artist->last_active_at ? $artist->last_active_at->diffForHumans() : 'Never' }}</td>
+                                    <td class="text-end">
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <button class="btn btn-sm btn-outline-primary view-user-btn"
+                                                    data-user-id="{{ $artist->id }}"
+                                                    data-user="{{ htmlspecialchars(json_encode($artist), ENT_QUOTES, 'UTF-8') }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary edit-user-btn"
+                                                    data-user-id="{{ $artist->id }}">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger delete-user-btn"
+                                                    data-user-id="{{ $artist->id }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            Showing {{ $artists->firstItem() }} to {{ $artists->lastItem() }} of {{ $artists->total() }} artists
+                        </div>
+                        <div class="pagination">
+                            @if($artists->onFirstPage())
+                                <span class="btn btn-outline-secondary disabled">Previous</span>
+                            @else
+                                <a class="btn btn-outline-secondary" href="{{ $artists->previousPageUrl() }}">Previous</a>
+                            @endif
+
+                            @foreach($artists->getUrlRange(1, $artists->lastPage()) as $page => $url)
+                                @if($page == $artists->currentPage())
+                                    <span class="btn btn-primary disabled">{{ $page }}</span>
+                                @else
+                                    <a class="btn btn-outline-primary" href="{{ $url }}">{{ $page }}</a>
+                                @endif
+                            @endforeach
+
+                            @if($artists->hasMorePages())
+                                <a class="btn btn-outline-secondary" href="{{ $artists->nextPageUrl() }}">Next</a>
+                            @else
+                                <span class="btn btn-outline-secondary disabled">Next</span>
+                            @endif
+                        </div>
+                    </div>
+                @else
+                    <div class="alert alert-info">No verified artists found.</div>
+                @endif
+            </div>
+        </div>
+
+        <!-- Edit User Modal -->
+        <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="editUserForm" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-body">
+                            <div class="mb-3 text-center">
+                                <img id="editUserAvatar" src="{{ asset('img/default.jpg') }}" alt="User Avatar" class="rounded-circle mb-2" style="width: 100px; height: 100px;">
+                                <div>
+                                    <label class="btn btn-outline-primary">
+                                        Change Avatar
+                                        <input type="file" id="editProfilePicture" name="profile_picture" accept="image/*" hidden>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editName" class="form-label">Name *</label>
+                                <input type="text" class="form-control" id="editName" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editEmail" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="editEmail" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editPhone" class="form-label">Phone</label>
+                                <input type="text" class="form-control" id="editPhone" name="phone">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editLocation" class="form-label">Location</label>
+                                <input type="text" class="form-control" id="editLocation" name="location">
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="editVerifiedArtist" name="verified_artist" value="1">
+                                <label class="form-check-label" for="editVerifiedArtist">Verified Artist</label>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editBio" class="form-label">Bio</label>
+                                <textarea class="form-control" id="editBio" name="bio" rows="4"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editPassword" class="form-label">New Password</label>
+                                <input type="password" class="form-control" id="editPassword" name="password">
+                                <small class="form-text text-muted">Minimum 8 characters</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editPasswordConfirmation" class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" id="editPasswordConfirmation" name="password_confirmation">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteUserModalLabel">Confirm Deletion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="deleteUserForm" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete this user? This action cannot be undone.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger">Delete User</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- JavaScript Dependencies -->

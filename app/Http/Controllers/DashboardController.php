@@ -24,8 +24,9 @@ return view('admin.dashboard', compact('users', 'uniqueLocationsCount'));
     }
 
     // app/Http/Controllers/DashboardController.php
-    public function chartData()
-    {
+   public function chartData()
+{
+    try {
         // User growth data (last 6 months)
         $userGrowth = User::select(
                 DB::raw('COUNT(*) as count'),
@@ -34,8 +35,19 @@ return view('admin.dashboard', compact('users', 'uniqueLocationsCount'));
             ->where('created_at', '>=', Carbon::now()->subMonths(6))
             ->groupBy('month')
             ->orderBy(DB::raw("MONTH(created_at)"))
-            ->pluck('count', 'month')
-            ->toArray();
+            ->get();
+
+        // Fill missing months with 0
+        $months = [];
+        $currentMonth = Carbon::now()->month;
+        for ($i = 5; $i >= 0; $i--) {
+            $month = Carbon::now()->subMonths($i)->format('M');
+            $months[$month] = 0;
+        }
+
+        foreach ($userGrowth as $growth) {
+            $months[$growth->month] = $growth->count;
+        }
 
         // Artwork types data
         $artworkTypes = Post::select(
@@ -43,8 +55,14 @@ return view('admin.dashboard', compact('users', 'uniqueLocationsCount'));
                 DB::raw('COUNT(*) as count')
             )
             ->groupBy('category')
-            ->pluck('count', 'category')
-            ->toArray();
+            ->get();
+
+        $artworkTypesData = [];
+        $artworkTypesLabels = [];
+        foreach ($artworkTypes as $type) {
+            $artworkTypesLabels[] = $type->category;
+            $artworkTypesData[] = $type->count;
+        }
 
         // Monthly uploads data (current year)
         $monthlyUploads = Post::select(
@@ -54,20 +72,32 @@ return view('admin.dashboard', compact('users', 'uniqueLocationsCount'));
             ->whereYear('created_at', date('Y'))
             ->groupBy('month')
             ->orderBy(DB::raw("MONTH(created_at)"))
-            ->pluck('count')
-            ->toArray();
+            ->get();
+
+        $uploadsData = array_fill(0, 12, 0);
+        $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        foreach ($monthlyUploads as $upload) {
+            $monthIndex = array_search($upload->month, $monthNames);
+            if ($monthIndex !== false) {
+                $uploadsData[$monthIndex] = $upload->count;
+            }
+        }
 
         return response()->json([
-            'user_growth' => array_values($userGrowth),
-            'user_growth_labels' => array_keys($userGrowth),
-            'artwork_types' => array_values($artworkTypes),
-            'artwork_types_labels' => array_keys($artworkTypes),
-            'monthly_uploads' => $monthlyUploads,
-            'monthly_uploads_labels' => [
-                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-            ]
+            'user_growth' => array_values($months),
+            'user_growth_labels' => array_keys($months),
+            'artwork_types' => $artworkTypesData,
+            'artwork_types_labels' => $artworkTypesLabels,
+            'monthly_uploads' => $uploadsData,
+            'monthly_uploads_labels' => $monthNames
         ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Failed to fetch chart data',
+            'message' => $e->getMessage()
+        ], 500);
     }
 }
-
+}
