@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
 use App\Models\StreetArtLocation;
 use App\Models\Post;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,4 +66,14 @@ Route::get('/posts', function () {
             'details' => $e->getMessage()
         ], 500);
     }
+});
+// For API-style routes
+Route::middleware(['auth', 'admin'])->group(function() {
+    Route::get('/admin/users/{user}', [UserController::class, 'show'])
+         ->name('admin.users.show');
+});
+
+// Or if using API routes (routes/api.php)
+Route::middleware(['auth:api', 'admin'])->group(function() {
+    Route::get('users/{user}', [UserController::class, 'show']);
 });

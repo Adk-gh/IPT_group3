@@ -242,6 +242,7 @@
         <!-- Grid View (Dynamic) -->
         <div class="art-grid" id="gridView" style="display: none;">
             @forelse($posts ?? [] as $post)
+
                 @php
                     $isShared = $post instanceof \App\Models\SharedPost;
                     $originalPost = $isShared ? $post->post : $post;
@@ -260,6 +261,21 @@
                             <span>{{ '@' . ($originalPost->user->username ?? 'unknown') }}</span><br>
                             <span class="art-card-date">{{ ($originalPost->created_at ?? now())->diffForHumans() }}</span>
                             <span>{{ $originalPost->location_name ?? 'Unknown' }}</span>
+
+            @php
+                $isShared = $post instanceof \App\Models\SharedPost;
+                $originalPost = ($isShared && isset($post->post) && !is_null($post->post) && is_object($post->post)) ? $post->post : $post;
+                $sharedByUser = ($isShared && is_object($post) && isset($post->user)) ? $post->user : null;
+            @endphp
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>
+                    <div class="art-cell">
+                        @if($originalPost->image_url ?? false)
+                        <div class="art-thumb">
+                            <img src="{{ asset('storage/' . $originalPost->image_url) }}"
+                                 alt="Post Image">
+
                         </div>
                         <div class="tags">
                             <span class="tag">#{{ $isShared ? 'shared' : 'original' }}</span>
@@ -281,10 +297,121 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
+
+                </td>
+                <td>{{ Str::limit($originalPost->location_name ?? 'Unknown', 15) }}</td>
+                <td>{{ Str::limit($originalPost->location_name ?? 'Unknown', 15) }}</td>
+                <td>
+                    <div class="tags">
+                        @foreach(explode(',', $originalPost->tags ?? '') as $tag)
+                            @if(trim($tag) !== '')
+                                <span class="tag">#{{ trim($tag) }}</span>
+                            @endif
+                        @endforeach
+                    </div>
+                </td>
+
+                <td>{{ ($originalPost->created_at ?? now())->diffForHumans() }}</td>
+                <td>
+                    <div class="action-btns">
+                        <button class="action-btn view" title="View" data-post-id="{{ $originalPost->id ?? '' }}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn approve" title="Approve" data-post-id="{{ $originalPost->id ?? '' }}">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="action-btn reject" title="Reject" data-post-id="{{ $originalPost->id ?? '' }}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+
             @empty
                 <p class="text-center w-full">No posts found.</p>
             @endforelse
+
+
+        </tbody>
+    </table>
+</div>
+<div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-body"></div>
+</div>
+
+@if(isset($posts) && $posts->count())
+<div class="pagination">
+    <div class="pagination-info">Showing {{ $posts->firstItem() }} to {{ $posts->lastItem() }} of {{ $posts->total() }} posts</div>
+    <div class="pagination-btns">
+        @if($posts->onFirstPage())
+            <button class="page-btn disabled"><i class="fas fa-chevron-left"></i></button>
+        @else
+            <a href="{{ $posts->previousPageUrl() }}" class="page-btn"><i class="fas fa-chevron-left"></i></a>
+        @endif
+
+        @foreach(range(1, $posts->lastPage()) as $page)
+            @if($page == $posts->currentPage())
+                <button class="page-btn active">{{ $page }}</button>
+            @else
+                <a href="{{ $posts->url($page) }}" class="page-btn">{{ $page }}</a>
+            @endif
+        @endforeach
+
+        @if($posts->hasMorePages())
+            <a href="{{ $posts->nextPageUrl() }}" class="page-btn"><i class="fas fa-chevron-right"></i></a>
+        @else
+            <button class="page-btn disabled"><i class="fas fa-chevron-right"></i></button>
+        @endif
+    </div>
+</div>
+@endif
+      </div>
+
+       <!-- Grid View (Dynamic) -->
+<div class="art-grid" id="gridView" style="display: none;">
+    @forelse($posts ?? [] as $post)
+        @php
+            $isShared = $post instanceof \App\Models\SharedPost;
+            $originalPost = $isShared ? $post->post : $post;
+            $sharedByUser = $isShared ? $post->user : null;
+        @endphp
+        <div class="art-card">
+            @if($originalPost->image_url ?? false)
+                <img src="{{ asset('storage/' . $originalPost->image_url) }}"
+                     alt="{{ $originalPost->caption ?? 'Artwork' }}"
+                     class="art-card-img"
+                     onclick="openArtModal('{{ $originalPost->caption ?? 'Untitled' }}')">
+            @endif
+            <div class="art-card-body">
+                <div class="art-card-title">{{ Str::limit($originalPost->caption ?? 'Untitled', 25) }}</div>
+                <div class="art-card-meta">
+                    <span>{{ '@' . ($originalPost->user->username ?? 'unknown') }}</span><br>
+                    <span class="art-card-date">{{ ($originalPost->created_at ?? now())->diffForHumans() }}</span>
+                    <span>{{ $originalPost->location_name ?? 'Unknown' }}</span>
+                </div>
+                <div class="tags">
+                    <span class="tag">#{{ $isShared ? 'shared' : 'original' }}</span>
+                    @if($originalPost->image_url)
+                        <span class="tag">#photo</span>
+                    @endif
+                </div>
+                <div class="art-card-footer">
+                    <div class="art-card-actions">
+                        <button class="action-btn view" title="View" data-post-id="{{ $originalPost->id }}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn approve" title="Approve" data-post-id="{{ $originalPost->id }}">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="action-btn reject" title="Reject" data-post-id="{{ $originalPost->id }}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- Artwork Detail Modal -->
