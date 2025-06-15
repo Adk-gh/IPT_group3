@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\SavedPostController;
 
 use App\Http\Controllers\ContactController;
-
+use App\Http\Controllers\ArtUploadController;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -72,6 +72,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/Reports', [AdminController::class, 'showReports'])->name('admin.Reports');
     Route::get('/Settings', [AdminController::class, 'showSettings'])->name('admin.Settings');
     Route::get('/UserManagement', [AdminController::class, 'showUserManagement'])->name('admin.UserManagement');
+
+
+
 });
 
 // Logout route
@@ -143,4 +146,12 @@ Route::middleware('auth')->get('/tags/list', [AuthController::class, 'listTags']
 Route::middleware('auth')->group(function () {
     Route::post('/posts', [AuthController::class, 'storePost'])->name('posts.store');
     Route::get('/posts/filter', [AuthController::class, 'filterPosts'])->name('posts.filter');
+});
+
+Route::prefix('admin')->group(function () {
+    // Art uploads management
+    Route::get('/art-uploads', [ArtUploadController::class, 'index'])->name('admin.art-uploads');
+    Route::get('/posts/{id}', [ArtUploadController::class, 'show']);
+    Route::delete('/posts/{id}', [ArtUploadController::class, 'destroy']);
+    Route::post('/posts/{id}/status', [ArtUploadController::class, 'updateStatus']);
 });
