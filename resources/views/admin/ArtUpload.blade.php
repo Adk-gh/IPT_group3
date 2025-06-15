@@ -147,8 +147,8 @@
             @forelse($posts ?? [] as $post)
             @php
                 $isShared = $post instanceof \App\Models\SharedPost;
-                $originalPost = $isShared ? $post->post : $post;
-                $sharedByUser = $isShared ? $post->user : null;
+                $originalPost = ($isShared && isset($post->post) && !is_null($post->post) && is_object($post->post)) ? $post->post : $post;
+                $sharedByUser = ($isShared && is_object($post) && isset($post->user)) ? $post->user : null;
             @endphp
             <tr>
                 <td><input type="checkbox"></td>
@@ -181,14 +181,17 @@
                     </div>
                 </td>
                 <td>{{ Str::limit($originalPost->location_name ?? 'Unknown', 15) }}</td>
+                <td>{{ Str::limit($originalPost->location_name ?? 'Unknown', 15) }}</td>
                 <td>
                     <div class="tags">
-                        <span class="tag">#{{ $isShared ? 'shared' : 'original' }}</span>
-                        @if($originalPost->image_url ?? false)
-                        <span class="tag">#photo</span>
-                        @endif
+                        @foreach(explode(',', $originalPost->tags ?? '') as $tag)
+                            @if(trim($tag) !== '')
+                                <span class="tag">#{{ trim($tag) }}</span>
+                            @endif
+                        @endforeach
                     </div>
                 </td>
+
                 <td>{{ ($originalPost->created_at ?? now())->diffForHumans() }}</td>
                 <td>
                     <div class="action-btns">
@@ -211,6 +214,9 @@
             @endforelse
         </tbody>
     </table>
+</div>
+<div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-body"></div>
 </div>
 
 @if(isset($posts) && $posts->count())
