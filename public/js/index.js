@@ -351,50 +351,64 @@ const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/
     // Load posts on map initialization
     loadPostMarkers();
 
-     // ========== Robust Fullscreen Toggle ==========
+// ========== Fullscreen Map Toggle ==========
+function initFullscreenMap() {
     const mapContainer = document.querySelector('.map-container');
     const viewFullMapBtn = document.getElementById('viewFullMapBtn');
     let isFullscreen = false;
 
+    if (!mapContainer || !viewFullMapBtn) {
+        console.error('Map container or fullscreen button not found');
+        return;
+    }
+
     function toggleFullscreen(e) {
-    if (e) e.preventDefault();
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
 
-    isFullscreen = !isFullscreen;
+        isFullscreen = !isFullscreen;
 
-    // Toggle classes
-    mapContainer.classList.toggle('fullscreen', isFullscreen);
-    document.body.classList.toggle('fullscreen-map-active', isFullscreen);
+        // Toggle classes
+        mapContainer.classList.toggle('fullscreen', isFullscreen);
+        document.body.classList.toggle('fullscreen-map-active', isFullscreen);
 
-    // Update button
-    if (viewFullMapBtn) {
+        // Update button
         const icon = isFullscreen ? 'compress' : 'expand';
         viewFullMapBtn.innerHTML = `<i class="fas fa-${icon}"></i> ${isFullscreen ? 'Exit Full Map' : 'View Full Map'}`;
+        viewFullMapBtn.classList.toggle('exit-fullscreen', isFullscreen);
 
-        // Ensure button is clickable
-        viewFullMapBtn.style.pointerEvents = 'auto';
-        viewFullMapBtn.style.zIndex = isFullscreen ? '10001' : '1001';
+        // Handle map resize
+        setTimeout(() => {
+            map.invalidateSize(true);
+            if (isFullscreen && clusteredMarkers) {
+                map.fitBounds(clusteredMarkers.getBounds(), {
+                    padding: [50, 50],
+                    maxZoom: 15
+                });
+            }
+        }, 150);
     }
 
-    // Resize map after transition
-    setTimeout(() => {
-        map.invalidateSize(true);
-        if (isFullscreen && clusteredMarkers) {
-            map.fitBounds(clusteredMarkers.getBounds());
-        }
-    }, 100);
-}
+    // Click handler
+    viewFullMapBtn.addEventListener('click', toggleFullscreen);
 
-    // Add click event listener with proper checks
-    if (viewFullMapBtn) {
-        viewFullMapBtn.addEventListener('click', toggleFullscreen);
-    }
-
-    // Add escape key handler
+    // Escape key handler
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && isFullscreen) {
             toggleFullscreen(e);
         }
     });
+
+    // Make sure button is visible and clickable
+    viewFullMapBtn.style.position = 'relative';
+    viewFullMapBtn.style.zIndex = '1061';
+}
+
+// Initialize the fullscreen functionality
+initFullscreenMap();
+
 
     // [Rest of your existing code]
 });

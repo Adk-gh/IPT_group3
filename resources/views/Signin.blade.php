@@ -8,13 +8,12 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-   <link href="{{ asset('css/signin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/signin.css') }}" rel="stylesheet">
     <script src="{{ asset('js/signin.js') }}" defer></script>
-      <!-- Inside <head> -->
-<link href="{{ asset('css/loading.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/loading.css') }}" rel="stylesheet">
     <style>
         :root {
             --accent: #FF5E5B;
@@ -23,12 +22,25 @@
             --background: #f9f9f9;
             --border-radius: 8px;
         }
+
+        .alert {
+            color: var(--accent);
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            background-color: rgba(255, 94, 91, 0.1);
+        }
+
+        .alert-success {
+            color: #28a745;
+            background-color: rgba(40, 167, 69, 0.1);
+        }
     </style>
 </head>
 <body>
     <div class="split-layout">
         <!-- Left Side - Art Background -->
-     <div class="art-side">
+        <div class="art-side">
             <div>
                 <a href="" class="logo large-logo" style="color: white;">
                     <img src="img/SI.png" alt="Street & Ink Logo" style="width: 40px; height: 40px; margin-right: 10px;">
@@ -41,7 +53,6 @@
             </div>
         </div>
 
-
         <!-- Right Side - Form -->
         <div class="form-side">
             <div class="form-container">
@@ -53,6 +64,12 @@
                     <h1>Welcome Back!</h1>
                     <p>Sign in to explore, pin, and discover the best street art around the world.</p>
                 </div>
+
+                @if(session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+                @endif
 
                 <form method="POST" action="{{ route('login.post') }}">
                     @csrf
@@ -69,23 +86,19 @@
                         @enderror
                     </div>
 
-                   <div class="form-group">
+                    <div class="form-group">
                         <label for="password">Password</label>
-
                         <div style="position: relative;">
                             <input type="password" id="password" name="password" autocapitalize="none" autocomplete="current-password"
                                 class="form-control @error('password') is-invalid @enderror"
                                 placeholder="Enter Password" required
-                                style="padding-right: 2.5rem;"> <!-- space for the icon -->
-
-                            <!-- Eye toggle button inside the input -->
-                            <button type="button" onclick="togglePassword()"
+                                style="padding-right: 2.5rem;">
+                            <button type="button" onclick="togglePassword('password', 'toggleIcon')"
                                     style="position: absolute; top: 50%; right: 0.75rem; transform: translateY(-50%);
                                         background: none; border: none; padding: 0; cursor: pointer;">
                                 <i id="toggleIcon" class="fas fa-eye" style="color: #6c757d;"></i>
                             </button>
                         </div>
-
                         @error('password')
                             <span class="invalid-feedback" role="alert" style="color: var(--accent); font-size: 0.8rem;">
                                 <strong>{{ $message }}</strong>
@@ -93,17 +106,15 @@
                         @enderror
                     </div>
 
-
                     <!-- Remember Me & Forgot Password -->
                     <div class="remember-forgot">
                         <div class="checkbox-group">
                             <input type="checkbox" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
                             <label for="remember">Remember me</label>
                         </div>
-                        {{-- Password reset route not available --}}
-                        <!-- <a href="#" class="forgot-link" style="pointer-events: none; color: var(--text-light);">
-                            Reset password <i class="fas fa-arrow-right"></i>
-                        </a> -->
+                        <a href="{{ route('password.request') }}" class="forgot-link">
+                            Forgot password? <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
 
                     <!-- Submit Button -->
@@ -113,7 +124,7 @@
 
                     <!-- Error Messages -->
                     @if($errors->any())
-                        <div class="alert alert-danger" style="color: var(--accent); margin: 15px 0; padding: 10px; border-radius: var(--border-radius); background-color: rgba(255, 94, 91, 0.1);">
+                        <div class="alert">
                             @foreach($errors->all() as $error)
                                 <p style="margin: 5px 0;">{{ $error }}</p>
                             @endforeach
@@ -140,7 +151,20 @@
         </div>
     </div>
 
-<!-- Before closing </body> -->
-<script src="{{ asset('js/loading.js') }}"></script>
+    <script src="{{ asset('js/loading.js') }}"></script>
+    <script>
+        function togglePassword(fieldId, iconId) {
+            const passwordField = document.getElementById(fieldId);
+            const icon = document.getElementById(iconId);
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+    </script>
 </body>
 </html>

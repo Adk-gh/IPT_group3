@@ -410,9 +410,7 @@ nav ul li a:hover:after {
     margin-right: 8px;
     font-size: 1.2rem;
 }
-
 /* === Map Preview Section === */
-/* Map Preview Section */
 .map-preview {
     background-color: var(--secondary);
 }
@@ -423,11 +421,16 @@ nav ul li a:hover:after {
     overflow: hidden;
     box-shadow: var(--shadow);
     position: relative;
+    /* Add transition for smooth fullscreen toggle */
+    transition: all 0.3s ease;
 }
 
 #streetArtMap {
     height: 500px;
     width: 100%;
+    /* Ensure map is behind overlay */
+    z-index: 1;
+    position: relative;
 }
 
 .map-overlay {
@@ -438,33 +441,34 @@ nav ul li a:hover:after {
     background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
     padding: 30px;
     color: var(--white);
-    z-index: 1000;
-    pointer-events: auto;
+    /* Higher than map but lower than button */
+    z-index: 100;
+    /* Make overlay click-through except for interactive elements */
+    pointer-events: none;
 }
 
-.map-overlay h3 {
-    color: var(--white);
-    margin-bottom: 10px;
-    pointer-events: auto;
-}
-
+.map-overlay h3,
 .map-overlay p {
-    opacity: 0.9;
-    margin-bottom: 20px;
-    pointer-events: auto;
+    pointer-events: none; /* Text shouldn't block clicks */
 }
 
 .map-overlay .btn {
+    /* Button should be clickable */
     pointer-events: auto;
+    /* Higher than overlay */
+    z-index: 110;
+    position: relative;
 }
 
+/* Fullscreen styles */
 .map-container.fullscreen {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
-    z-index: 9999 !important;
+    /* Below modal but above everything else */
+    z-index: 1040 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
 }
@@ -473,23 +477,35 @@ nav ul li a:hover:after {
     height: 100% !important;
 }
 
+.map-container.fullscreen .map-overlay {
+    /* Slightly adjust overlay in fullscreen */
+    padding: 20px;
+    /* Ensure overlay stays above map */
+    z-index: 1041 !important;
+}
+
+.map-container.fullscreen .map-overlay .btn {
+    /* Button must be highest in fullscreen */
+    z-index: 1042 !important;
+}
+
 body.fullscreen-map-active {
     overflow: hidden;
 }
 
+/* Modal z-index should be higher than fullscreen map */
 #postModal {
+    z-index: 1050;
     animation: fadeIn 0.2s ease-in-out;
 }
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
 
+/* Map controls positioning */
 .map-theme-toggle-btn {
     position: absolute;
     top: 10px;
     right: 10px;
-    z-index: 1000;
+    /* Above map but below overlay */
+    z-index: 50;
     background: white;
     border: none;
     padding: 8px 12px;
@@ -498,6 +514,14 @@ body.fullscreen-map-active {
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     font-weight: 600;
     --user-select: none;
+}
+
+/* Fullscreen map controls adjustment */
+.map-container.fullscreen .map-theme-toggle-btn {
+    /* Move controls above overlay in fullscreen */
+    z-index: 1041 !important;
+    top: 20px;
+    right: 20px;
 }
 
 /* Featured Street Art */
@@ -704,7 +728,46 @@ body.fullscreen-map-active {
 .text-center .btn {
     margin-top: 40px;
 }
+/* Fullscreen styles */
+.map-container.fullscreen {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 10000;
+    background: #fff;
+    margin: 0 !important;
+    padding: 0 !important;
+}
 
+.fullscreen-map-active {
+    overflow: hidden;
+}
+
+.no-scroll {
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Map overlay positioning in fullscreen */
+.map-container.fullscreen .map-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+/* Exit button styling */
+.btn.exit-fullscreen {
+    background-color: #dc3545 !important; /* Red color for exit state */
+}
+
+.btn.exit-fullscreen:hover {
+    background-color: #c82333 !important;
+}
 /* View All Artists button */
 .text-center .btn {
     padding: 12px 30px;

@@ -14,6 +14,10 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -521,90 +525,24 @@
         </div>
     </section>
 
-    <!-- Artist Spotlight -->
-    <section class="artist-spotlight">
-        <div class="container">
-            <div class="spotlight-header">
-                <h2>Artist Spotlight</h2>
-                <p>Get to know the artist behind the artworks</p>
-            </div>
-            <div class="spotlight-content">
-                <div class="spotlight-image">
-                    <img src="https://images.unsplash.com/photo-1578926375602-3ad9e91ec0a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Featured Artwork">
-                </div>
-                <div class="spotlight-info">
-                    <h3>Featured Artwork: "Urban Dreams"</h3>
-                    <p class="spotlight-statement">
-                        "My work explores the intersection of urban decay and vibrant renewal. I see walls as blank canvases that tell the stories of our cities. Through bold colors and abstract forms, I aim to transform forgotten spaces into places of beauty and conversation."
-                    </p>
-                    <div class="spotlight-tools">
-                        <div class="tools-title">Tools & Styles I Use:</div>
-                        <div class="tools-list">
-                            <span class="tool-tag">Spray Paint</span>
-                            <span class="tool-tag">Acrylic</span>
-                            <span class="tool-tag">Stencils</span>
-                            <span class="tool-tag">Abstract</span>
-                            <span class="tool-tag">Geometric</span>
-                            <span class="tool-tag">Street Art</span>
-                        </div>
-                    </div>
-                    <div style="margin-top: 30px;">
-                        <a href="#" class="btn btn-primary"><i class="fas fa-play"></i> Watch Process Video</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="testimonials-section">
-        <div class="container">
-            <div class="testimonials-header">
-                <h2>Collaborations & Testimonials</h2>
-                <p>What others say about working with Juno Art</p>
-            </div>
-            <div class="testimonials-grid">
-                <!-- Testimonial 1 -->
-                <div class="testimonial-card">
-                    <div class="testimonial-text">
-                        "Juno transformed our dull warehouse wall into a vibrant masterpiece that has become a local landmark. Their attention to detail and unique style brought our vision to life beyond expectations."
-                    </div>
-                    <div class="testimonial-author">
-                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Maria Santos" class="author-avatar">
-                        <div class="author-info">
-                            <div class="author-name">Maria Santos <span class="collab-tag">Collaboration</span></div>
-                            <div class="author-role">Owner, Santos Warehouse</div>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="contact-section">
-        <div class="container contact-container">
-            <h2 class="contact-title">Contact Juno Art</h2>
-            <p class="contact-description">
-                Interested in commissioning work or collaborating? Get in touch with Juno for project inquiries, exhibition opportunities, or just to say hello.
-            </p>
-            <div class="contact-buttons">
-                <a href="#" class="btn btn-primary btn-large"><i class="fas fa-envelope"></i> Send Message</a>
-                <a href="#" class="btn btn-outline btn-large"><i class="fas fa-calendar-check"></i> Book Commission</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Map View (Hidden by default) -->
-    <section class="container" id="map-tab" style="display: none;">
+   <!-- Map Preview Section -->
+<section class="map-preview-section" id="map">
+    <div class="container">
+        <h2 class="section-title">Interactive Street Art Map</h2>
+        <p class="map-description">Explore thousands of street art locations around the world. Click on markers to discover new artworks.</p>
         <div class="map-container">
-            <div id="profileMap"></div>
+            <div id="streetArtMap" class="preview-map"></div>
+            <div class="map-overlay">
+                <h3>San Pablo City Street Art</h3>
+                <p>Discover over 1,200 documented street artworks in City Of Seven Lakes.</p>
+                <button id="viewFullMapBtn" class="map-action-btn">
+                    View Full Map
+                </button>
+            </div>
         </div>
-    </section>
-
-    <!-- Collections (Hidden by default) -->
+    </div>
+</section>
+<!-- Collections (Hidden by default) -->
     <section class="container" id="collections-tab" style="display: none;">
         <h2>Collections</h2>
         <p>Organized galleries of Juno's artwork by theme or project</p>
@@ -708,9 +646,88 @@
 
         </div>
     </section>
+    <!-- Artist Spotlight -->
+    <section class="artist-spotlight">
+        <div class="container">
+            <div class="spotlight-header">
+                <h2>Artist Spotlight</h2>
+                <p>Get to know the artist behind the artworks</p>
+            </div>
+            <div class="spotlight-content">
+                <div class="spotlight-image">
+                    <img src="https://images.unsplash.com/photo-1578926375602-3ad9e91ec0a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Featured Artwork">
+                </div>
+                <div class="spotlight-info">
+                    <h3>Featured Artwork: "Urban Dreams"</h3>
+                    <p class="spotlight-statement">
+                        "My work explores the intersection of urban decay and vibrant renewal. I see walls as blank canvases that tell the stories of our cities. Through bold colors and abstract forms, I aim to transform forgotten spaces into places of beauty and conversation."
+                    </p>
+                    <div class="spotlight-tools">
+                        <div class="tools-title">Tools & Styles I Use:</div>
+                        <div class="tools-list">
+                            <span class="tool-tag">Spray Paint</span>
+                            <span class="tool-tag">Acrylic</span>
+                            <span class="tool-tag">Stencils</span>
+                            <span class="tool-tag">Abstract</span>
+                            <span class="tool-tag">Geometric</span>
+                            <span class="tool-tag">Street Art</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 30px;">
+                        <a href="#" class="btn btn-primary"><i class="fas fa-play"></i> Watch Process Video</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="testimonials-header">
+                <h2>Collaborations & Testimonials</h2>
+                <p>What others say about working with Juno Art</p>
+            </div>
+            <div class="testimonials-grid">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "Juno transformed our dull warehouse wall into a vibrant masterpiece that has become a local landmark. Their attention to detail and unique style brought our vision to life beyond expectations."
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Maria Santos" class="author-avatar">
+                        <div class="author-info">
+                            <div class="author-name">Maria Santos <span class="collab-tag">Collaboration</span></div>
+                            <div class="author-role">Owner, Santos Warehouse</div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container contact-container">
+            <h2 class="contact-title">Contact Juno Art</h2>
+            <p class="contact-description">
+                Interested in commissioning work or collaborating? Get in touch with Juno for project inquiries, exhibition opportunities, or just to say hello.
+            </p>
+            <div class="contact-buttons">
+                <a href="#" class="btn btn-primary btn-large"><i class="fas fa-envelope"></i> Send Message</a>
+                <a href="#" class="btn btn-outline btn-large"><i class="fas fa-calendar-check"></i> Book Commission</a>
+            </div>
+        </div>
+    </section>
+
+    <
 
 
 
+
+     <script src="https://unpkg.com/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 
 <!-- Before closing </body> -->

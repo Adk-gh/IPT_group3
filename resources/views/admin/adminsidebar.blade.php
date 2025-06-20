@@ -194,7 +194,7 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="sidebar-logo">Street & <span>Ink</span></div>
+            <div class="sidebar-logo"><a href="{{ route('home') }}">Street & <span>Ink</span></a></div>
         </div>
 
         <div class="sidebar-menu">

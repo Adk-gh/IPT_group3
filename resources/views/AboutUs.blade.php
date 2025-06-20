@@ -8,7 +8,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -137,7 +137,7 @@
                 <!-- Team Member 2 -->
                 <div class="team-card">
                     <div class="team-card-img">
-                        <img src="https://kahimyang.com/resources-18/fernando-poe-jr.webp" alt="Jamie Chen">
+                        <img src="img/chessboy.jpg" alt="Jamie Chen">
                     </div>
                     <div class="team-card-content">
                         <h3 class="team-card-name">De Rama, John Cedrick</h3>
@@ -155,7 +155,7 @@
                 <!-- Team Member 3 -->
                 <div class="team-card">
                     <div class="team-card-img">
-                        <img src="https://boroktimes.com/storage/2023/07/channels4_profile.jpeg" alt="Marcus Johnson">
+                        <img src="img/koki.jpg" alt="Marcus Johnson">
                     </div>
                     <div class="team-card-content">
                         <h3 class="team-card-name">Marabe, John Francis</h3>
@@ -190,7 +190,7 @@
                 <!-- Team Member 5 -->
                 <div class="team-card">
                     <div class="team-card-img">
-                        <img src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Samira Khan">
+                        <img src="img/oliveoil.jpg" alt="Samira Khan">
                     </div>
                     <div class="team-card-content">
                         <h3 class="team-card-name">Oliveros, Amiel</h3>
@@ -328,7 +328,7 @@
     <div class="container">
         <h2 class="section-title">Join the Movement</h2>
         <p>Become part of our growing community of street art enthusiasts and creators</p>
-        
+
         <div class="cta-cards">
             <!-- Card 1 -->
             <div class="cta-card">
@@ -337,7 +337,7 @@
                 <p>Share street art you've discovered with our global community</p>
                 <a href="#" class="btn btn-primary">Contribute</a>
             </div>
-            
+
             <!-- Card 2 -->
             <div class="cta-card">
                 <i class="fas fa-users"></i>
@@ -345,7 +345,7 @@
                 <p>Connect with other street art lovers around the world</p>
                 <a href="#" class="btn btn-secondary">Sign Up</a>
             </div>
-            
+
             <!-- Card 3 -->
             <div class="cta-card">
                 <i class="fas fa-hand-holding-heart"></i>
