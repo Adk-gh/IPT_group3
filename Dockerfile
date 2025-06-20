@@ -1,22 +1,53 @@
-FROM php:8.2-fpm
-
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    git curl zip unzip libzip-dev libpng-dev libjpeg-dev libonig-dev libxml2-dev \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
-
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Use official PHP image with Apache and extensions
+FROM php:8.2-apache
 
 # Set working directory
-WORKDIR /var/www
+WORKDIR /var/www/html
 
-# Copy project
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    libzip-dev \
+    libcurl4-openssl-dev \
+    && docker-php-ext-install pdo pdo_mysql zip
+
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
+
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Copy project files
 COPY . .
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage
 
-# Expose port and run
-EXPOSE 9000
-CMD ["php-fpm"]
+# Run Laravel setup commands
+RUN composer install --no-dev --optimize-autoloader \
+    && cp .env.example .env || true \
+    && php artisan config:clear \
+    && php artisan config:cache \
+    && php artisan route:cache \
+    && php artisan view:cache \
+    && php artisan storage:link || true
+
+# Set Apache document root to Laravel public/
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+
+# Override default Apache config to point to public/
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf \
+    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
+
+# Expose port
+EXPOSE 80
+
+# Start Apache in foreground
+CMD ["apache2-foreground"]
