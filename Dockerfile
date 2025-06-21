@@ -53,7 +53,7 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 EXPOSE 80
 
 # Start Apache in foreground
-#CMD ["apache2-foreground"]
-CMD php artisan serve --host=127.0.0.1 --port=80
+CMD ["apache2-foreground"]
+
 
 HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost/ || exit 1
