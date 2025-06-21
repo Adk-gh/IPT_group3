@@ -54,6 +54,6 @@ EXPOSE 80
 
 # Start Apache in foreground
 #CMD ["apache2-foreground"]
-CMD php artisan serve --host=0.0.0.0 --port=80
+CMD php artisan serve --host=127.0.0.1 --port=80
 
 HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost/ || exit 1
