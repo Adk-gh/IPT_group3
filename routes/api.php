@@ -70,7 +70,7 @@ Route::get('/posts', function () {
 // For API-style routes
 Route::middleware(['auth', 'admin'])->group(function() {
     Route::get('/admin/users/{user}', [UserController::class, 'show'])
-         ->name('admin.users.show');
+         ->name('api.users.show');
 });
 
 // Or if using API routes (routes/api.php)
