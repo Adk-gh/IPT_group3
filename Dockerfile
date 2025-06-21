@@ -40,7 +40,7 @@ RUN chown -R www-data:www-data /var/www/html \
 
 # Run Laravel setup commands
 RUN composer install --no-dev --optimize-autoloader \
-    && cp .env.example .env || true \
+    #&& cp .env.example .env || true \
     && php artisan config:clear \
     && php artisan config:cache \
     && php artisan route:cache \
