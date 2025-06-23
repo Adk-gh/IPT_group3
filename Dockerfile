@@ -1,4 +1,4 @@
-# Use official PHP image with Apache and extensions
+# Use official PHP image with Apache
 FROM php:8.2-apache
 
 # Set working directory
@@ -28,19 +28,19 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Copy project files
 COPY . .
+
+# Explicitly copy public folder to avoid .dockerignore issues
+COPY public/ /var/www/html/public/
+
+# Copy environment file
 COPY .env .env
 
 # Fix permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage
-
 # Run Laravel setup commands
 RUN composer install --no-dev --optimize-autoloader \
-    #&& cp .env.example .env || true \
     && php artisan config:clear \
     && php artisan config:cache \
     && php artisan route:cache \
@@ -57,8 +57,8 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 # Expose port
 EXPOSE 80
 
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost/ || exit 1
+
 # Start Apache in foreground
 CMD ["apache2-foreground"]
-
-
-HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost/ || exit 1
