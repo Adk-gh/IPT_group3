@@ -1,8 +1,11 @@
 <?php
 
+namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\SharedLike;
 use App\Models\SharedPost;
+
 
 class SharedPostInteractionController
 {
