@@ -1,14 +1,31 @@
+# Node dependencies
 node_modules
-# vendor  <-- Do NOT ignore vendor if you want to COPY it
-.env*
-.git
-.gitignore
+
+# Laravel storage (allow necessary subfolders)
+storage/*.key
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# Local environment files
+.env
+.env.*
+.DS_Store
 *.log
 *.zip
 *.tar
 *.gz
+
+# VCS
+.git
+.gitignore
+.gitattributes
+
+# IDE files
 .idea
 .vscode
-.DS_Store
+
+# OS files
 Thumbs.db
 ehthumbs.db
