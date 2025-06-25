@@ -1,7 +1,7 @@
 # Node dependencies
 node_modules
 
-# Laravel storage (allow necessary subfolders)
+# Laravel storage (only exclude runtime-generated files)
 storage/*.key
 storage/logs/*
 storage/framework/cache/*
@@ -29,3 +29,6 @@ storage/framework/views/*
 # OS files
 Thumbs.db
 ehthumbs.db
+
+# Vendor folder - Let Composer generate this inside container
+vendor
