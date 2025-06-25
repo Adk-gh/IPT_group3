@@ -1,26 +1,29 @@
-i have this docker file # Use official PHP image with Apache
+# Use official PHP image with Apache
 FROM php:8.2-apache
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Install system dependencies
+# Install system dependencies and required PHP extensions
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     curl \
     libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
     libonig-dev \
     libxml2-dev \
     zip \
     libzip-dev \
     libcurl4-openssl-dev \
-    && docker-php-ext-install pdo pdo_mysql zip
+    && docker-php-ext-configure gd --with-jpeg --with-freetype \
+    && docker-php-ext-install pdo pdo_mysql zip mbstring gd
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Add ServerName to suppress Apache warning
+# Suppress Apache ServerName warning
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 # Install Composer
@@ -29,17 +32,11 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Copy project files
 COPY . .
 
-# Explicitly copy public folder to avoid .dockerignore issues
-COPY public/ /var/www/html/public/
-
-# Copy environment file
-COPY .env .env
-
-# Fix permissions
+# Set permissions for storage and cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Run Laravel setup commands
+# Install dependencies and precompile Laravel caches
 RUN composer install --no-dev --optimize-autoloader \
     && php artisan config:clear \
     && php artisan config:cache \
@@ -50,7 +47,7 @@ RUN composer install --no-dev --optimize-autoloader \
 # Set Apache document root to Laravel public/
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 
-# Override default Apache config to point to public/
+# Override Apache configs to point to public folder
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf \
     && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
