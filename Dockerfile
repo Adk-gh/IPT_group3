@@ -1,7 +1,6 @@
 # Use official PHP with Apache image
 FROM php:8.2-apache
 
-# Set working directory
 WORKDIR /var/www/html
 
 # Install system dependencies and PHP extensions
@@ -36,17 +35,20 @@ ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf \
     && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
-# Copy project files
+# Step 1: Copy composer files only
+COPY composer.json composer.lock ./
+
+# Step 2: Run composer install early
+RUN composer install --no-dev --optimize-autoloader
+
+# Step 3: Copy the rest of the project
 COPY . .
 
-# Set correct permissions
+# Step 4: Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
-
-# Expose port 80 for Railway
+# Expose port 80
 EXPOSE 80
 
 # Healthcheck
