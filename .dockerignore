@@ -1,0 +1,33 @@
+# Node and vendor dependencies
+node_modules
+vendor
+
+# Laravel storage (except necessary parts)
+storage/*.key
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# Development files
+.env
+.env.*
+.DS_Store
+*.md
+*.log
+*.zip
+*.tar
+*.gz
+
+# VCS
+.git
+.gitignore
+.gitattributes
+
+# IDE and editor files
+.idea
+.vscode
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
