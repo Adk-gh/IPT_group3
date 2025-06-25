@@ -56,6 +56,8 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # ✅ Run composer install AFTER everything is properly configured
 RUN composer install --no-dev --optimize-autoloader
 
+RUN php artisan storage:link
+
 # Expose port 80
 EXPOSE 80
 
@@ -63,4 +65,9 @@ EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost/ || exit 1
 
 # Start Apache with Laravel optimizations
-CMD php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan storage:link || true && apache2-foreground
+CMD php artisan config:cache \
+ && php artisan route:cache \
+ && php artisan view:cache \
+ && php artisan storage:link \
+ && apache2-foreground
+
