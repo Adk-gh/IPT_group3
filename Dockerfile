@@ -32,12 +32,17 @@ RUN echo '<Directory /var/www/html/public>\n\
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# ✅ Set Apache document root to Laravel public folder BEFORE copying files
+# Set Apache document root to Laravel public folder
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
-# Update Apache config
+# Update Apache config to apply document root and allow .htaccess
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf \
-    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
+    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf \
+    && echo '<Directory ${APACHE_DOCUMENT_ROOT}>\n\
+    AllowOverride All\n\
+    Require all granted\n\
+</Directory>' >> /etc/apache2/apache2.conf
+
 
 # ✅ Copy project files (excluding vendor & node_modules thanks to .dockerignore)
 COPY . .
