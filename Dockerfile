@@ -1,10 +1,10 @@
-# Use official PHP image
+# Use official PHP image with Apache
 FROM php:8.2-apache
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Install system dependencies
+# Install system dependencies and required PHP extensions
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -32,25 +32,25 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Copy project files (excluding vendor via .dockerignore)
 COPY . .
 
-# Set permissions
+# Set permissions for storage and cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Set Apache document root
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+# Set Apache document root to Laravel public
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
-# Override Apache configs
+# Override Apache configs to respect public folder
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf \
     && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
-# Expose port
+# Expose port 80 for Railway
 EXPOSE 80
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost/ || exit 1
 
-# Start Laravel and Apache
+# Start Laravel setup and Apache
 CMD bash -c "php artisan config:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan storage:link || true && apache2-foreground"
