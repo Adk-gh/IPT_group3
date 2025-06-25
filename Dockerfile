@@ -29,6 +29,13 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# ✅ Set Apache document root to Laravel public folder BEFORE copying files
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+
+# Update Apache config
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf \
+    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
+
 # ✅ Copy project files (excluding vendor & node_modules thanks to .dockerignore)
 COPY . .
 
@@ -36,15 +43,8 @@ COPY . .
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# ✅ Run composer install AFTER files are copied
+# ✅ Run composer install AFTER everything is properly configured
 RUN composer install --no-dev --optimize-autoloader
-
-# Set Apache document root to Laravel public folder
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
-
-# Update Apache config
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf \
-    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 # Expose port 80
 EXPOSE 80
