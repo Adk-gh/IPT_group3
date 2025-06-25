@@ -1,10 +1,10 @@
-# Use official PHP with Apache
+# Use official PHP image with Apache
 FROM php:8.2-apache
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Install system dependencies and PHP extensions
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -22,32 +22,31 @@ RUN apt-get update && apt-get install -y \
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
-
-# Suppress Apache ServerName warning
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy project files
+# Copy only composer files first
+COPY composer.json composer.lock ./
+
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
+
+# THEN copy the rest of the project (excluding vendor via .dockerignore)
 COPY . .
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Set Apache document root to Laravel public/
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
-
-# Update Apache config to point to public/
+# Set Apache document root
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf \
     && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
-# Expose port 8080 as required by Railway
 EXPOSE 8080
 
-# Healthcheck to ensure container stays healthy
-HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost:8080/ || exit 1
+HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost/ || exit 1
 
-# Final command to start Apache
-CMD ["apache2-foreground"]
+CMD bash -c "php artisan config:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan storage:link || true && apache2-foreground"
