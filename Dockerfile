@@ -24,13 +24,7 @@ RUN apt-get update && apt-get install -y \
 RUN a2enmod rewrite
 
 # Suppress Apache ServerName warning
-RUN echo '<Directory /var/www/html/public>\n\
-    AllowOverride All\n\
-</Directory>' >> /etc/apache2/apache2.conf
-
-
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 # Set Apache document root to Laravel public folder
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
@@ -38,25 +32,23 @@ ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 # Update Apache config to apply document root and allow .htaccess
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf \
     && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf \
-    && echo '<Directory ${APACHE_DOCUMENT_ROOT}>\n\
+    && echo "<Directory ${APACHE_DOCUMENT_ROOT}>\n\
     AllowOverride All\n\
     Require all granted\n\
-</Directory>' >> /etc/apache2/apache2.conf
+</Directory>" >> /etc/apache2/apache2.conf
 
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# ✅ Copy project files (excluding vendor & node_modules thanks to .dockerignore)
+# Copy project files
 COPY . .
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-
-
-# ✅ Run composer install AFTER everything is properly configured
+# Run composer install
 RUN composer install --no-dev --optimize-autoloader
-
-RUN php artisan storage:link
 
 # Expose port 80
 EXPOSE 80
@@ -70,4 +62,3 @@ CMD php artisan config:cache \
  && php artisan view:cache \
  && php artisan storage:link \
  && apache2-foreground
-
