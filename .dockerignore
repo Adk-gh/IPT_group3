@@ -1,17 +1,10 @@
-# Node and vendor dependencies
 node_modules
-vendor
 
-# Laravel storage (except necessary parts)
-storage/*.key
-storage/logs/*
-storage/framework/cache/*
-storage/framework/sessions/*
-storage/framework/views/*
+# Remove this during build, let composer generate vendor inside container
+# vendor
 
 # Development files
-.env
-.env.*
+.env.*      # Keep .env out, but optionally COPY it manually during build
 .DS_Store
 *.md
 *.log
