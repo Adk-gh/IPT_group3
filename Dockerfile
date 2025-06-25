@@ -13,7 +13,6 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libonig-dev \
     libxml2-dev \
-    zip \
     libzip-dev \
     libcurl4-openssl-dev \
     libssl-dev \
@@ -30,11 +29,11 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy composer files only for optimized layer caching
+# Copy composer files only first for optimized layer caching
 COPY composer.json composer.lock ./
 
-# Install PHP dependencies without triggering Laravel artisan during build
-RUN COMPOSER_DISABLE_PLUGINS=1 composer install --no-dev --optimize-autoloader --ignore-platform-reqs
+# Install PHP dependencies with verbose logs for debugging
+RUN COMPOSER_DISABLE_PLUGINS=1 composer install --no-dev --optimize-autoloader --ignore-platform-reqs --verbose
 
 # Copy full project files
 COPY . .
