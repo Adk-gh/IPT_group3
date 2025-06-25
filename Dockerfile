@@ -24,7 +24,10 @@ RUN apt-get update && apt-get install -y \
 RUN a2enmod rewrite
 
 # Suppress Apache ServerName warning
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+RUN echo '<Directory /var/www/html/public>\n\
+    AllowOverride All\n\
+</Directory>' >> /etc/apache2/apache2.conf
+
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
