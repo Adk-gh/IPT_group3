@@ -29,22 +29,21 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# ✅ COPY FULL PROJECT FILES FIRST
+# Copy project files
 COPY . .
 
-# Set permissions
+# Set permissions for storage and cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# ✅ THEN run composer install
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
 # Set document root
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
 # Update Apache config
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf \
-    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf
 
 # Expose port
 EXPOSE 80
@@ -53,4 +52,4 @@ EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost/ || exit 1
 
 # Start command
-CMD php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan storage:link || true && apache2-foreground
+CMD ["apache2-foreground"]
