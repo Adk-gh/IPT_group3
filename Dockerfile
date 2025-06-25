@@ -29,10 +29,10 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy project files (excluding vendor via .dockerignore)
+# Copy full project files
 COPY . .
 
-# Set permissions for storage and cache
+# Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
@@ -42,15 +42,15 @@ RUN composer install --no-dev --optimize-autoloader
 # Set Apache document root to Laravel public
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
-# Override Apache configs to respect public folder
+# Override Apache configs
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf \
     && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
-# Expose port 80 for Railway
+# Expose port 80
 EXPOSE 80
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost/ || exit 1
 
-# Start Laravel setup and Apache
-CMD bash -c "php artisan config:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan storage:link || true && apache2-foreground"
+# Start Laravel and Apache
+CMD php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan storage:link || true && apache2-foreground

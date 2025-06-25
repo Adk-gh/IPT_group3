@@ -24,9 +24,16 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-  public function boot()
+  public function boot(): void
 {
+    // Force HTTPS in production
+    if (app()->environment('production')) {
+        URL::forceScheme('https');
+    }
+
+    // Set application locale
     App::setLocale(Session::get('locale', config('app.locale')));
 }
+
 
 }
