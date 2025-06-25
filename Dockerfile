@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libcurl4-openssl-dev \
     && docker-php-ext-configure gd --with-jpeg --with-freetype \
-    && docker-php-ext-install pdo pdo_mysql zip mbstring gd
+    && docker-php-ext-install pdo pdo_mysql zip mbstring gd curl fileinfo openssl sodium mysqli
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
@@ -29,13 +29,13 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy composer files only first for optimized layer caching
+# Copy composer files only for optimized layer caching
 COPY composer.json composer.lock ./
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Install PHP dependencies without triggering Laravel artisan during build
+RUN COMPOSER_DISABLE_PLUGINS=1 composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
-# Copy project files
+# Copy full project files
 COPY . .
 
 # Set permissions for storage and cache
