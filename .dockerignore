@@ -1,37 +1,31 @@
 # Node dependencies
 node_modules
 
-# Composer vendor directory - let Docker build it inside the container
-vendor
-
-# Laravel environment files
-.env
-.env.*
-.phpunit.result.cache
-
-# IDE/editor files
-.idea
-.vscode
-
-# OS/system files
-.DS_Store
-Thumbs.db
-ehthumbs.db
-
-# Logs and archives
-*.log
-*.zip
-*.tar
-*.gz
-
-# VCS files
-.git
-.gitignore
-.gitattributes
-
-# Laravel cache and session files (optional, useful to exclude)
+# Laravel storage (allow necessary subfolders)
 storage/*.key
 storage/logs/*
 storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
+
+# Local environment files
+.env
+.env.*
+.DS_Store
+*.log
+*.zip
+*.tar
+*.gz
+
+# VCS
+.git
+.gitignore
+.gitattributes
+
+# IDE files
+.idea
+.vscode
+
+# OS files
+Thumbs.db
+ehthumbs.db
