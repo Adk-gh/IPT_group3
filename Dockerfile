@@ -8,7 +8,6 @@ WORKDIR /var/www/html
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
-    curl \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
@@ -17,8 +16,10 @@ RUN apt-get update && apt-get install -y \
     zip \
     libzip-dev \
     libcurl4-openssl-dev \
+    libssl-dev \
+    libsodium-dev \
     && docker-php-ext-configure gd --with-jpeg --with-freetype \
-    && docker-php-ext-install pdo pdo_mysql zip mbstring gd curl fileinfo openssl sodium mysqli
+    && docker-php-ext-install pdo pdo_mysql zip mbstring gd fileinfo mysqli sodium
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
