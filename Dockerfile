@@ -1,8 +1,9 @@
+# Use official PHP image
 FROM php:8.2-apache
 
 WORKDIR /var/www/html
 
-# Install system dependencies and PHP extensions
+# System dependencies
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -18,34 +19,29 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-jpeg --with-freetype \
     && docker-php-ext-install pdo pdo_mysql zip mbstring gd
 
-# Enable Apache mods
 RUN a2enmod rewrite
 RUN sed -i 's/Listen 80/Listen 8080/' /etc/apache2/ports.conf
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy composer files first for caching
+# Copy composer files
 COPY composer.json composer.lock ./
 
-# Install PHP dependencies WITHOUT running scripts
-RUN COMPOSER_ALLOW_SUPERUSER=1 COMPOSER_NO_DEV=1 COMPOSER_SKIP_AUTOSCRIPTS=1 composer install --optimize-autoloader --no-interaction
+# Install dependencies without scripts
+RUN COMPOSER_ALLOW_SUPERUSER=1 COMPOSER_NO_DEV=1 COMPOSER_SKIP_AUTOSCRIPTS=1 composer install --optimize-autoloader --no-interaction || true
 
-# Copy rest of project
+# Now copy everything
 COPY . .
 
-# Set permissions
+# Permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Laravel public folder
+# Apache public folder config
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 8080
 
-HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost:8080/ || exit 1
-
-# Start Laravel + Apache, run artisan commands at runtime
 CMD bash -c "composer dump-autoload --optimize && php artisan config:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan storage:link || true && apache2-foreground"

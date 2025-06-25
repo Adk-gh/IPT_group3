@@ -1,26 +1,37 @@
+# Node dependencies
 node_modules
 
-# Remove this during build, let composer generate vendor inside container
-# vendor
+# Composer vendor directory - let Docker build it inside the container
+vendor
 
-# Development files
-.env.*      # Keep .env out, but optionally COPY it manually during build
+# Laravel environment files
+.env
+.env.*
+.phpunit.result.cache
+
+# IDE/editor files
+.idea
+.vscode
+
+# OS/system files
 .DS_Store
-*.md
+Thumbs.db
+ehthumbs.db
+
+# Logs and archives
 *.log
 *.zip
 *.tar
 *.gz
 
-# VCS
+# VCS files
 .git
 .gitignore
 .gitattributes
 
-# IDE and editor files
-.idea
-.vscode
-
-# OS generated files
-Thumbs.db
-ehthumbs.db
+# Laravel cache and session files (optional, useful to exclude)
+storage/*.key
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
