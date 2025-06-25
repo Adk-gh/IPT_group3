@@ -51,6 +51,9 @@ COPY . .
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+    # Recreate storage symlink
+RUN php artisan storage:link
+
 # ✅ Run composer install AFTER everything is properly configured
 RUN composer install --no-dev --optimize-autoloader
 
