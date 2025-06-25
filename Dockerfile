@@ -4,7 +4,7 @@ FROM php:8.2-apache
 # Set working directory
 WORKDIR /var/www/html
 
-# Install system dependencies and PHP extensions
+# Install system dependencies and required PHP extensions
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -29,15 +29,18 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Copy composer files only first for optimized layer caching
+COPY composer.json composer.lock ./
+
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
+
 # Copy project files
 COPY . .
 
 # Set permissions for storage and cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
 
 # Set Apache document root to Laravel public/
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
@@ -52,5 +55,5 @@ EXPOSE 80
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost/ || exit 1
 
-# Start Apache and run Laravel setup commands at container startup
+# Run Laravel setup commands at container startup
 CMD bash -c "php artisan config:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan storage:link || true && apache2-foreground"
