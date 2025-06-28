@@ -70,7 +70,7 @@
         <div class="card-body">
             <div class="create-post-header mb-3">
                 <div class="user-avatar d-flex align-items-center gap-5">
-                    <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : 'img/default.jpg' }}"
+                    <img src="{{ Auth::user()->profile_picture ? asset( Auth::user()->profile_picture) : 'img/default.jpg' }}"
                          alt="User Avatar"
                          class="rounded-circle me-2">
                     <span class="fw-bold">{{ Auth::user()->username }}</span>
@@ -170,7 +170,7 @@
         <div class="post-card card mb-4" data-post-id="{{ $originalPost->id }}">
             @if($isShared)
     <div class="shared-by-info card-header bg-light d-flex align-items-center">
-        <img src="{{ $sharedByUser?->profile_picture ? asset('storage/' . $sharedByUser->profile_picture) : asset('img/default.jpg') }}"
+        <img src="{{ $sharedByUser?->profile_picture ? asset( $sharedByUser->profile_picture) : asset('img/default.jpg') }}"
              class="rounded-circle me-2" style="width: 50px; height: 50px; object-fit: cover;">
         <div>
            <strong>
@@ -192,7 +192,7 @@
                     <div class="post-header d-flex justify-content-between mb-3">
                         <div class="post-user d-flex align-items-center">
                             <div class="post-user-avatar me-3">
-                                <img src="{{ $originalPost->user?->profile_picture ? asset('storage/' . $originalPost->user->profile_picture) : asset('img/default.jpg') }}"
+                                <img src="{{ $originalPost->user?->profile_picture ? asset( $originalPost->user->profile_picture) : asset('img/default.jpg') }}"
                                     alt="User Avatar" class="rounded-circle" style="width: 50px; height: 50px;">
                             </div>
                             <div class="post-user-info">
@@ -274,9 +274,9 @@
                         <div class="post-text mb-3">{{ $originalPost->caption }}</div>
                         @if($originalPost->image_url)
                             <div class="post-image mb-3">
-                                <img src="{{ asset('storage/' . $originalPost->image_url) }}"
-                                    class="img-fluid rounded clickable-image"
-                                    alt="Post Image">
+                               <img src="{{ asset($originalPost->image_url) }}"
+                                class="img-fluid rounded clickable-image"
+                                alt="Post Image">
                             </div>
                         @endif
                     </div>
@@ -333,7 +333,7 @@
         $user = $firstComment->user;
         $username = $user->username ?? $user->name ?? 'Unknown User';
         $profilePic = $user?->profile_picture
-            ? asset('storage/' . $user->profile_picture)
+            ? asset( $user->profile_picture)
             : asset('img/default.jpg');
     @endphp
 
@@ -381,7 +381,7 @@
                 @if($commentable->comments->count())
                     @foreach($commentable->comments as $comment)
                         <div class="d-flex mb-3">
-                            <img src="{{ $comment->user?->profile_picture ? asset('storage/' . $comment->user->profile_picture) : asset('img/default.jpg') }}"
+                            <img src="{{ $comment->user?->profile_picture ? asset($comment->user->profile_picture) : asset('img/default.jpg') }}"
                                 class="rounded-circle me-2" style="width: 40px; height: 40px;">
                             <div>
                                 <strong>{{ $comment->user?->username ?? $comment->user?->name ?? 'Unknown User' }}</strong>
@@ -414,7 +414,7 @@
                                 </div>
                                 <div class="border rounded p-3 bg-light">
                                     <div class="d-flex align-items-center mb-2">
-                                        <img src="{{ $originalPost->user?->profile_picture ? asset('storage/' . $originalPost->user->profile_picture) : asset('img/default.jpg') }}"
+                                        <img src="{{ $originalPost->user?->profile_picture ? asset($originalPost->user->profile_picture) : asset('img/default.jpg') }}"
                                             alt="User Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px;">
                                         <div>
                                             <strong>{{ $originalPost->user?->username ?? $originalPost->user?->name ?? 'Unknown User' }}</strong><br>
@@ -423,7 +423,7 @@
                                     </div>
                                     <p>{{ $originalPost->caption }}</p>
                                     @if($originalPost->image_url)
-                                        <img src="{{ asset('storage/' . $originalPost->image_url) }}" class="img-fluid rounded" alt="Post Image">
+                                        <img src="{{ asset($originalPost->image_url) }}" class="img-fluid rounded" alt="Post Image">
                                     @endif
                                 </div>
                             </div>

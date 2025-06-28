@@ -154,7 +154,7 @@
                                 <div class="art-cell">
                                     @if($originalPost->image_url ?? false)
                                     <div class="art-thumb">
-                                        <img src="{{ asset('storage/' . $originalPost->image_url) }}"
+                                        <img src="{{ asset( $originalPost->image_url) }}"
                                              alt="Post Image">
                                     </div>
                                     @endif
@@ -169,7 +169,7 @@
                             <td>
                                 <div class="user-cell">
                                     <div class="user-avatar-sm">
-                                        <img src="{{ ($originalPost->user->profile_picture ?? false) ? asset('storage/' . $originalPost->user->profile_picture) : asset('img/default.jpg') }}"
+                                        <img src="{{ ($originalPost->user->profile_picture ?? false) ? asset( $originalPost->user->profile_picture) : asset('img/default.jpg') }}"
                                              alt="User Avatar">
                                     </div>
                                     <div class="user-info">
@@ -254,7 +254,7 @@
                 @endphp
                 <div class="art-card">
                     @if($originalPost->image_url ?? false)
-                        <img src="{{ asset('storage/' . $originalPost->image_url) }}"
+                        <img src="{{ asset( $originalPost->image_url) }}"
                              alt="{{ $originalPost->caption ?? 'Artwork' }}"
                              class="art-card-img">
                     @endif

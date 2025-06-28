@@ -61,7 +61,7 @@
         <div class="profile-header">
             <!-- Avatar -->
             <div class="profile-avatar-wrapper">
-                <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : 'img/default.jpg' }}"
+                <img src="{{ Auth::user()->profile_picture ? asset( Auth::user()->profile_picture) : 'img/default.jpg' }}"
                      alt="{{ Auth::user()->username }}" class="profile-avatar" id="avatarImage">
             </div>
 
@@ -183,7 +183,7 @@
         @forelse ($posts as $post)
             <div class="art-card">
                 <div class="art-card-img">
-                    <img src="{{ $post->image_url ? asset('storage/' . $post->image_url) : 'https://via.placeholder.com/400x300?text=No+Image' }}" alt="{{ $post->caption }}">
+                    <img src="{{ $post->image_url ? asset( $post->image_url) : 'https://via.placeholder.com/400x300?text=No+Image' }}" alt="{{ $post->caption }}">
                     <div class="art-card-overlay">
                         <div class="art-card-stats">
                             <div class="art-card-stat"><i class="fas fa-heart"></i> {{ $post->likes_count ?? 0 }}</div>

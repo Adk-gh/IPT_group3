@@ -398,7 +398,7 @@
                         latitude: {{ $post->latitude }},
                         longitude: {{ $post->longitude }},
                         location_name: @json($post->location_name ?? ''),
-                        image_url: @json($post->image_url ? asset('storage/' . $post->image_url) : null),
+                        image_url: @json($post->image_url ? asset( $post->image_url) : null),
                     },
                 @endif
             @endforeach

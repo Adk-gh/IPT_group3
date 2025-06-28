@@ -73,7 +73,7 @@
         <div class="avatar-placeholder">
             <i class="fas fa-user"></i>
         </div>
-        <img id="avatarImage" src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : '' }}"
+        <img id="avatarImage" src="{{ Auth::user()->profile_picture ? asset(Auth::user()->profile_picture) : '' }}"
              alt="Preview" style="{{ Auth::user()->profile_picture ? 'display: block;' : 'display: none;' }}">
     </div>
     <input type="file" name="profile_picture" id="avatarInput" class="avatar-input" accept="image/*">
@@ -243,12 +243,12 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     // Pre-fill existing images
-    const existingAvatar = "{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : '' }}";
+    const existingAvatar = "{{ Auth::user()->profile_picture ? asset( Auth::user()->profile_picture) : '' }}";
     if (existingAvatar) {
         document.getElementById('avatarImage').src = existingAvatar;
     }
 
-    const existingBanner = "{{ Auth::user()->cover_photo ? asset('storage/' . Auth::user()->cover_photo) : '' }}";
+    const existingBanner = "{{ Auth::user()->cover_photo ? asset( Auth::user()->cover_photo) : '' }}";
     if (existingBanner) {
         document.getElementById('bannerImage').src = existingBanner;
     }
