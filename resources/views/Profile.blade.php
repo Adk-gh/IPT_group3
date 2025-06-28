@@ -39,8 +39,9 @@
     <!-- Profile Banner -->
     <section class="profile-banner">
     <!-- Cover Photo -->
-    <img src="{{ Auth::user()->cover_photo ? asset('storage/' . Auth::user()->cover_photo) : 'https://images.unsplash.com/photo-1516617442634-75371039cb3a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1374&q=80' }}"
+   <img src="{{ Auth::user()->cover_photo ? asset(Auth::user()->cover_photo) : 'https://images.unsplash.com/photo-1516617442634-75371039cb3a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1374&q=80' }}"
      alt="Profile Banner" class="banner-image" id="bannerImage">
+
 
 
 <div class="profile-actions dropdown">

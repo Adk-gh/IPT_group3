@@ -37,7 +37,8 @@
                         <li class="profile-container">
                             <button class="profile-btn">
                                 <span>{{ Auth::user()->name }}</span>
-                                <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : 'img/default.jpg' }}" alt="Profile" class="profile-img">
+                               <img src="{{ Auth::user()->profile_picture ? asset(Auth::user()->profile_picture) : asset('img/default.jpg') }}" alt="Profile" class="profile-img">
+
                             </button>
                             <div class="profile-dropdown">
                                 <a href="{{ route('profile') }}"><i class="fas fa-user-cog mr-2"></i> Manage Profile</a>

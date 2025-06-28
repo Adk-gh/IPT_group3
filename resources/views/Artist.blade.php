@@ -95,7 +95,8 @@
                 @if($user->email !== 'admin@gmail.com')
                 <div class="artist-card">
                     <div class="artist-card-img">
-                        <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('img/default.jpg') }}" alt="User Avatar">
+                        <img src="{{ $user->profile_picture ? asset($user->profile_picture) : asset('img/default.jpg') }}" alt="User Avatar">
+
 
                         @if($user->is_verified)
                         <div class="artist-verified" title="Verified Artist"><i class="fas fa-check"></i></div>
@@ -131,7 +132,7 @@
             @endforelse
         </div>
 
-       
+
 
     </div>
 </section>
