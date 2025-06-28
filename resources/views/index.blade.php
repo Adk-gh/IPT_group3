@@ -92,7 +92,7 @@
                 @forelse ($users as $user)
                     <div class="artist-card">
                         <div class="artist-card-img">
-                            <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : 'img/default.jpg' }}" alt="User Avatar">
+                            <img src="{{ $user->profile_picture ? asset($user->profile_picture) : asset('img/default.jpg') }}" alt="User Avatar">
                         </div>
                         <div class="artist-card-content">
                             <h3 class="artist-card-name">{{ $user->name }}</h3>
