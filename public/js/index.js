@@ -142,11 +142,10 @@ const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/
                 const userName = user.name || 'Unknown User';
                 const userEmail = user.email || '';
                 const userAvatar = user.profile_picture
-                    ? user.profile_picture.startsWith('http')
-                        ? user.profile_picture
-                        : user.profile_picture
-                    : '/img/default-avatar.jpg';
-
+                ? user.profile_picture.startsWith('http')
+                    ? user.profile_picture
+                    : `/${user.profile_picture.replace(/^public\//, '')}`
+                : '/img/default-avatar.jpg';
                 // Get post data with fallbacks
                 const location = originalPost.location_name || 'Unknown location';
                 const description = originalPost.caption || '';
@@ -160,11 +159,11 @@ const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/
                       })
                     : 'Unknown date';
 
-                const imageUrl = originalPost.image_url
-    ? originalPost.image_url.startsWith('http')
-        ? originalPost.image_url
-        : `/${originalPost.image_url.replace(/^public\//, '')}`
-    : null;
+               const imageUrl = originalPost.image_url
+                ? originalPost.image_url.startsWith('http')
+                    ? originalPost.image_url
+                    : `/${originalPost.image_url.replace(/^public\//, '')}`
+                : null;
 
 
                 // Create marker icon
