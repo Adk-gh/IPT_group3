@@ -161,10 +161,11 @@ const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/
                     : 'Unknown date';
 
                 const imageUrl = originalPost.image_url
-                    ? originalPost.image_url.startsWith('http')
-                        ? originalPost.image_url
-                        : `/storage/${originalPost.image_url.replace(/^storage\/|^public\//, '')}`
-                    : null;
+    ? originalPost.image_url.startsWith('http')
+        ? originalPost.image_url
+        : `/${originalPost.image_url.replace(/^public\//, '')}`
+    : null;
+
 
                 // Create marker icon
                 const markerIcon = L.divIcon({
